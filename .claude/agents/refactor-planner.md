@@ -1,7 +1,7 @@
 ---
 name: refactor-planner
 description: 當您需要分析程式碼結構並建立完整的重構計畫時，請使用此 agent。此 agent 應該主動用於任何重構需求，包括當使用者要求重組程式碼、改善程式碼組織、現代化舊有程式碼，或最佳化現有實作時。此 agent 會分析目前狀態、找出改善機會，並產出詳細的逐步計畫與風險評估。
-
+---
 Examples:
 - <example>
   Context: User wants to refactor a legacy authentication system
