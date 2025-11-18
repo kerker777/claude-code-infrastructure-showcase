@@ -1,50 +1,50 @@
 # Hooks
 
-Claude Code hooks that enable skill auto-activation, file tracking, and validation.
+Claude Code hooks 可啟用 skill 自動觸發、檔案追蹤及驗證功能。
 
 ---
 
-## What Are Hooks?
+## 什麼是 Hooks？
 
-Hooks are scripts that run at specific points in Claude's workflow:
-- **UserPromptSubmit**: When user submits a prompt
-- **PreToolUse**: Before a tool executes  
-- **PostToolUse**: After a tool completes
-- **Stop**: When user requests to stop
+Hooks 是在 Claude 工作流程中特定時間點執行的腳本：
+- **UserPromptSubmit**：當使用者提交提示訊息時
+- **PreToolUse**：在工具執行之前
+- **PostToolUse**：在工具完成之後
+- **Stop**：當使用者要求停止時
 
-**Key insight:** Hooks can modify prompts, block actions, and track state - enabling features Claude can't do alone.
+**關鍵概念：** Hooks 可以修改提示訊息、阻止動作並追蹤狀態 — 這些功能是 Claude 單獨無法做到的。
 
 ---
 
-## Essential Hooks (Start Here)
+## 必要的 Hooks（從這裡開始）
 
 ### skill-activation-prompt (UserPromptSubmit)
 
-**Purpose:** Automatically suggests relevant skills based on user prompts and file context
+**用途：** 根據使用者提示訊息和檔案情境自動建議相關的 skills
 
-**How it works:**
-1. Reads `skill-rules.json`
-2. Matches user prompt against trigger patterns
-3. Checks which files user is working with
-4. Injects skill suggestions into Claude's context
+**運作方式：**
+1. 讀取 `skill-rules.json`
+2. 將使用者提示訊息與觸發規則進行比對
+3. 檢查使用者正在處理哪些檔案
+4. 將 skill 建議注入到 Claude 的情境中
 
-**Why it's essential:** This is THE hook that makes skills auto-activate.
+**為什麼必要：** 這是讓 skills 能夠自動啟動的關鍵 hook。
 
-**Integration:**
+**整合方式：**
 ```bash
-# Copy both files
+# 複製兩個檔案
 cp skill-activation-prompt.sh your-project/.claude/hooks/
 cp skill-activation-prompt.ts your-project/.claude/hooks/
 
-# Make executable
+# 設為可執行
 chmod +x your-project/.claude/hooks/skill-activation-prompt.sh
 
-# Install dependencies
+# 安裝相依套件
 cd your-project/.claude/hooks
 npm install
 ```
 
-**Add to settings.json:**
+**加入到 settings.json：**
 ```json
 {
   "hooks": {
@@ -62,32 +62,32 @@ npm install
 }
 ```
 
-**Customization:** ✅ None needed - reads skill-rules.json automatically
+**客製化：** ✅ 無需修改 - 會自動讀取 skill-rules.json
 
 ---
 
 ### post-tool-use-tracker (PostToolUse)
 
-**Purpose:** Tracks file changes to maintain context across sessions
+**用途：** 追蹤檔案變更，以維持跨會話的情境
 
-**How it works:**
-1. Monitors Edit/Write/MultiEdit tool calls
-2. Records which files were modified
-3. Creates cache for context management
-4. Auto-detects project structure (frontend, backend, packages, etc.)
+**運作方式：**
+1. 監控 Edit/Write/MultiEdit 工具呼叫
+2. 記錄哪些檔案被修改
+3. 建立快取以管理情境
+4. 自動偵測專案結構（frontend、backend、packages 等）
 
-**Why it's essential:** Helps Claude understand what parts of your codebase are active.
+**為什麼必要：** 幫助 Claude 理解你的程式碼庫中哪些部分正在使用。
 
-**Integration:**
+**整合方式：**
 ```bash
-# Copy file
+# 複製檔案
 cp post-tool-use-tracker.sh your-project/.claude/hooks/
 
-# Make executable
+# 設為可執行
 chmod +x your-project/.claude/hooks/post-tool-use-tracker.sh
 ```
 
-**Add to settings.json:**
+**加入到 settings.json：**
 ```json
 {
   "hooks": {
@@ -106,58 +106,58 @@ chmod +x your-project/.claude/hooks/post-tool-use-tracker.sh
 }
 ```
 
-**Customization:** ✅ None needed - auto-detects structure
+**客製化：** ✅ 無需修改 - 會自動偵測結構
 
 ---
 
-## Optional Hooks (Require Customization)
+## 選用的 Hooks（需要客製化）
 
 ### tsc-check (Stop)
 
-**Purpose:** TypeScript compilation check when user stops
+**用途：** 當使用者停止時進行 TypeScript 編譯檢查
 
-**⚠️ WARNING:** Configured for multi-service monorepo structure
+**⚠️ 警告：** 此設定是針對多服務 monorepo 結構
 
-**Integration:**
+**整合方式：**
 
-**First, determine if this is right for you:**
-- ✅ Use if: Multi-service TypeScript monorepo
-- ❌ Skip if: Single-service project or different build setup
+**首先，確認這是否適合你：**
+- ✅ 適用：多服務 TypeScript monorepo
+- ❌ 跳過：單一服務專案或不同的建置設定
 
-**If using:**
-1. Copy tsc-check.sh
-2. **EDIT the service detection (line ~28):**
+**如果要使用：**
+1. 複製 tsc-check.sh
+2. **編輯服務偵測部分（約第 28 行）：**
    ```bash
-   # Replace example services with YOUR services:
+   # 將範例服務替換成你的服務：
    case "$repo" in
-       api|web|auth|payments|...)  # ← Your actual services
+       api|web|auth|payments|...)  # ← 你實際的服務
    ```
-3. Test manually before adding to settings.json
+3. 在加入到 settings.json 之前先手動測試
 
-**Customization:** ⚠️⚠️⚠️ Heavy
+**客製化：** ⚠️⚠️⚠️ 需要大幅修改
 
 ---
 
 ### trigger-build-resolver (Stop)
 
-**Purpose:** Auto-launches build-error-resolver agent when compilation fails
+**用途：** 當編譯失敗時自動啟動 build-error-resolver agent
 
-**Depends on:** tsc-check hook working correctly
+**依賴於：** tsc-check hook 正常運作
 
-**Customization:** ✅ None (but tsc-check must work first)
+**客製化：** ✅ 無需修改（但 tsc-check 必須先正常運作）
 
 ---
 
-## For Claude Code
+## 給 Claude Code
 
-**When setting up hooks for a user:**
+**為使用者設定 hooks 時：**
 
-1. **Read [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)** first
-2. **Always start with the two essential hooks**
-3. **Ask before adding Stop hooks** - they can block if misconfigured  
-4. **Verify after setup:**
+1. **先閱讀 [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)**
+2. **務必從兩個必要的 hooks 開始**
+3. **在加入 Stop hooks 之前先詢問** - 設定錯誤可能會造成阻塞
+4. **設定後進行驗證：**
    ```bash
    ls -la .claude/hooks/*.sh | grep rwx
    ```
 
-**Questions?** See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)
+**有問題？** 請參閱 [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)

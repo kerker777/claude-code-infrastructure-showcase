@@ -2,9 +2,9 @@
 
 ## 統計
 - 總檔案數：52
-- 已完成：14
+- 已完成：19
 - 進行中：0
-- 待處理：38
+- 待處理：33
 
 ## 檔案清單
 
@@ -27,13 +27,13 @@
 - [x] ./.claude/agents/web-research-specialist.md
 
 ### Commands (3)
-- [ ] ./.claude/commands/dev-docs-update.md
-- [ ] ./.claude/commands/dev-docs.md
-- [ ] ./.claude/commands/route-research-for-testing.md
+- [x] ./.claude/commands/dev-docs-update.md
+- [x] ./.claude/commands/dev-docs.md
+- [x] ./.claude/commands/route-research-for-testing.md
 
 ### Hooks (2)
-- [ ] ./.claude/hooks/CONFIG.md
-- [ ] ./.claude/hooks/README.md
+- [x] ./.claude/hooks/CONFIG.md
+- [x] ./.claude/hooks/README.md
 
 ### Skills (1)
 - [ ] ./.claude/skills/README.md
@@ -81,4 +81,4 @@
 - [ ] ./.claude/skills/skill-developer/TROUBLESHOOTING.md
 
 ---
-最後更新：完成 Agents 資料夾 11 個檔案翻譯
+最後更新：完成 Commands 與 Hooks 資料夾 5 個檔案翻譯
