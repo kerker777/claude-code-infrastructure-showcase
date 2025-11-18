@@ -2,9 +2,9 @@
 
 ## 統計
 - 總檔案數：52
-- 已完成：19
+- 已完成：32
 - 進行中：0
-- 待處理：33
+- 待處理：20
 
 ## 檔案清單
 
@@ -36,21 +36,21 @@
 - [x] ./.claude/hooks/README.md
 
 ### Skills (1)
-- [ ] ./.claude/skills/README.md
+- [x] ./.claude/skills/README.md
 
-### Backend Dev Guidelines (11)
-- [ ] ./.claude/skills/backend-dev-guidelines/SKILL.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/architecture-overview.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/async-and-errors.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/complete-examples.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/configuration.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/database-patterns.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/middleware-guide.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/routing-and-controllers.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/sentry-and-monitoring.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/services-and-repositories.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/testing-guide.md
-- [ ] ./.claude/skills/backend-dev-guidelines/resources/validation-patterns.md
+### Backend Dev Guidelines (12)
+- [x] ./.claude/skills/backend-dev-guidelines/SKILL.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/architecture-overview.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/async-and-errors.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/complete-examples.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/configuration.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/database-patterns.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/middleware-guide.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/routing-and-controllers.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/sentry-and-monitoring.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/services-and-repositories.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/testing-guide.md
+- [x] ./.claude/skills/backend-dev-guidelines/resources/validation-patterns.md
 
 ### Error Tracking (1)
 - [ ] ./.claude/skills/error-tracking/SKILL.md
@@ -81,4 +81,4 @@
 - [ ] ./.claude/skills/skill-developer/TROUBLESHOOTING.md
 
 ---
-最後更新：完成 Commands 與 Hooks 資料夾 5 個檔案翻譯
+最後更新：完成 Backend Dev Guidelines 與 Skills README 共 13 個檔案翻譯

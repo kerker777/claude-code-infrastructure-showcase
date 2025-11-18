@@ -1,66 +1,66 @@
 # Skills
 
-Production-tested skills for Claude Code that auto-activate based on context.
+經過實戰測試的 Claude Code 技能，能根據情境自動啟動。
 
 ---
 
-## What Are Skills?
+## 什麼是 Skills？
 
-Skills are modular knowledge bases that Claude loads when needed. They provide:
-- Domain-specific guidelines
-- Best practices
-- Code examples
-- Anti-patterns to avoid
+Skills 是模組化的知識庫，Claude 會在需要時載入。它們提供：
+- 特定領域的指引
+- 最佳實務
+- 程式碼範例
+- 應避免的反模式
 
-**Problem:** Skills don't activate automatically by default.
+**問題：** Skills 預設不會自動啟動。
 
-**Solution:** This showcase includes the hooks + configuration to make them activate.
+**解決方案：** 此 showcase 包含讓它們自動啟動所需的 hooks 與配置。
 
 ---
 
-## Available Skills
+## 可用的 Skills
 
-### skill-developer (Meta-Skill)
-**Purpose:** Creating and managing Claude Code skills
+### skill-developer（Meta-Skill）
+**用途：** 建立和管理 Claude Code skills
 
-**Files:** 7 resource files (426 lines total)
+**檔案：** 7 個資源檔案（共 426 行）
 
-**Use when:**
-- Creating new skills
-- Understanding skill structure
-- Working with skill-rules.json
-- Debugging skill activation
+**使用時機：**
+- 建立新的 skills
+- 理解 skill 結構
+- 處理 skill-rules.json
+- 除錯 skill 啟動問題
 
-**Customization:** ✅ None - copy as-is
+**客製化需求：** ✅ 無需修改 - 直接複製即可
 
-**[View Skill →](skill-developer/)**
+**[查看 Skill →](skill-developer/)**
 
 ---
 
 ### backend-dev-guidelines
-**Purpose:** Node.js/Express/TypeScript development patterns
+**用途：** Node.js/Express/TypeScript 開發模式
 
-**Files:** 12 resource files (304 lines main + resources)
+**檔案：** 12 個資源檔案（主檔案 304 行 + 資源檔案）
 
-**Covers:**
-- Layered architecture (Routes → Controllers → Services → Repositories)
-- BaseController pattern
-- Prisma database access
-- Sentry error tracking
-- Zod validation
-- UnifiedConfig pattern
-- Dependency injection
-- Testing strategies
+**涵蓋內容：**
+- 分層架構（Routes → Controllers → Services → Repositories）
+- BaseController 模式
+- Prisma 資料庫存取
+- Sentry 錯誤追蹤
+- Zod 驗證
+- UnifiedConfig 模式
+- 依賴注入
+- 測試策略
 
-**Use when:**
-- Creating/modifying API routes
-- Building controllers or services
-- Database operations with Prisma
-- Setting up error tracking
+**使用時機：**
+- 建立或修改 API routes
+- 建立 controllers 或 services
+- 使用 Prisma 進行資料庫操作
+- 設定錯誤追蹤
 
-**Customization:** ⚠️ Update `pathPatterns` in skill-rules.json to match your backend directories
+**客製化需求：** ⚠️ 更新 skill-rules.json 中的 `pathPatterns` 以符合你的後端目錄
 
-**Example pathPatterns:**
+**pathPatterns 範例：**
 ```json
 {
   "pathPatterns": [
@@ -71,33 +71,33 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 }
 ```
 
-**[View Skill →](backend-dev-guidelines/)**
+**[查看 Skill →](backend-dev-guidelines/)**
 
 ---
 
 ### frontend-dev-guidelines
-**Purpose:** React/TypeScript/MUI v7 development patterns
+**用途：** React/TypeScript/MUI v7 開發模式
 
-**Files:** 11 resource files (398 lines main + resources)
+**檔案：** 11 個資源檔案（主檔案 398 行 + 資源檔案）
 
-**Covers:**
-- Modern React patterns (Suspense, lazy loading)
-- useSuspenseQuery for data fetching
-- MUI v7 styling (Grid with `size={{}}` prop)
+**涵蓋內容：**
+- 現代 React 模式（Suspense、lazy loading）
+- 使用 useSuspenseQuery 進行資料擷取
+- MUI v7 樣式（使用 `size={{}}` prop 的 Grid）
 - TanStack Router
-- File organization (features/ pattern)
-- Performance optimization
-- TypeScript best practices
+- 檔案組織（features/ 模式）
+- 效能最佳化
+- TypeScript 最佳實務
 
-**Use when:**
-- Creating React components
-- Fetching data with TanStack Query
-- Styling with MUI v7
-- Setting up routing
+**使用時機：**
+- 建立 React 元件
+- 使用 TanStack Query 擷取資料
+- 使用 MUI v7 進行樣式設定
+- 設定路由
 
-**Customization:** ⚠️ Update `pathPatterns` + verify you use React/MUI
+**客製化需求：** ⚠️ 更新 `pathPatterns` 並確認你使用 React/MUI
 
-**Example pathPatterns:**
+**pathPatterns 範例：**
 ```json
 {
   "pathPatterns": [
@@ -108,97 +108,97 @@ Skills are modular knowledge bases that Claude loads when needed. They provide:
 }
 ```
 
-**Note:** This skill is configured as a **guardrail** (enforcement: "block") to prevent MUI v6→v7 incompatibilities.
+**注意：** 此 skill 被設定為 **guardrail**（enforcement: "block"），以防止 MUI v6→v7 的不相容問題。
 
-**[View Skill →](frontend-dev-guidelines/)**
+**[查看 Skill →](frontend-dev-guidelines/)**
 
 ---
 
 ### route-tester
-**Purpose:** Testing authenticated API routes with JWT cookie auth
+**用途：** 使用 JWT cookie 驗證測試需要身份驗證的 API routes
 
-**Files:** 1 main file (389 lines)
+**檔案：** 1 個主檔案（389 行）
 
-**Covers:**
-- JWT cookie-based authentication testing
-- test-auth-route.js script patterns
-- cURL with cookie authentication
-- Debugging auth issues
-- Testing POST/PUT/DELETE operations
+**涵蓋內容：**
+- 基於 JWT cookie 的身份驗證測試
+- test-auth-route.js 腳本模式
+- 使用 cookie 身份驗證的 cURL
+- 除錯身份驗證問題
+- 測試 POST/PUT/DELETE 操作
 
-**Use when:**
-- Testing API endpoints
-- Debugging authentication
-- Validating route functionality
+**使用時機：**
+- 測試 API endpoints
+- 除錯身份驗證
+- 驗證 route 功能
 
-**Customization:** ⚠️ Requires JWT cookie auth setup
+**客製化需求：** ⚠️ 需要設定 JWT cookie 身份驗證
 
-**Ask first:** "Do you use JWT cookie-based authentication?"
-- If YES: Copy and customize service URLs
-- If NO: Skip or adapt for your auth method
+**先確認：** 「你是否使用基於 JWT cookie 的身份驗證？」
+- 如果是：複製並自訂 service URLs
+- 如果否：略過或改用你的身份驗證方法
 
-**[View Skill →](route-tester/)**
+**[查看 Skill →](route-tester/)**
 
 ---
 
 ### error-tracking
-**Purpose:** Sentry error tracking and monitoring patterns
+**用途：** Sentry 錯誤追蹤與監控模式
 
-**Files:** 1 main file (~250 lines)
+**檔案：** 1 個主檔案（約 250 行）
 
-**Covers:**
-- Sentry v8 initialization
-- Error capture patterns
-- Breadcrumbs and user context
-- Performance monitoring
-- Integration with Express and React
+**涵蓋內容：**
+- Sentry v8 初始化
+- 錯誤捕獲模式
+- Breadcrumbs 與使用者 context
+- 效能監控
+- 與 Express 和 React 的整合
 
-**Use when:**
-- Setting up error tracking
-- Capturing exceptions
-- Adding error context
-- Debugging production issues
+**使用時機：**
+- 設定錯誤追蹤
+- 捕獲例外
+- 新增錯誤 context
+- 除錯正式環境問題
 
-**Customization:** ⚠️ Update `pathPatterns` for your backend
+**客製化需求：** ⚠️ 為你的後端更新 `pathPatterns`
 
-**[View Skill →](error-tracking/)**
+**[查看 Skill →](error-tracking/)**
 
 ---
 
-## How to Add a Skill to Your Project
+## 如何將 Skill 加入你的專案
 
-### Quick Integration
+### 快速整合
 
-**For Claude Code:**
+**給 Claude Code：**
 ```
-User: "Add the backend-dev-guidelines skill to my project"
+使用者：「將 backend-dev-guidelines skill 加入我的專案」
 
-Claude should:
-1. Ask about project structure
-2. Copy skill directory
-3. Update skill-rules.json with their paths
-4. Verify integration
+Claude 應該：
+1. 詢問專案結構
+2. 複製 skill 目錄
+3. 以他們的路徑更新 skill-rules.json
+4. 驗證整合
 ```
 
-See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md) for complete instructions.
+完整說明請參閱 [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)。
 
-### Manual Integration
+### 手動整合
 
-**Step 1: Copy the skill directory**
+**步驟 1：複製 skill 目錄**
 ```bash
-cp -r claude-code-infrastructure-showcase/.claude/skills/backend-dev-guidelines \\
+cp -r claude-code-infrastructure-showcase/.claude/skills/backend-dev-guidelines \
       your-project/.claude/skills/
 ```
 
-**Step 2: Update skill-rules.json**
+**步驟 2：更新 skill-rules.json**
 
-If you don't have one, create it:
+如果你還沒有這個檔案，請建立它：
 ```bash
-cp claude-code-infrastructure-showcase/.claude/skills/skill-rules.json \\
+cp claude-code-infrastructure-showcase/.claude/skills/skill-rules.json \
    your-project/.claude/skills/
 ```
 
-Then customize the `pathPatterns` for your project:
+接著為你的專案自訂 `pathPatterns`：
 ```json
 {
   "skills": {
@@ -213,23 +213,23 @@ Then customize the `pathPatterns` for your project:
 }
 ```
 
-**Step 3: Test**
-- Edit a file in your backend directory
-- The skill should activate automatically
+**步驟 3：測試**
+- 編輯後端目錄中的檔案
+- Skill 應該會自動啟動
 
 ---
 
-## skill-rules.json Configuration
+## skill-rules.json 配置
 
-### What It Does
+### 功能說明
 
-Defines when skills should activate based on:
-- **Keywords** in user prompts ("backend", "API", "route")
-- **Intent patterns** (regex matching user intent)
-- **File path patterns** (editing backend files)
-- **Content patterns** (code contains Prisma queries)
+定義 skills 應該在何時啟動，依據：
+- **關鍵字**：使用者提示中的關鍵字（"backend"、"API"、"route"）
+- **Intent patterns**：使用 regex 比對使用者意圖
+- **檔案路徑模式**：編輯後端檔案
+- **內容模式**：程式碼包含 Prisma 查詢
 
-### Configuration Format
+### 配置格式
 
 ```json
 {
@@ -249,32 +249,32 @@ Defines when skills should activate based on:
 }
 ```
 
-### Enforcement Levels
+### Enforcement 層級
 
-- **suggest**: Skill appears as suggestion, doesn't block
-- **block**: Must use skill before proceeding (guardrail)
+- **suggest**：Skill 以建議方式出現，不會阻擋
+- **block**：必須使用 skill 才能繼續（guardrail）
 
-**Use "block" for:**
-- Preventing breaking changes (MUI v6→v7)
-- Critical database operations
-- Security-sensitive code
+**使用 "block" 的時機：**
+- 防止破壞性變更（MUI v6→v7）
+- 關鍵的資料庫操作
+- 安全敏感的程式碼
 
-**Use "suggest" for:**
-- General best practices
-- Domain guidance
-- Code organization
+**使用 "suggest" 的時機：**
+- 一般最佳實務
+- 領域指引
+- 程式碼組織
 
 ---
 
-## Creating Your Own Skills
+## 建立你自己的 Skills
 
-See the **skill-developer** skill for complete guide on:
-- Skill YAML frontmatter structure
-- Resource file organization
-- Trigger pattern design
-- Testing skill activation
+完整指南請參閱 **skill-developer** skill：
+- Skill YAML frontmatter 結構
+- 資源檔案組織
+- Trigger pattern 設計
+- 測試 skill 啟動
 
-**Quick template:**
+**快速範本：**
 ```markdown
 ---
 name: my-skill
@@ -299,18 +299,18 @@ description: What this skill does
 
 ---
 
-## Troubleshooting
+## 疑難排解
 
-### Skill isn't activating
+### Skill 沒有啟動
 
-**Check:**
-1. Is skill directory in `.claude/skills/`?
-2. Is skill listed in `skill-rules.json`?
-3. Do `pathPatterns` match your files?
-4. Are hooks installed and working?
-5. Is settings.json configured correctly?
+**檢查項目：**
+1. Skill 目錄是否在 `.claude/skills/` 中？
+2. Skill 是否列在 `skill-rules.json` 中？
+3. `pathPatterns` 是否符合你的檔案？
+4. Hooks 是否已安裝且正常運作？
+5. settings.json 是否正確配置？
 
-**Debug:**
+**除錯：**
 ```bash
 # Check skill exists
 ls -la .claude/skills/
@@ -325,44 +325,44 @@ ls -la .claude/hooks/*.sh
 ./.claude/hooks/skill-activation-prompt.sh
 ```
 
-### Skill activates too often
+### Skill 啟動太頻繁
 
-Update skill-rules.json:
-- Make keywords more specific
-- Narrow `pathPatterns`
-- Increase specificity of `intentPatterns`
+更新 skill-rules.json：
+- 讓關鍵字更具體
+- 縮小 `pathPatterns` 範圍
+- 提高 `intentPatterns` 的具體性
 
-### Skill never activates
+### Skill 從不啟動
 
-Update skill-rules.json:
-- Add more keywords
-- Broaden `pathPatterns`
-- Add more `intentPatterns`
-
----
-
-## For Claude Code
-
-**When integrating a skill for a user:**
-
-1. **Read [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)** first
-2. Ask about their project structure
-3. Customize `pathPatterns` in skill-rules.json
-4. Verify the skill file has no hardcoded paths
-5. Test activation after integration
-
-**Common mistakes:**
-- Keeping example paths (blog-api/, frontend/)
-- Not asking about monorepo vs single-app
-- Copying skill-rules.json without customization
+更新 skill-rules.json：
+- 新增更多關鍵字
+- 擴大 `pathPatterns` 範圍
+- 新增更多 `intentPatterns`
 
 ---
 
-## Next Steps
+## 給 Claude Code
 
-1. **Start simple:** Add one skill that matches your work
-2. **Verify activation:** Edit a relevant file, skill should suggest
-3. **Add more:** Once first skill works, add others
-4. **Customize:** Adjust triggers based on your workflow
+**為使用者整合 skill 時：**
 
-**Questions?** See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md) for comprehensive integration instructions.
+1. **先閱讀 [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)**
+2. 詢問他們的專案結構
+3. 在 skill-rules.json 中自訂 `pathPatterns`
+4. 驗證 skill 檔案沒有寫死的路徑
+5. 整合後測試啟動
+
+**常見錯誤：**
+- 保留範例路徑（blog-api/、frontend/）
+- 沒有詢問是 monorepo 還是單一應用程式
+- 複製 skill-rules.json 時沒有客製化
+
+---
+
+## 下一步
+
+1. **從簡單開始：** 加入一個符合你工作的 skill
+2. **驗證啟動：** 編輯相關檔案，skill 應該會提示
+3. **再加更多：** 第一個 skill 運作後，再加入其他的
+4. **客製化：** 根據你的工作流程調整 triggers
+
+**有問題嗎？** 完整的整合說明請參閱 [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)。

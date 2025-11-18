@@ -1,21 +1,21 @@
-# Database Patterns - Prisma Best Practices
+# Database Patterns - Prisma 最佳實踐
 
-Complete guide to database access patterns using Prisma in backend microservices.
+在後端微服務中使用 Prisma 進行資料庫存取的完整指南。
 
-## Table of Contents
+## 目錄
 
-- [PrismaService Usage](#prismaservice-usage)
-- [Repository Pattern](#repository-pattern)
-- [Transaction Patterns](#transaction-patterns)
-- [Query Optimization](#query-optimization)
-- [N+1 Query Prevention](#n1-query-prevention)
-- [Error Handling](#error-handling)
+- [PrismaService 使用方式](#prismaservice-使用方式)
+- [Repository 模式](#repository-模式)
+- [Transaction 模式](#transaction-模式)
+- [查詢最佳化](#查詢最佳化)
+- [N+1 查詢預防](#n1-查詢預防)
+- [錯誤處理](#錯誤處理)
 
 ---
 
-## PrismaService Usage
+## PrismaService 使用方式
 
-### Basic Pattern
+### 基本模式
 
 ```typescript
 import { PrismaService } from '@project-lifecycle-portal/database';
@@ -24,7 +24,7 @@ import { PrismaService } from '@project-lifecycle-portal/database';
 const users = await PrismaService.main.user.findMany();
 ```
 
-### Check Availability
+### 檢查可用性
 
 ```typescript
 if (!PrismaService.isAvailable) {
@@ -36,21 +36,21 @@ const user = await PrismaService.main.user.findUnique({ where: { id } });
 
 ---
 
-## Repository Pattern
+## Repository 模式
 
-### Why Use Repositories
+### 為什麼要使用 Repository
 
-✅ **Use repositories when:**
-- Complex queries with joins/includes
-- Query used in multiple places
-- Need caching layer
-- Want to mock for testing
+✅ **在以下情況使用 repository：**
+- 包含 join/include 的複雜查詢
+- 查詢在多個地方使用
+- 需要快取層
+- 想要模擬測試
 
-❌ **Skip repositories for:**
-- Simple one-off queries
-- Prototyping (can refactor later)
+❌ **在以下情況可以跳過 repository：**
+- 簡單的一次性查詢
+- 原型開發階段（之後可以重構）
 
-### Repository Template
+### Repository 範本
 
 ```typescript
 export class UserRepository {
@@ -76,9 +76,9 @@ export class UserRepository {
 
 ---
 
-## Transaction Patterns
+## Transaction 模式
 
-### Simple Transaction
+### 簡單 Transaction
 
 ```typescript
 const result = await PrismaService.main.$transaction(async (tx) => {
@@ -88,7 +88,7 @@ const result = await PrismaService.main.$transaction(async (tx) => {
 });
 ```
 
-### Interactive Transaction
+### 互動式 Transaction
 
 ```typescript
 const result = await PrismaService.main.$transaction(
@@ -110,9 +110,9 @@ const result = await PrismaService.main.$transaction(
 
 ---
 
-## Query Optimization
+## 查詢最佳化
 
-### Use select to Limit Fields
+### 使用 select 限制欄位
 
 ```typescript
 // ❌ Fetches all fields
@@ -128,7 +128,7 @@ const users = await PrismaService.main.user.findMany({
 });
 ```
 
-### Use include Carefully
+### 謹慎使用 include
 
 ```typescript
 // ❌ Excessive includes
@@ -150,9 +150,9 @@ const user = await PrismaService.main.user.findUnique({
 
 ---
 
-## N+1 Query Prevention
+## N+1 查詢預防
 
-### Problem: N+1 Queries
+### 問題：N+1 查詢
 
 ```typescript
 // ❌ N+1 Query Problem
@@ -166,7 +166,7 @@ for (const user of users) {
 }
 ```
 
-### Solution: Use include or Batching
+### 解決方案：使用 include 或批次處理
 
 ```typescript
 // ✅ Single query with include
@@ -183,9 +183,9 @@ const profiles = await PrismaService.main.userProfile.findMany({
 
 ---
 
-## Error Handling
+## 錯誤處理
 
-### Prisma Error Types
+### Prisma 錯誤類型
 
 ```typescript
 import { Prisma } from '@prisma/client';
@@ -218,7 +218,7 @@ try {
 
 ---
 
-**Related Files:**
+**相關檔案：**
 - [SKILL.md](SKILL.md)
 - [services-and-repositories.md](services-and-repositories.md)
 - [async-and-errors.md](async-and-errors.md)

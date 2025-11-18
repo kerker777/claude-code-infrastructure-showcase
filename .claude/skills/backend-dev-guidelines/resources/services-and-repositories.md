@@ -1,60 +1,60 @@
-# Services and Repositories - Business Logic Layer
+# Services 與 Repositories - 業務邏輯層
 
-Complete guide to organizing business logic with services and data access with repositories.
+完整指南：使用 services 組織業務邏輯，以及使用 repositories 進行資料存取。
 
-## Table of Contents
+## 目錄
 
-- [Service Layer Overview](#service-layer-overview)
-- [Dependency Injection Pattern](#dependency-injection-pattern)
-- [Singleton Pattern](#singleton-pattern)
-- [Repository Pattern](#repository-pattern)
-- [Service Design Principles](#service-design-principles)
-- [Caching Strategies](#caching-strategies)
-- [Testing Services](#testing-services)
-
----
-
-## Service Layer Overview
-
-### Purpose of Services
-
-**Services contain business logic** - the 'what' and 'why' of your application:
-
-```
-Controller asks: "Should I do this?"
-Service answers: "Yes/No, here's why, and here's what happens"
-Repository executes: "Here's the data you requested"
-```
-
-**Services are responsible for:**
-- ✅ Business rules enforcement
-- ✅ Orchestrating multiple repositories
-- ✅ Transaction management
-- ✅ Complex calculations
-- ✅ External service integration
-- ✅ Business validations
-
-**Services should NOT:**
-- ❌ Know about HTTP (Request/Response)
-- ❌ Direct Prisma access (use repositories)
-- ❌ Handle route-specific logic
-- ❌ Format HTTP responses
+- [Service 層概述](#service-層概述)
+- [依賴注入模式](#依賴注入模式)
+- [Singleton 模式](#singleton-模式)
+- [Repository 模式](#repository-模式)
+- [Service 設計原則](#service-設計原則)
+- [快取策略](#快取策略)
+- [測試 Services](#測試-services)
 
 ---
 
-## Dependency Injection Pattern
+## Service 層概述
 
-### Why Dependency Injection?
+### Services 的用途
 
-**Benefits:**
-- Easy to test (inject mocks)
-- Clear dependencies
-- Flexible configuration
-- Promotes loose coupling
+**Services 包含業務邏輯** - 你的應用程式的「做什麼」和「為什麼」：
 
-### Excellent Example: NotificationService
+```
+Controller 問：「我應該這樣做嗎？」
+Service 回答：「可以/不可以，原因是這樣，接下來會發生這些事」
+Repository 執行：「這是你要求的資料」
+```
 
-**File:** `/blog-api/src/services/NotificationService.ts`
+**Services 負責：**
+- ✅ 強制執行業務規則
+- ✅ 協調多個 repositories
+- ✅ 交易管理
+- ✅ 複雜計算
+- ✅ 整合外部服務
+- ✅ 業務驗證
+
+**Services 不應該：**
+- ❌ 了解 HTTP（Request/Response）
+- ❌ 直接存取 Prisma（使用 repositories）
+- ❌ 處理路由特定的邏輯
+- ❌ 格式化 HTTP 回應
+
+---
+
+## 依賴注入模式
+
+### 為什麼要用依賴注入？
+
+**好處：**
+- 容易測試（注入 mocks）
+- 依賴關係清楚
+- 配置靈活
+- 促進鬆散耦合
+
+### 優秀範例：NotificationService
+
+**檔案：** `/blog-api/src/services/NotificationService.ts`
 
 ```typescript
 // Define dependencies interface for clarity
@@ -199,7 +199,7 @@ export class NotificationService {
 }
 ```
 
-**Usage in Controller:**
+**在 Controller 中使用：**
 
 ```typescript
 // Instantiate with dependencies
@@ -217,29 +217,29 @@ const notification = await notificationService.createNotification({
 });
 ```
 
-**Key Takeaways:**
-- Dependencies passed via constructor
-- Clear interface defines required dependencies
-- Easy to test (inject mocks)
-- Encapsulated caching logic
-- Business rules isolated from HTTP
+**重點整理：**
+- 依賴透過建構函式傳入
+- 清楚的介面定義所需的依賴
+- 容易測試（注入 mocks）
+- 快取邏輯封裝完整
+- 業務規則與 HTTP 隔離
 
 ---
 
-## Singleton Pattern
+## Singleton 模式
 
-### When to Use Singletons
+### 何時使用 Singletons
 
-**Use for:**
-- Services with expensive initialization
-- Services with shared state (caching)
-- Services accessed from many places
-- Permission services
-- Configuration services
+**適用於：**
+- 初始化成本高的 services
+- 具有共享狀態的 services（快取）
+- 從多處存取的 services
+- 權限 services
+- 配置 services
 
-### Example: PermissionService (Singleton)
+### 範例：PermissionService（Singleton）
 
-**File:** `/blog-api/src/services/permissionService.ts`
+**檔案：** `/blog-api/src/services/permissionService.ts`
 
 ```typescript
 import { PrismaClient } from '@prisma/client';
@@ -332,7 +332,7 @@ class PermissionService {
 export const permissionService = PermissionService.getInstance();
 ```
 
-**Usage:**
+**使用方式：**
 
 ```typescript
 import { permissionService } from '../services/permissionService';
@@ -347,30 +347,30 @@ if (!canComplete) {
 
 ---
 
-## Repository Pattern
+## Repository 模式
 
-### Purpose of Repositories
+### Repositories 的用途
 
-**Repositories abstract data access** - the 'how' of data operations:
+**Repositories 抽象化資料存取** - 資料操作的「如何做」：
 
 ```
-Service: "Get me all active users sorted by name"
-Repository: "Here's the Prisma query that does that"
+Service：「給我所有按名稱排序的活躍使用者」
+Repository：「這是能做到的 Prisma 查詢」
 ```
 
-**Repositories are responsible for:**
-- ✅ All Prisma operations
-- ✅ Query construction
-- ✅ Query optimization (select, include)
-- ✅ Database error handling
-- ✅ Caching database results
+**Repositories 負責：**
+- ✅ 所有 Prisma 操作
+- ✅ 查詢建構
+- ✅ 查詢優化（select、include）
+- ✅ 資料庫錯誤處理
+- ✅ 快取資料庫結果
 
-**Repositories should NOT:**
-- ❌ Contain business logic
-- ❌ Know about HTTP
-- ❌ Make decisions (that's service layer)
+**Repositories 不應該：**
+- ❌ 包含業務邏輯
+- ❌ 了解 HTTP
+- ❌ 做決策（那是 service 層的事）
 
-### Repository Template
+### Repository 模板
 
 ```typescript
 // repositories/UserRepository.ts
@@ -498,7 +498,7 @@ export class UserRepository {
 export const userRepository = new UserRepository();
 ```
 
-**Using Repository in Service:**
+**在 Service 中使用 Repository：**
 
 ```typescript
 // services/userService.ts
@@ -549,14 +549,14 @@ export class UserService {
 
 ---
 
-## Service Design Principles
+## Service 設計原則
 
-### 1. Single Responsibility
+### 1. 單一職責
 
-Each service should have ONE clear purpose:
+每個 service 應該有一個明確的用途：
 
 ```typescript
-// ✅ GOOD - Single responsibility
+// ✅ 好 - 單一職責
 class UserService {
     async createUser() {}
     async updateUser() {}
@@ -568,53 +568,53 @@ class EmailService {
     async sendBulkEmails() {}
 }
 
-// ❌ BAD - Too many responsibilities
+// ❌ 壞 - 太多職責
 class UserService {
     async createUser() {}
-    async sendWelcomeEmail() {}  // Should be EmailService
-    async logUserActivity() {}   // Should be AuditService
-    async processPayment() {}    // Should be PaymentService
+    async sendWelcomeEmail() {}  // 應該在 EmailService
+    async logUserActivity() {}   // 應該在 AuditService
+    async processPayment() {}    // 應該在 PaymentService
 }
 ```
 
-### 2. Clear Method Names
+### 2. 清楚的方法名稱
 
-Method names should describe WHAT they do:
+方法名稱應該描述它們做什麼：
 
 ```typescript
-// ✅ GOOD - Clear intent
+// ✅ 好 - 意圖清楚
 async createNotification()
 async getUserPreferences()
 async shouldBatchEmail()
 async routeNotification()
 
-// ❌ BAD - Vague or misleading
+// ❌ 壞 - 模糊或誤導
 async process()
 async handle()
 async doIt()
 async execute()
 ```
 
-### 3. Return Types
+### 3. 回傳型別
 
-Always use explicit return types:
+永遠使用明確的回傳型別：
 
 ```typescript
-// ✅ GOOD - Explicit types
+// ✅ 好 - 明確的型別
 async createUser(data: CreateUserDTO): Promise<User> {}
 async findUsers(): Promise<User[]> {}
 async deleteUser(id: string): Promise<void> {}
 
-// ❌ BAD - Implicit any
-async createUser(data) {}  // No types!
+// ❌ 壞 - 隱含的 any
+async createUser(data) {}  // 沒有型別！
 ```
 
-### 4. Error Handling
+### 4. 錯誤處理
 
-Services should throw meaningful errors:
+Services 應該拋出有意義的錯誤：
 
 ```typescript
-// ✅ GOOD - Meaningful errors
+// ✅ 好 - 有意義的錯誤
 if (!user) {
     throw new NotFoundError(`User not found: ${userId}`);
 }
@@ -623,29 +623,29 @@ if (emailExists) {
     throw new ConflictError('Email already exists');
 }
 
-// ❌ BAD - Generic errors
+// ❌ 壞 - 通用錯誤
 if (!user) {
-    throw new Error('Error');  // What error?
+    throw new Error('Error');  // 什麼錯誤？
 }
 ```
 
-### 5. Avoid God Services
+### 5. 避免萬能 Services
 
-Don't create services that do everything:
+不要建立什麼都做的 services：
 
 ```typescript
-// ❌ BAD - God service
+// ❌ 壞 - 萬能 service
 class WorkflowService {
     async startWorkflow() {}
     async completeStep() {}
     async assignRoles() {}
-    async sendNotifications() {}  // Should be NotificationService
-    async validatePermissions() {}  // Should be PermissionService
-    async logAuditTrail() {}  // Should be AuditService
-    // ... 50 more methods
+    async sendNotifications() {}  // 應該在 NotificationService
+    async validatePermissions() {}  // 應該在 PermissionService
+    async logAuditTrail() {}  // 應該在 AuditService
+    // ... 還有 50 個方法
 }
 
-// ✅ GOOD - Focused services
+// ✅ 好 - 專注的 services
 class WorkflowService {
     constructor(
         private notificationService: NotificationService,
@@ -665,9 +665,9 @@ class WorkflowService {
 
 ---
 
-## Caching Strategies
+## 快取策略
 
-### 1. In-Memory Caching
+### 1. 記憶體內快取
 
 ```typescript
 class UserService {
@@ -698,7 +698,7 @@ class UserService {
 }
 ```
 
-### 2. Cache Invalidation
+### 2. 快取失效
 
 ```typescript
 class UserService {
@@ -716,9 +716,9 @@ class UserService {
 
 ---
 
-## Testing Services
+## 測試 Services
 
-### Unit Tests
+### 單元測試
 
 ```typescript
 // tests/userService.test.ts
@@ -782,8 +782,8 @@ describe('UserService', () => {
 
 ---
 
-**Related Files:**
-- [SKILL.md](SKILL.md) - Main guide
-- [routing-and-controllers.md](routing-and-controllers.md) - Controllers that use services
-- [database-patterns.md](database-patterns.md) - Prisma and repository patterns
-- [complete-examples.md](complete-examples.md) - Full service/repository examples
+**相關檔案：**
+- [SKILL.md](SKILL.md) - 主要指南
+- [routing-and-controllers.md](routing-and-controllers.md) - 使用 services 的 Controllers
+- [database-patterns.md](database-patterns.md) - Prisma 與 repository 模式
+- [complete-examples.md](complete-examples.md) - 完整的 service/repository 範例

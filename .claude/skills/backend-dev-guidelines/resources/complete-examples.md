@@ -1,21 +1,21 @@
-# Complete Examples - Full Working Code
+# 完整範例 - 完整可執行程式碼
 
-Real-world examples showing complete implementation patterns.
+展示完整實作模式的實際範例。
 
-## Table of Contents
+## 目錄
 
-- [Complete Controller Example](#complete-controller-example)
-- [Complete Service with DI](#complete-service-with-di)
-- [Complete Route File](#complete-route-file)
-- [Complete Repository](#complete-repository)
-- [Refactoring Example: Bad to Good](#refactoring-example-bad-to-good)
-- [End-to-End Feature Example](#end-to-end-feature-example)
+- [完整的 Controller 範例](#完整的-controller-範例)
+- [完整的 Service 與依賴注入](#完整的-service-與依賴注入)
+- [完整的路由檔案](#完整的路由檔案)
+- [完整的 Repository](#完整的-repository)
+- [重構範例：從不良到良好](#重構範例從不良到良好)
+- [端到端功能範例](#端到端功能範例)
 
 ---
 
-## Complete Controller Example
+## 完整的 Controller 範例
 
-### UserController (Following All Best Practices)
+### UserController（遵循所有最佳實踐）
 
 ```typescript
 // controllers/UserController.ts
@@ -121,7 +121,7 @@ export class UserController extends BaseController {
 
 ---
 
-## Complete Service with DI
+## 完整的 Service 與依賴注入
 
 ### UserService
 
@@ -202,7 +202,7 @@ export class UserService {
 
 ---
 
-## Complete Route File
+## 完整的路由檔案
 
 ### userRoutes.ts
 
@@ -256,7 +256,7 @@ export default router;
 
 ---
 
-## Complete Repository
+## 完整的 Repository
 
 ### UserRepository
 
@@ -318,9 +318,9 @@ export class UserRepository {
 
 ---
 
-## Refactoring Example: Bad to Good
+## 重構範例：從不良到良好
 
-### BEFORE: Business Logic in Routes ❌
+### 重構前：商業邏輯寫在路由中 ❌
 
 ```typescript
 // routes/postRoutes.ts (BAD - 200+ lines)
@@ -358,9 +358,9 @@ router.post('/posts', async (req, res) => {
 });
 ```
 
-### AFTER: Clean Separation ✅
+### 重構後：清晰的分離 ✅
 
-**1. Clean Route:**
+**1. 清晰的路由：**
 ```typescript
 // routes/postRoutes.ts
 import { PostController } from '../controllers/PostController';
@@ -368,7 +368,7 @@ import { PostController } from '../controllers/PostController';
 const router = Router();
 const controller = new PostController();
 
-// ✅ CLEAN: 8 lines total!
+// ✅ CLEAN: 總共只有 8 行！
 router.post('/',
     SSOMiddlewareClient.verifyLoginStatus,
     auditMiddleware,
@@ -378,7 +378,7 @@ router.post('/',
 export default router;
 ```
 
-**2. Controller:**
+**2. Controller：**
 ```typescript
 // controllers/PostController.ts
 export class PostController extends BaseController {
@@ -408,7 +408,7 @@ export class PostController extends BaseController {
 }
 ```
 
-**3. Service:**
+**3. Service：**
 ```typescript
 // services/postService.ts
 export class PostService {
@@ -452,19 +452,19 @@ export class PostService {
 }
 ```
 
-**Result:**
-- Route: 8 lines (was 200+)
-- Controller: 25 lines
-- Service: 40 lines
-- **Testable, maintainable, reusable!**
+**結果：**
+- 路由：8 行（原本超過 200 行）
+- Controller：25 行
+- Service：40 行
+- **可測試、可維護、可重用！**
 
 ---
 
-## End-to-End Feature Example
+## 端到端功能範例
 
-### Complete User Management Feature
+### 完整的使用者管理功能
 
-**1. Types:**
+**1. 型別定義：**
 ```typescript
 // types/user.types.ts
 export interface User {
@@ -488,7 +488,7 @@ export interface UpdateUserDTO {
 }
 ```
 
-**2. Validators:**
+**2. 驗證器：**
 ```typescript
 // validators/userSchemas.ts
 import { z } from 'zod';
@@ -507,7 +507,7 @@ export const updateUserSchema = z.object({
 });
 ```
 
-**3. Repository:**
+**3. Repository：**
 ```typescript
 // repositories/UserRepository.ts
 export class UserRepository {
@@ -527,7 +527,7 @@ export class UserRepository {
 }
 ```
 
-**4. Service:**
+**4. Service：**
 ```typescript
 // services/userService.ts
 export class UserService {
@@ -557,7 +557,7 @@ export class UserService {
 }
 ```
 
-**5. Controller:**
+**5. Controller：**
 ```typescript
 // controllers/UserController.ts
 export class UserController extends BaseController {
@@ -580,7 +580,7 @@ export class UserController extends BaseController {
 }
 ```
 
-**6. Routes:**
+**6. 路由：**
 ```typescript
 // routes/userRoutes.ts
 const router = Router();
@@ -594,7 +594,7 @@ router.post('/',
 export default router;
 ```
 
-**7. Register in app.ts:**
+**7. 在 app.ts 中註冊：**
 ```typescript
 // app.ts
 import userRoutes from './routes/userRoutes';
@@ -602,36 +602,36 @@ import userRoutes from './routes/userRoutes';
 app.use('/api/users', userRoutes);
 ```
 
-**Complete Request Flow:**
+**完整的請求流程：**
 ```
 POST /api/users
   ↓
-userRoutes matches /
+userRoutes 匹配到 /
   ↓
-SSOMiddleware authenticates
+SSOMiddleware 進行身份驗證
   ↓
-controller.createUser called
+呼叫 controller.createUser
   ↓
-Validates with Zod
+使用 Zod 進行驗證
   ↓
-userService.create called
+呼叫 userService.create
   ↓
-Checks business rules
+檢查商業規則
   ↓
-userRepository.create called
+呼叫 userRepository.create
   ↓
-Prisma creates user
+Prisma 建立使用者
   ↓
-Returns up the chain
+逐層往上回傳
   ↓
-Controller formats response
+Controller 格式化回應
   ↓
-200/201 sent to client
+回傳 200/201 給客戶端
 ```
 
 ---
 
-**Related Files:**
+**相關檔案：**
 - [SKILL.md](SKILL.md)
 - [routing-and-controllers.md](routing-and-controllers.md)
 - [services-and-repositories.md](services-and-repositories.md)

@@ -1,78 +1,78 @@
-# Configuration Management - UnifiedConfig Pattern
+# 配置管理 - UnifiedConfig 模式
 
-Complete guide to managing configuration in backend microservices.
+後端微服務配置管理的完整指南。
 
-## Table of Contents
+## 目錄
 
-- [UnifiedConfig Overview](#unifiedconfig-overview)
-- [NEVER Use process.env Directly](#never-use-processenv-directly)
-- [Configuration Structure](#configuration-structure)
-- [Environment-Specific Configs](#environment-specific-configs)
-- [Secrets Management](#secrets-management)
-- [Migration Guide](#migration-guide)
-
----
-
-## UnifiedConfig Overview
-
-### Why UnifiedConfig?
-
-**Problems with process.env:**
-- ❌ No type safety
-- ❌ No validation
-- ❌ Hard to test
-- ❌ Scattered throughout code
-- ❌ No default values
-- ❌ Runtime errors for typos
-
-**Benefits of unifiedConfig:**
-- ✅ Type-safe configuration
-- ✅ Single source of truth
-- ✅ Validated at startup
-- ✅ Easy to test with mocks
-- ✅ Clear structure
-- ✅ Fallback to environment variables
+- [UnifiedConfig 概述](#unifiedconfig-概述)
+- [絕對不要直接使用 process.env](#絕對不要直接使用-processenv)
+- [配置結構](#配置結構)
+- [環境特定配置](#環境特定配置)
+- [密鑰管理](#密鑰管理)
+- [遷移指南](#遷移指南)
 
 ---
 
-## NEVER Use process.env Directly
+## UnifiedConfig 概述
 
-### The Rule
+### 為什麼使用 UnifiedConfig？
+
+**process.env 的問題：**
+- ❌ 沒有型別安全
+- ❌ 沒有驗證
+- ❌ 難以測試
+- ❌ 散落在程式碼各處
+- ❌ 沒有預設值
+- ❌ 拼寫錯誤會導致執行期錯誤
+
+**unifiedConfig 的優點：**
+- ✅ 型別安全的配置
+- ✅ 單一真實來源
+- ✅ 啟動時驗證
+- ✅ 易於使用 mock 測試
+- ✅ 清晰的結構
+- ✅ 可回退到環境變數
+
+---
+
+## 絕對不要直接使用 process.env
+
+### 規則
 
 ```typescript
-// ❌ NEVER DO THIS
+// ❌ 絕對不要這樣做
 const timeout = parseInt(process.env.TIMEOUT_MS || '5000');
 const dbHost = process.env.DB_HOST || 'localhost';
 
-// ✅ ALWAYS DO THIS
+// ✅ 永遠這樣做
 import { config } from './config/unifiedConfig';
 const timeout = config.timeouts.default;
 const dbHost = config.database.host;
 ```
 
-### Why This Matters
+### 為什麼這很重要
 
-**Example of problems:**
+**問題範例：**
 ```typescript
-// Typo in environment variable name
-const host = process.env.DB_HSOT; // undefined! No error!
+// 環境變數名稱拼錯
+const host = process.env.DB_HSOT; // undefined！沒有錯誤！
 
-// Type safety
-const port = process.env.PORT; // string! Need parseInt
-const timeout = parseInt(process.env.TIMEOUT); // NaN if not set!
+// 型別安全
+const port = process.env.PORT; // string！需要 parseInt
+const timeout = parseInt(process.env.TIMEOUT); // 如果沒設定會是 NaN！
 ```
 
-**With unifiedConfig:**
+**使用 unifiedConfig：**
 ```typescript
-const port = config.server.port; // number, guaranteed
-const timeout = config.timeouts.default; // number, with fallback
+const port = config.server.port; // number，保證有值
+const timeout = config.timeouts.default; // number，有備用值
 ```
 
 ---
 
-## Configuration Structure
+## 配置結構
 
-### UnifiedConfig Interface
+### UnifiedConfig 介面
 
 ```typescript
 export interface UnifiedConfig {
@@ -109,13 +109,13 @@ export interface UnifiedConfig {
         environment: string;
         tracesSampleRate: number;
     };
-    // ... more sections
+    // ... 更多區塊
 }
 ```
 
-### Implementation Pattern
+### 實作模式
 
-**File:** `/blog-api/src/config/unifiedConfig.ts`
+**檔案：** `/blog-api/src/config/unifiedConfig.ts`
 
 ```typescript
 import * as fs from 'fs';
@@ -137,27 +137,27 @@ export const config: UnifiedConfig = {
         port: parseInt(iniConfig.server?.port || process.env.PORT || '3002'),
         sessionSecret: iniConfig.server?.sessionSecret || process.env.SESSION_SECRET || 'dev-secret',
     },
-    // ... more configuration
+    // ... 更多配置
 };
 
-// Validate critical config
+// 驗證關鍵配置
 if (!config.tokens.jwt) {
     throw new Error('JWT secret not configured!');
 }
 ```
 
-**Key Points:**
-- Read from config.ini first
-- Fallback to process.env
-- Default values for development
-- Validation at startup
-- Type-safe access
+**重點：**
+- 優先從 config.ini 讀取
+- 回退到 process.env
+- 開發環境的預設值
+- 啟動時驗證
+- 型別安全的存取
 
 ---
 
-## Environment-Specific Configs
+## 環境特定配置
 
-### config.ini Structure
+### config.ini 結構
 
 ```ini
 [database]
@@ -188,25 +188,25 @@ environment = development
 tracesSampleRate = 0.1
 ```
 
-### Environment Overrides
+### 環境變數覆寫
 
 ```bash
-# .env file (optional overrides)
+# .env 檔案（選擇性覆寫）
 DB_HOST=production-db.example.com
 DB_PASSWORD=secure-password
 PORT=80
 ```
 
-**Precedence:**
-1. config.ini (highest priority)
-2. process.env variables
-3. Hard-coded defaults (lowest priority)
+**優先順序：**
+1. config.ini（最高優先）
+2. process.env 變數
+3. 硬編碼預設值（最低優先）
 
 ---
 
-## Secrets Management
+## 密鑰管理
 
-### DO NOT Commit Secrets
+### 不要提交密鑰
 
 ```gitignore
 # .gitignore
@@ -217,11 +217,11 @@ sentry.ini
 *.key
 ```
 
-### Use Environment Variables in Production
+### 在正式環境使用環境變數
 
 ```typescript
-// Development: config.ini
-// Production: Environment variables
+// 開發環境：config.ini
+// 正式環境：環境變數
 
 export const config: UnifiedConfig = {
     database: {
@@ -235,25 +235,25 @@ export const config: UnifiedConfig = {
 
 ---
 
-## Migration Guide
+## 遷移指南
 
-### Find All process.env Usage
+### 找出所有 process.env 使用
 
 ```bash
 grep -r "process.env" blog-api/src/ --include="*.ts" | wc -l
 ```
 
-### Migration Example
+### 遷移範例
 
-**Before:**
+**之前：**
 ```typescript
-// Scattered throughout code
+// 散落在程式碼各處
 const timeout = parseInt(process.env.OPENID_HTTP_TIMEOUT_MS || '15000');
 const keycloakUrl = process.env.KEYCLOAK_BASE_URL;
 const jwtSecret = process.env.JWT_SECRET;
 ```
 
-**After:**
+**之後：**
 ```typescript
 import { config } from './config/unifiedConfig';
 
@@ -262,14 +262,14 @@ const keycloakUrl = config.keycloak.baseUrl;
 const jwtSecret = config.tokens.jwt;
 ```
 
-**Benefits:**
-- Type-safe
-- Centralized
-- Easy to test
-- Validated at startup
+**優點：**
+- 型別安全
+- 集中管理
+- 易於測試
+- 啟動時驗證
 
 ---
 
-**Related Files:**
+**相關檔案：**
 - [SKILL.md](SKILL.md)
 - [testing-guide.md](testing-guide.md)

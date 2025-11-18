@@ -1,36 +1,36 @@
-# Routing and Controllers - Best Practices
+# 路由與控制器 - 最佳實踐
 
-Complete guide to clean route definitions and controller patterns.
+完整指南：乾淨的路由定義與控制器模式。
 
-## Table of Contents
+## 目錄
 
-- [Routes: Routing Only](#routes-routing-only)
-- [BaseController Pattern](#basecontroller-pattern)
-- [Good Examples](#good-examples)
-- [Anti-Patterns](#anti-patterns)
-- [Refactoring Guide](#refactoring-guide)
-- [Error Handling](#error-handling)
-- [HTTP Status Codes](#http-status-codes)
+- [路由：只做路由](#路由只做路由)
+- [BaseController 模式](#basecontroller-模式)
+- [良好範例](#良好範例)
+- [反模式](#反模式)
+- [重構指南](#重構指南)
+- [錯誤處理](#錯誤處理)
+- [HTTP 狀態碼](#http-狀態碼)
 
 ---
 
-## Routes: Routing Only
+## 路由：只做路由
 
-### The Golden Rule
+### 黃金法則
 
-**Routes should ONLY:**
-- ✅ Define route paths
-- ✅ Register middleware
-- ✅ Delegate to controllers
+**路由應該只做：**
+- ✅ 定義路由路徑
+- ✅ 註冊中介層
+- ✅ 委派給控制器
 
-**Routes should NEVER:**
-- ❌ Contain business logic
-- ❌ Access database directly
-- ❌ Implement validation logic (use Zod + controller)
-- ❌ Format complex responses
-- ❌ Handle complex error scenarios
+**路由絕對不應該：**
+- ❌ 包含業務邏輯
+- ❌ 直接存取資料庫
+- ❌ 實作驗證邏輯（使用 Zod + 控制器）
+- ❌ 格式化複雜的回應
+- ❌ 處理複雜的錯誤情境
 
-### Clean Route Pattern
+### 乾淨的路由模式
 
 ```typescript
 // routes/userRoutes.ts
@@ -42,7 +42,7 @@ import { auditMiddleware } from '../middleware/auditMiddleware';
 const router = Router();
 const controller = new UserController();
 
-// ✅ CLEAN: Route definition only
+// ✅ 乾淨：只有路由定義
 router.get('/:id',
     SSOMiddlewareClient.verifyLoginStatus,
     auditMiddleware,
@@ -64,29 +64,29 @@ router.put('/:id',
 export default router;
 ```
 
-**Key Points:**
-- Each route: method, path, middleware chain, controller delegation
-- No try-catch needed (controller handles errors)
-- Clean, readable, maintainable
-- Easy to see all endpoints at a glance
+**重點：**
+- 每個路由：HTTP 方法、路徑、中介層鏈、控制器委派
+- 不需要 try-catch（控制器會處理錯誤）
+- 乾淨、可讀、易維護
+- 一眼就能看到所有端點
 
 ---
 
-## BaseController Pattern
+## BaseController 模式
 
-### Why BaseController?
+### 為什麼要用 BaseController？
 
-**Benefits:**
-- Consistent error handling across all controllers
-- Automatic Sentry integration
-- Standardized response formats
-- Reusable helper methods
-- Performance tracking utilities
-- Logging and breadcrumb helpers
+**優點：**
+- 所有控制器的錯誤處理方式一致
+- 自動整合 Sentry
+- 標準化的回應格式
+- 可重用的輔助方法
+- 效能追蹤工具
+- 日誌記錄與麵包屑輔助工具
 
-### BaseController Pattern (Template)
+### BaseController 模式（範本）
 
-**File:** `/email/src/controllers/BaseController.ts`
+**檔案：** `/email/src/controllers/BaseController.ts`
 
 ```typescript
 import * as Sentry from '@sentry/node';
@@ -94,7 +94,7 @@ import { Response } from 'express';
 
 export abstract class BaseController {
     /**
-     * Handle errors with Sentry integration
+     * 處理錯誤並整合 Sentry
      */
     protected handleError(
         error: unknown,
@@ -127,7 +127,7 @@ export abstract class BaseController {
     }
 
     /**
-     * Handle success responses
+     * 處理成功回應
      */
     protected handleSuccess<T>(
         res: Response,
@@ -143,7 +143,7 @@ export abstract class BaseController {
     }
 
     /**
-     * Performance tracking wrapper
+     * 效能追蹤包裝器
      */
     protected async withTransaction<T>(
         name: string,
@@ -157,7 +157,7 @@ export abstract class BaseController {
     }
 
     /**
-     * Validate required fields
+     * 驗證必填欄位
      */
     protected validateRequest(
         required: string[],
@@ -186,7 +186,7 @@ export abstract class BaseController {
     }
 
     /**
-     * Logging helpers
+     * 日誌記錄輔助工具
      */
     protected logInfo(message: string, context?: Record<string, any>): void {
         Sentry.addBreadcrumb({
@@ -206,7 +206,7 @@ export abstract class BaseController {
     }
 
     /**
-     * Add Sentry breadcrumb
+     * 新增 Sentry 麵包屑
      */
     protected addBreadcrumb(
         message: string,
@@ -217,7 +217,7 @@ export abstract class BaseController {
     }
 
     /**
-     * Capture custom metric
+     * 擷取自訂指標
      */
     protected captureMetric(name: string, value: number, unit: string): void {
         Sentry.metrics.gauge(name, value, { unit });
@@ -225,7 +225,7 @@ export abstract class BaseController {
 }
 ```
 
-### Using BaseController
+### 使用 BaseController
 
 ```typescript
 // controllers/UserController.ts
@@ -265,10 +265,10 @@ export class UserController extends BaseController {
 
     async createUser(req: Request, res: Response): Promise<void> {
         try {
-            // Validate input
+            // 驗證輸入
             const validated = createUserSchema.parse(req.body);
 
-            // Track performance
+            // 追蹤效能
             const user = await this.withTransaction(
                 'user.create',
                 'db.query',
@@ -293,20 +293,20 @@ export class UserController extends BaseController {
 }
 ```
 
-**Benefits:**
-- Consistent error handling
-- Automatic Sentry integration
-- Performance tracking
-- Clean, readable code
-- Easy to test
+**優點：**
+- 一致的錯誤處理
+- 自動整合 Sentry
+- 效能追蹤
+- 乾淨、可讀的程式碼
+- 容易測試
 
 ---
 
-## Good Examples
+## 良好範例
 
-### Example 1: Email Notification Routes (Excellent ✅)
+### 範例 1：Email 通知路由（優秀 ✅）
 
-**File:** `/email/src/routes/notificationRoutes.ts`
+**檔案：** `/email/src/routes/notificationRoutes.ts`
 
 ```typescript
 import { Router } from 'express';
@@ -316,7 +316,7 @@ import { SSOMiddlewareClient } from '../middleware/SSOMiddleware';
 const router = Router();
 const controller = new NotificationController();
 
-// ✅ EXCELLENT: Clean delegation
+// ✅ 優秀：乾淨的委派
 router.get('/',
     SSOMiddlewareClient.verifyLoginStatus,
     async (req, res) => controller.getNotifications(req, res)
@@ -335,15 +335,15 @@ router.put('/:id/read',
 export default router;
 ```
 
-**What Makes This Excellent:**
-- Zero business logic in routes
-- Clear middleware chain
-- Consistent pattern
-- Easy to understand
+**為什麼這是優秀的：**
+- 路由中沒有業務邏輯
+- 清晰的中介層鏈
+- 一致的模式
+- 容易理解
 
-### Example 2: Proxy Routes with Validation (Good ✅)
+### 範例 2：帶驗證的 Proxy 路由（良好 ✅）
 
-**File:** `/form/src/routes/proxyRoutes.ts`
+**檔案：** `/form/src/routes/proxyRoutes.ts`
 
 ```typescript
 import { z } from 'zod';
@@ -369,40 +369,40 @@ router.post('/',
 );
 ```
 
-**What Makes This Good:**
-- Zod validation
-- Delegates to service
-- Proper HTTP status codes
-- Error handling
+**為什麼這是良好的：**
+- Zod 驗證
+- 委派給服務層
+- 適當的 HTTP 狀態碼
+- 錯誤處理
 
-**Could Be Better:**
-- Move validation to controller
-- Use BaseController
+**可以更好的地方：**
+- 將驗證移到控制器
+- 使用 BaseController
 
 ---
 
-## Anti-Patterns
+## 反模式
 
-### Anti-Pattern 1: Business Logic in Routes (Bad ❌)
+### 反模式 1：路由中的業務邏輯（糟糕 ❌）
 
-**File:** `/form/src/routes/responseRoutes.ts` (actual production code)
+**檔案：** `/form/src/routes/responseRoutes.ts`（實際的 production 程式碼）
 
 ```typescript
-// ❌ ANTI-PATTERN: 200+ lines of business logic in route
+// ❌ 反模式：路由中有 200+ 行業務邏輯
 router.post('/:formID/submit', async (req: Request, res: Response) => {
     try {
         const username = res.locals.claims.preferred_username;
         const responses = req.body.responses;
         const stepInstanceId = req.body.stepInstanceId;
 
-        // ❌ Permission checking in route
+        // ❌ 路由中的權限檢查
         const userId = await userProfileService.getProfileByEmail(username).then(p => p.id);
         const canComplete = await permissionService.canCompleteStep(userId, stepInstanceId);
         if (!canComplete) {
             return res.status(403).json({ error: 'No permission' });
         }
 
-        // ❌ Workflow logic in route
+        // ❌ 路由中的工作流程邏輯
         const { createWorkflowEngine, CompleteStepCommand } = require('../workflow/core/WorkflowEngineV3');
         const engine = await createWorkflowEngine();
         const command = new CompleteStepCommand(
@@ -413,7 +413,7 @@ router.post('/:formID/submit', async (req: Request, res: Response) => {
         );
         const events = await engine.executeCommand(command);
 
-        // ❌ Impersonation handling in route
+        // ❌ 路由中的模擬處理
         if (res.locals.isImpersonating) {
             impersonationContextStore.storeContext(stepInstanceId, {
                 originalUserId: res.locals.originalUserId,
@@ -421,16 +421,16 @@ router.post('/:formID/submit', async (req: Request, res: Response) => {
             });
         }
 
-        // ❌ Response processing in route
+        // ❌ 路由中的回應處理
         const post = await PrismaService.main.post.findUnique({
             where: { id: postData.id },
             include: { comments: true },
         });
 
-        // ❌ Permission check in route
+        // ❌ 路由中的權限檢查
         await checkPostPermissions(post, userId);
 
-        // ... 100+ more lines of business logic
+        // ... 還有 100+ 行業務邏輯
 
         res.json({ success: true, data: result });
     } catch (e) {
@@ -439,17 +439,17 @@ router.post('/:formID/submit', async (req: Request, res: Response) => {
 });
 ```
 
-**Why This Is Terrible:**
-- 200+ lines of business logic
-- Hard to test (requires HTTP mocking)
-- Hard to reuse (tied to route)
-- Mixed responsibilities
-- Difficult to debug
-- Performance tracking difficult
+**為什麼這很糟糕：**
+- 200+ 行的業務邏輯
+- 難以測試（需要 HTTP mocking）
+- 難以重用（綁定在路由上）
+- 職責混雜
+- 難以除錯
+- 效能追蹤困難
 
-### How to Refactor (Step-by-Step)
+### 如何重構（逐步說明）
 
-**Step 1: Create Controller**
+**步驟 1：建立控制器**
 
 ```typescript
 // controllers/PostController.ts
@@ -480,7 +480,7 @@ export class PostController extends BaseController {
 }
 ```
 
-**Step 2: Create Service**
+**步驟 2：建立服務**
 
 ```typescript
 // services/postService.ts
@@ -489,23 +489,23 @@ export class PostService {
         data: CreatePostDTO,
         userId: string
     ): Promise<PostResult> {
-        // Permission check
+        // 權限檢查
         const canCreate = await permissionService.canCreatePost(userId);
         if (!canCreate) {
             throw new ForbiddenError('No permission to create post');
         }
 
-        // Execute workflow
+        // 執行工作流程
         const engine = await createWorkflowEngine();
         const command = new CompleteStepCommand(/* ... */);
         const events = await engine.executeCommand(command);
 
-        // Handle impersonation if needed
+        // 如需要，處理模擬
         if (context.isImpersonating) {
             await this.handleImpersonation(data.stepInstanceId, context);
         }
 
-        // Synchronize roles
+        // 同步角色
         await this.synchronizeRoles(events, userId);
 
         return { events, success: true };
@@ -519,12 +519,12 @@ export class PostService {
     }
 
     private async synchronizeRoles(events: WorkflowEvent[], userId: string) {
-        // Role synchronization logic
+        // 角色同步邏輯
     }
 }
 ```
 
-**Step 3: Update Route**
+**步驟 3：更新路由**
 
 ```typescript
 // routes/postRoutes.ts
@@ -533,7 +533,7 @@ import { PostController } from '../controllers/PostController';
 const router = Router();
 const controller = new PostController();
 
-// ✅ CLEAN: Just routing
+// ✅ 乾淨：只做路由
 router.post('/',
     SSOMiddlewareClient.verifyLoginStatus,
     auditMiddleware,
@@ -541,17 +541,17 @@ router.post('/',
 );
 ```
 
-**Result:**
-- Route: 8 lines (was 200+)
-- Controller: 25 lines (request handling)
-- Service: 50 lines (business logic)
-- Testable, reusable, maintainable!
+**結果：**
+- 路由：8 行（原本 200+ 行）
+- 控制器：25 行（請求處理）
+- 服務：50 行（業務邏輯）
+- 可測試、可重用、易維護！
 
 ---
 
-## Error Handling
+## 錯誤處理
 
-### Controller Error Handling
+### 控制器的錯誤處理
 
 ```typescript
 async createUser(req: Request, res: Response): Promise<void> {
@@ -559,16 +559,16 @@ async createUser(req: Request, res: Response): Promise<void> {
         const result = await this.userService.create(req.body);
         this.handleSuccess(res, result, 'User created', 201);
     } catch (error) {
-        // BaseController.handleError automatically:
-        // - Captures to Sentry with context
-        // - Sets appropriate status code
-        // - Returns formatted error response
+        // BaseController.handleError 會自動：
+        // - 擷取到 Sentry 並附上 context
+        // - 設定適當的狀態碼
+        // - 回傳格式化的錯誤回應
         this.handleError(error, res, 'createUser');
     }
 }
 ```
 
-### Custom Error Status Codes
+### 自訂錯誤狀態碼
 
 ```typescript
 async getUser(req: Request, res: Response): Promise<void> {
@@ -576,12 +576,12 @@ async getUser(req: Request, res: Response): Promise<void> {
         const user = await this.userService.findById(req.params.id);
 
         if (!user) {
-            // Custom 404 status
+            // 自訂 404 狀態
             return this.handleError(
                 new Error('User not found'),
                 res,
                 'getUser',
-                404  // Custom status code
+                404  // 自訂狀態碼
             );
         }
 
@@ -592,7 +592,7 @@ async getUser(req: Request, res: Response): Promise<void> {
 }
 ```
 
-### Validation Errors
+### 驗證錯誤
 
 ```typescript
 async createUser(req: Request, res: Response): Promise<void> {
@@ -601,7 +601,7 @@ async createUser(req: Request, res: Response): Promise<void> {
         const user = await this.userService.create(validated);
         this.handleSuccess(res, user, 'User created', 201);
     } catch (error) {
-        // Zod errors get 400 status
+        // Zod 錯誤會使用 400 狀態碼
         if (error instanceof z.ZodError) {
             return this.handleError(error, res, 'createUser', 400);
         }
@@ -612,81 +612,81 @@ async createUser(req: Request, res: Response): Promise<void> {
 
 ---
 
-## HTTP Status Codes
+## HTTP 狀態碼
 
-### Standard Codes
+### 標準狀態碼
 
-| Code | Use Case | Example |
+| 代碼 | 使用場景 | 範例 |
 |------|----------|---------|
-| 200 | Success (GET, PUT) | User retrieved, Updated |
-| 201 | Created (POST) | User created |
-| 204 | No Content (DELETE) | User deleted |
-| 400 | Bad Request | Invalid input data |
-| 401 | Unauthorized | Not authenticated |
-| 403 | Forbidden | No permission |
-| 404 | Not Found | Resource doesn't exist |
-| 409 | Conflict | Duplicate resource |
-| 422 | Unprocessable Entity | Validation failed |
-| 500 | Internal Server Error | Unexpected error |
+| 200 | 成功（GET、PUT） | 使用者已取得、已更新 |
+| 201 | 已建立（POST） | 使用者已建立 |
+| 204 | 無內容（DELETE） | 使用者已刪除 |
+| 400 | 錯誤請求 | 無效的輸入資料 |
+| 401 | 未授權 | 未驗證 |
+| 403 | 禁止 | 無權限 |
+| 404 | 找不到 | 資源不存在 |
+| 409 | 衝突 | 資源重複 |
+| 422 | 無法處理的實體 | 驗證失敗 |
+| 500 | 內部伺服器錯誤 | 未預期的錯誤 |
 
-### Usage Examples
+### 使用範例
 
 ```typescript
-// 200 - Success (default)
+// 200 - 成功（預設）
 this.handleSuccess(res, user);
 
-// 201 - Created
+// 201 - 已建立
 this.handleSuccess(res, user, 'Created', 201);
 
-// 400 - Bad Request
+// 400 - 錯誤請求
 this.handleError(error, res, 'operation', 400);
 
-// 404 - Not Found
+// 404 - 找不到
 this.handleError(new Error('Not found'), res, 'operation', 404);
 
-// 403 - Forbidden
+// 403 - 禁止
 this.handleError(new ForbiddenError('No permission'), res, 'operation', 403);
 ```
 
 ---
 
-## Refactoring Guide
+## 重構指南
 
-### Identify Routes Needing Refactoring
+### 識別需要重構的路由
 
-**Red Flags:**
-- Route file > 100 lines
-- Multiple try-catch blocks in one route
-- Direct database access (Prisma calls)
-- Complex business logic (if statements, loops)
-- Permission checks in routes
+**警訊：**
+- 路由檔案 > 100 行
+- 一個路由中有多個 try-catch 區塊
+- 直接存取資料庫（Prisma 呼叫）
+- 複雜的業務邏輯（if 陳述式、迴圈）
+- 路由中的權限檢查
 
-**Check your routes:**
+**檢查你的路由：**
 ```bash
-# Find large route files
+# 找出大型路由檔案
 wc -l form/src/routes/*.ts | sort -n
 
-# Find routes with Prisma usage
+# 找出使用 Prisma 的路由
 grep -r "PrismaService" form/src/routes/
 ```
 
-### Refactoring Process
+### 重構流程
 
-**1. Extract to Controller:**
+**1. 提取到控制器：**
 ```typescript
-// Before: Route with logic
+// 之前：路由中有邏輯
 router.post('/action', async (req, res) => {
     try {
-        // 50 lines of logic
+        // 50 行邏輯
     } catch (e) {
         handler.handleException(res, e);
     }
 });
 
-// After: Clean route
+// 之後：乾淨的路由
 router.post('/action', (req, res) => controller.performAction(req, res));
 
-// New controller method
+// 新的控制器方法
 async performAction(req: Request, res: Response): Promise<void> {
     try {
         const result = await this.service.performAction(req.body);
@@ -697,9 +697,9 @@ async performAction(req: Request, res: Response): Promise<void> {
 }
 ```
 
-**2. Extract to Service:**
+**2. 提取到服務：**
 ```typescript
-// Controller stays thin
+// 控制器保持精簡
 async performAction(req: Request, res: Response): Promise<void> {
     try {
         const validated = actionSchema.parse(req.body);
@@ -710,33 +710,33 @@ async performAction(req: Request, res: Response): Promise<void> {
     }
 }
 
-// Service contains business logic
+// 服務包含業務邏輯
 export class ActionService {
     async execute(data: ActionDTO): Promise<Result> {
-        // All business logic here
-        // Permission checks
-        // Database operations
-        // Complex transformations
+        // 所有業務邏輯都在這裡
+        // 權限檢查
+        // 資料庫操作
+        // 複雜的轉換
         return result;
     }
 }
 ```
 
-**3. Add Repository (if needed):**
+**3. 新增倉儲（如需要）：**
 ```typescript
-// Service calls repository
+// 服務呼叫倉儲
 export class ActionService {
     constructor(private actionRepository: ActionRepository) {}
 
     async execute(data: ActionDTO): Promise<Result> {
-        // Business logic
+        // 業務邏輯
         const entity = await this.actionRepository.findById(data.id);
-        // More logic
+        // 更多邏輯
         return await this.actionRepository.update(data.id, changes);
     }
 }
 
-// Repository handles data access
+// 倉儲處理資料存取
 export class ActionRepository {
     async findById(id: number): Promise<Entity | null> {
         return PrismaService.main.entity.findUnique({ where: { id } });
@@ -750,7 +750,7 @@ export class ActionRepository {
 
 ---
 
-**Related Files:**
-- [SKILL.md](SKILL.md) - Main guide
-- [services-and-repositories.md](services-and-repositories.md) - Service layer details
-- [complete-examples.md](complete-examples.md) - Full refactoring examples
+**相關檔案：**
+- [SKILL.md](SKILL.md) - 主要指南
+- [services-and-repositories.md](services-and-repositories.md) - 服務層細節
+- [complete-examples.md](complete-examples.md) - 完整重構範例
