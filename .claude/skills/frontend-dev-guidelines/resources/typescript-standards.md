@@ -1,14 +1,14 @@
-# TypeScript Standards
+# TypeScript 標準
 
-TypeScript best practices for type safety and maintainability in React frontend code.
+React 前端程式碼中的 TypeScript 最佳實踐，確保型別安全與可維護性。
 
 ---
 
-## Strict Mode
+## 嚴格模式
 
-### Configuration
+### 設定
 
-TypeScript strict mode is **enabled** in the project:
+專案已**啟用** TypeScript 嚴格模式：
 
 ```json
 // tsconfig.json
@@ -21,24 +21,24 @@ TypeScript strict mode is **enabled** in the project:
 }
 ```
 
-**This means:**
-- No implicit `any` types
-- Null/undefined must be handled explicitly
-- Type safety enforced
+**這代表：**
+- 不允許隱式的 `any` 型別
+- 必須明確處理 null/undefined
+- 強制執行型別安全
 
 ---
 
-## No `any` Type
+## 禁用 `any` 型別
 
-### The Rule
+### 規則
 
 ```typescript
-// ❌ NEVER use any
+// ❌ 絕不使用 any
 function handleData(data: any) {
     return data.something;
 }
 
-// ✅ Use specific types
+// ✅ 使用明確的型別
 interface MyData {
     something: string;
 }
@@ -47,7 +47,7 @@ function handleData(data: MyData) {
     return data.something;
 }
 
-// ✅ Or use unknown for truly unknown data
+// ✅ 或針對真正未知的資料使用 unknown
 function handleUnknown(data: unknown) {
     if (typeof data === 'object' && data !== null && 'something' in data) {
         return (data as MyData).something;
@@ -55,19 +55,19 @@ function handleUnknown(data: unknown) {
 }
 ```
 
-**If you truly don't know the type:**
-- Use `unknown` (forces type checking)
-- Use type guards to narrow
-- Document why type is unknown
+**如果你真的不知道型別：**
+- 使用 `unknown`（強制進行型別檢查）
+- 使用型別守衛來縮小範圍
+- 記錄為何型別未知
 
 ---
 
-## Explicit Return Types
+## 明確的回傳型別
 
-### Function Return Types
+### 函式回傳型別
 
 ```typescript
-// ✅ CORRECT - Explicit return type
+// ✅ 正確 - 明確的回傳型別
 function getUser(id: number): Promise<User> {
     return apiClient.get(`/users/${id}`);
 }
@@ -76,21 +76,21 @@ function calculateTotal(items: Item[]): number {
     return items.reduce((sum, item) => sum + item.price, 0);
 }
 
-// ❌ AVOID - Implicit return type (less clear)
+// ❌ 避免 - 隱式回傳型別（較不清楚）
 function getUser(id: number) {
     return apiClient.get(`/users/${id}`);
 }
 ```
 
-### Component Return Types
+### 元件回傳型別
 
 ```typescript
-// React.FC already provides return type (ReactElement)
+// React.FC 已提供回傳型別 (ReactElement)
 export const MyComponent: React.FC<Props> = ({ prop }) => {
     return <div>{prop}</div>;
 };
 
-// For custom hooks
+// 針對自訂 Hook
 function useMyData(id: number): { data: Data; isLoading: boolean } {
     const [data, setData] = useState<Data | null>(null);
     const [isLoading, setIsLoading] = useState(true);
@@ -101,67 +101,67 @@ function useMyData(id: number): { data: Data; isLoading: boolean } {
 
 ---
 
-## Type Imports
+## 型別匯入
 
-### Use 'type' Keyword
+### 使用 'type' 關鍵字
 
 ```typescript
-// ✅ CORRECT - Explicitly mark as type import
+// ✅ 正確 - 明確標記為型別匯入
 import type { User } from '~types/user';
 import type { Post } from '~types/post';
 import type { SxProps, Theme } from '@mui/material';
 
-// ❌ AVOID - Mixed value and type imports
-import { User } from '~types/user';  // Unclear if type or value
+// ❌ 避免 - 混合值與型別的匯入
+import { User } from '~types/user';  // 不清楚是型別還是值
 ```
 
-**Benefits:**
-- Clearly separates types from values
-- Better tree-shaking
-- Prevents circular dependencies
-- TypeScript compiler optimization
+**好處：**
+- 清楚區分型別與值
+- 更好的 tree-shaking
+- 避免循環依賴
+- TypeScript 編譯器最佳化
 
 ---
 
-## Component Prop Interfaces
+## 元件 Prop 介面
 
-### Interface Pattern
+### 介面模式
 
 ```typescript
 /**
- * Props for MyComponent
+ * MyComponent 的 Props
  */
 interface MyComponentProps {
-    /** The user ID to display */
+    /** 要顯示的使用者 ID */
     userId: number;
 
-    /** Optional callback when action completes */
+    /** 動作完成時的選用回呼函式 */
     onComplete?: () => void;
 
-    /** Display mode for the component */
+    /** 元件的顯示模式 */
     mode?: 'view' | 'edit';
 
-    /** Additional CSS classes */
+    /** 額外的 CSS 類別 */
     className?: string;
 }
 
 export const MyComponent: React.FC<MyComponentProps> = ({
     userId,
     onComplete,
-    mode = 'view',  // Default value
+    mode = 'view',  // 預設值
     className,
 }) => {
     return <div>...</div>;
 };
 ```
 
-**Key Points:**
-- Separate interface for props
-- JSDoc comments for each prop
-- Optional props use `?`
-- Provide defaults in destructuring
+**重點：**
+- 為 props 建立獨立的介面
+- 為每個 prop 加上 JSDoc 註解
+- 選用的 props 使用 `?`
+- 在解構時提供預設值
 
-### Props with Children
+### 包含 Children 的 Props
 
 ```typescript
 interface ContainerProps {
@@ -169,7 +169,7 @@ interface ContainerProps {
     title: string;
 }
 
-// React.FC automatically includes children type, but be explicit
+// React.FC 會自動包含 children 型別，但明確定義更好
 export const Container: React.FC<ContainerProps> = ({ children, title }) => {
     return (
         <div>
@@ -182,64 +182,64 @@ export const Container: React.FC<ContainerProps> = ({ children, title }) => {
 
 ---
 
-## Utility Types
+## 實用型別
 
 ### Partial<T>
 
 ```typescript
-// Make all properties optional
+// 將所有屬性設為選用
 type UserUpdate = Partial<User>;
 
 function updateUser(id: number, updates: Partial<User>) {
-    // updates can have any subset of User properties
+    // updates 可以包含 User 屬性的任意子集
 }
 ```
 
 ### Pick<T, K>
 
 ```typescript
-// Select specific properties
+// 選擇特定的屬性
 type UserPreview = Pick<User, 'id' | 'name' | 'email'>;
 
 const preview: UserPreview = {
     id: 1,
     name: 'John',
     email: 'john@example.com',
-    // Other User properties not allowed
+    // 不允許其他 User 屬性
 };
 ```
 
 ### Omit<T, K>
 
 ```typescript
-// Exclude specific properties
+// 排除特定的屬性
 type UserWithoutPassword = Omit<User, 'password' | 'passwordHash'>;
 
 const publicUser: UserWithoutPassword = {
     id: 1,
     name: 'John',
     email: 'john@example.com',
-    // password and passwordHash not allowed
+    // 不允許 password 和 passwordHash
 };
 ```
 
 ### Required<T>
 
 ```typescript
-// Make all properties required
-type RequiredConfig = Required<Config>;  // All optional props become required
+// 將所有屬性設為必填
+type RequiredConfig = Required<Config>;  // 所有選用的 props 變為必填
 ```
 
 ### Record<K, V>
 
 ```typescript
-// Type-safe object/map
+// 型別安全的物件/映射
 const userMap: Record<string, User> = {
     'user1': { id: 1, name: 'John' },
     'user2': { id: 2, name: 'Jane' },
 };
 
-// For styles
+// 用於樣式
 import type { SxProps, Theme } from '@mui/material';
 
 const styles: Record<string, SxProps<Theme>> = {
@@ -250,9 +250,9 @@ const styles: Record<string, SxProps<Theme>> = {
 
 ---
 
-## Type Guards
+## 型別守衛
 
-### Basic Type Guards
+### 基本型別守衛
 
 ```typescript
 function isUser(data: unknown): data is User {
@@ -264,13 +264,13 @@ function isUser(data: unknown): data is User {
     );
 }
 
-// Usage
+// 使用方式
 if (isUser(response)) {
-    console.log(response.name);  // TypeScript knows it's User
+    console.log(response.name);  // TypeScript 知道這是 User
 }
 ```
 
-### Discriminated Unions
+### 可辨識聯合型別
 
 ```typescript
 type LoadingState =
@@ -280,13 +280,13 @@ type LoadingState =
     | { status: 'error'; error: Error };
 
 function Component({ state }: { state: LoadingState }) {
-    // TypeScript narrows type based on status
+    // TypeScript 根據 status 縮小型別範圍
     if (state.status === 'success') {
-        return <Display data={state.data} />;  // data available here
+        return <Display data={state.data} />;  // 這裡可以使用 data
     }
 
     if (state.status === 'error') {
-        return <Error error={state.error} />;  // error available here
+        return <Error error={state.error} />;  // 這裡可以使用 error
     }
 
     return <Loading />;
@@ -295,21 +295,21 @@ function Component({ state }: { state: LoadingState }) {
 
 ---
 
-## Generic Types
+## 泛型
 
-### Generic Functions
+### 泛型函式
 
 ```typescript
 function getById<T>(items: T[], id: number): T | undefined {
     return items.find(item => (item as any).id === id);
 }
 
-// Usage with type inference
+// 使用型別推論
 const users: User[] = [...];
-const user = getById(users, 123);  // Type: User | undefined
+const user = getById(users, 123);  // 型別：User | undefined
 ```
 
-### Generic Components
+### 泛型元件
 
 ```typescript
 interface ListProps<T> {
@@ -327,7 +327,7 @@ export function List<T>({ items, renderItem }: ListProps<T>): React.ReactElement
     );
 }
 
-// Usage
+// 使用方式
 <List<User>
     items={users}
     renderItem={(user) => <UserCard user={user} />}
@@ -336,83 +336,83 @@ export function List<T>({ items, renderItem }: ListProps<T>): React.ReactElement
 
 ---
 
-## Type Assertions (Use Sparingly)
+## 型別斷言（謹慎使用）
 
-### When to Use
+### 何時使用
 
 ```typescript
-// ✅ OK - When you know more than TypeScript
+// ✅ 可接受 - 當你比 TypeScript 更了解狀況時
 const element = document.getElementById('my-element') as HTMLInputElement;
 const value = element.value;
 
-// ✅ OK - API response that you've validated
+// ✅ 可接受 - 已驗證的 API 回應
 const response = await api.getData();
-const user = response.data as User;  // You know the shape
+const user = response.data as User;  // 你知道資料結構
 ```
 
-### When NOT to Use
+### 何時不使用
 
 ```typescript
-// ❌ AVOID - Circumventing type safety
-const data = getData() as any;  // WRONG - defeats TypeScript
+// ❌ 避免 - 規避型別安全
+const data = getData() as any;  // 錯誤 - 破壞了 TypeScript 的用途
 
-// ❌ AVOID - Unsafe assertion
-const value = unknownValue as string;  // Might not actually be string
+// ❌ 避免 - 不安全的斷言
+const value = unknownValue as string;  // 實際上可能不是 string
 ```
 
 ---
 
-## Null/Undefined Handling
+## Null/Undefined 處理
 
-### Optional Chaining
+### 可選鏈
 
 ```typescript
-// ✅ CORRECT
+// ✅ 正確
 const name = user?.profile?.name;
 
-// Equivalent to:
+// 等同於：
 const name = user && user.profile && user.profile.name;
 ```
 
-### Nullish Coalescing
+### 空值合併
 
 ```typescript
-// ✅ CORRECT
+// ✅ 正確
 const displayName = user?.name ?? 'Anonymous';
 
-// Only uses default if null or undefined
-// (Different from || which triggers on '', 0, false)
+// 只在 null 或 undefined 時使用預設值
+// （與 || 不同，|| 會在 '', 0, false 時觸發）
 ```
 
-### Non-Null Assertion (Use Carefully)
+### 非空斷言（謹慎使用）
 
 ```typescript
-// ✅ OK - When you're certain value exists
+// ✅ 可接受 - 當你確定值存在時
 const data = queryClient.getQueryData<Data>(['data'])!;
 
-// ⚠️ CAREFUL - Only use when you KNOW it's not null
-// Better to check explicitly:
+// ⚠️ 小心 - 只在你確定不是 null 時使用
+// 更好的做法是明確檢查：
 const data = queryClient.getQueryData<Data>(['data']);
 if (data) {
-    // Use data
+    // 使用 data
 }
 ```
 
 ---
 
-## Summary
+## 總結
 
-**TypeScript Checklist:**
-- ✅ Strict mode enabled
-- ✅ No `any` type (use `unknown` if needed)
-- ✅ Explicit return types on functions
-- ✅ Use `import type` for type imports
-- ✅ JSDoc comments on prop interfaces
-- ✅ Utility types (Partial, Pick, Omit, Required, Record)
-- ✅ Type guards for narrowing
-- ✅ Optional chaining and nullish coalescing
-- ❌ Avoid type assertions unless necessary
+**TypeScript 檢查清單：**
+- ✅ 啟用嚴格模式
+- ✅ 禁用 `any` 型別（需要時使用 `unknown`）
+- ✅ 函式使用明確的回傳型別
+- ✅ 型別匯入使用 `import type`
+- ✅ Prop 介面加上 JSDoc 註解
+- ✅ 實用型別（Partial、Pick、Omit、Required、Record）
+- ✅ 使用型別守衛來縮小範圍
+- ✅ 可選鏈與空值合併
+- ❌ 除非必要，避免使用型別斷言
 
-**See Also:**
-- [component-patterns.md](component-patterns.md) - Component typing
-- [data-fetching.md](data-fetching.md) - API typing
+**另請參閱：**
+- [component-patterns.md](component-patterns.md) - 元件型別定義
+- [data-fetching.md](data-fetching.md) - API 型別定義

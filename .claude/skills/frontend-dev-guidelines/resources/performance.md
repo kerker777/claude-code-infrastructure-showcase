@@ -1,12 +1,12 @@
-# Performance Optimization
+# 效能優化
 
-Patterns for optimizing React component performance, preventing unnecessary re-renders, and avoiding memory leaks.
+用於優化 React 元件效能、避免不必要的重新渲染，以及預防記憶體洩漏的模式。
 
 ---
 
-## Memoization Patterns
+## Memoization 模式
 
-### useMemo for Expensive Computations
+### 使用 useMemo 處理昂貴的運算
 
 ```typescript
 import { useMemo } from 'react';
@@ -15,12 +15,12 @@ export const DataDisplay: React.FC<{ items: Item[], searchTerm: string }> = ({
     items,
     searchTerm,
 }) => {
-    // ❌ AVOID - Runs on every render
+    // ❌ 避免 - 每次渲染都會執行
     const filteredItems = items
         .filter(item => item.name.includes(searchTerm))
         .sort((a, b) => a.name.localeCompare(b.name));
 
-    // ✅ CORRECT - Memoized, only recalculates when dependencies change
+    // ✅ 正確 - 記憶化，只在依賴項改變時重新計算
     const filteredItems = useMemo(() => {
         return items
             .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
@@ -31,67 +31,67 @@ export const DataDisplay: React.FC<{ items: Item[], searchTerm: string }> = ({
 };
 ```
 
-**When to use useMemo:**
-- Filtering/sorting large arrays
-- Complex calculations
-- Transforming data structures
-- Expensive computations (loops, recursion)
+**何時使用 useMemo：**
+- 過濾/排序大型陣列
+- 複雜的計算
+- 轉換資料結構
+- 昂貴的運算（迴圈、遞迴）
 
-**When NOT to use useMemo:**
-- Simple string concatenation
-- Basic arithmetic
-- Premature optimization (profile first!)
+**何時不要使用 useMemo：**
+- 簡單的字串串接
+- 基本的算術運算
+- 過早優化（先做效能分析！）
 
 ---
 
-## useCallback for Event Handlers
+## 使用 useCallback 處理事件處理器
 
-### The Problem
+### 問題所在
 
 ```typescript
-// ❌ AVOID - Creates new function on every render
+// ❌ 避免 - 每次渲染都建立新函式
 export const Parent: React.FC = () => {
     const handleClick = (id: string) => {
         console.log('Clicked:', id);
     };
 
-    // Child re-renders every time Parent renders
-    // because handleClick is a new function reference each time
+    // Child 每次 Parent 渲染時都會重新渲染
+    // 因為 handleClick 每次都是新的函式參考
     return <Child onClick={handleClick} />;
 };
 ```
 
-### The Solution
+### 解決方案
 
 ```typescript
 import { useCallback } from 'react';
 
 export const Parent: React.FC = () => {
-    // ✅ CORRECT - Stable function reference
+    // ✅ 正確 - 穩定的函式參考
     const handleClick = useCallback((id: string) => {
         console.log('Clicked:', id);
-    }, []); // Empty deps = function never changes
+    }, []); // 空依賴 = 函式永不改變
 
-    // Child only re-renders when props actually change
+    // Child 只在 props 真正改變時才重新渲染
     return <Child onClick={handleClick} />;
 };
 ```
 
-**When to use useCallback:**
-- Functions passed as props to children
-- Functions used as dependencies in useEffect
-- Functions passed to memoized components
-- Event handlers in lists
+**何時使用 useCallback：**
+- 傳遞給子元件的函式
+- 在 useEffect 中作為依賴項的函式
+- 傳遞給記憶化元件的函式
+- 列表中的事件處理器
 
-**When NOT to use useCallback:**
-- Event handlers not passed to children
-- Simple inline handlers: `onClick={() => doSomething()}`
+**何時不要使用 useCallback：**
+- 不傳遞給子元件的事件處理器
+- 簡單的內聯處理器：`onClick={() => doSomething()}`
 
 ---
 
-## React.memo for Component Memoization
+## 使用 React.memo 進行元件記憶化
 
-### Basic Usage
+### 基本用法
 
 ```typescript
 import React from 'react';
@@ -101,32 +101,32 @@ interface ExpensiveComponentProps {
     onAction: () => void;
 }
 
-// ✅ Wrap expensive components in React.memo
+// ✅ 用 React.memo 包裹昂貴的元件
 export const ExpensiveComponent = React.memo<ExpensiveComponentProps>(
     function ExpensiveComponent({ data, onAction }) {
-        // Complex rendering logic
+        // 複雜的渲染邏輯
         return <ComplexVisualization data={data} />;
     }
 );
 ```
 
-**When to use React.memo:**
-- Component renders frequently
-- Component has expensive rendering
-- Props don't change often
-- Component is a list item
-- DataGrid cells/renderers
+**何時使用 React.memo：**
+- 元件頻繁渲染
+- 元件渲染成本高
+- Props 不常改變
+- 元件是列表項目
+- DataGrid 的儲存格/渲染器
 
-**When NOT to use React.memo:**
-- Props change frequently anyway
-- Rendering is already fast
-- Premature optimization
+**何時不要使用 React.memo：**
+- Props 本來就經常改變
+- 渲染已經很快
+- 過早優化
 
 ---
 
-## Debounced Search
+## 防抖搜尋
 
-### Using use-debounce Hook
+### 使用 use-debounce Hook
 
 ```typescript
 import { useState } from 'react';
@@ -136,10 +136,10 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 export const SearchComponent: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Debounce for 300ms
+    // 防抖 300ms
     const [debouncedSearchTerm] = useDebounce(searchTerm, 300);
 
-    // Query uses debounced value
+    // 查詢使用防抖後的值
     const { data } = useSuspenseQuery({
         queryKey: ['search', debouncedSearchTerm],
         queryFn: () => api.search(debouncedSearchTerm),
@@ -156,16 +156,16 @@ export const SearchComponent: React.FC = () => {
 };
 ```
 
-**Optimal Debounce Timing:**
-- **300-500ms**: Search/filtering
-- **1000ms**: Auto-save
-- **100-200ms**: Real-time validation
+**最佳防抖時機：**
+- **300-500ms**：搜尋/過濾
+- **1000ms**：自動儲存
+- **100-200ms**：即時驗證
 
 ---
 
-## Memory Leak Prevention
+## 預防記憶體洩漏
 
-### Cleanup Timeouts/Intervals
+### 清理 Timeout/Interval
 
 ```typescript
 import { useEffect, useState } from 'react';
@@ -174,24 +174,24 @@ export const MyComponent: React.FC = () => {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
-        // ✅ CORRECT - Cleanup interval
+        // ✅ 正確 - 清理 interval
         const intervalId = setInterval(() => {
             setCount(c => c + 1);
         }, 1000);
 
         return () => {
-            clearInterval(intervalId);  // Cleanup!
+            clearInterval(intervalId);  // 清理！
         };
     }, []);
 
     useEffect(() => {
-        // ✅ CORRECT - Cleanup timeout
+        // ✅ 正確 - 清理 timeout
         const timeoutId = setTimeout(() => {
             console.log('Delayed action');
         }, 5000);
 
         return () => {
-            clearTimeout(timeoutId);  // Cleanup!
+            clearTimeout(timeoutId);  // 清理！
         };
     }, []);
 
@@ -199,7 +199,7 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-### Cleanup Event Listeners
+### 清理事件監聽器
 
 ```typescript
 useEffect(() => {
@@ -210,12 +210,12 @@ useEffect(() => {
     window.addEventListener('resize', handleResize);
 
     return () => {
-        window.removeEventListener('resize', handleResize);  // Cleanup!
+        window.removeEventListener('resize', handleResize);  // 清理！
     };
 }, []);
 ```
 
-### Abort Controllers for Fetch
+### 使用 Abort Controller 處理 Fetch
 
 ```typescript
 useEffect(() => {
@@ -231,18 +231,18 @@ useEffect(() => {
         });
 
     return () => {
-        abortController.abort();  // Cleanup!
+        abortController.abort();  // 清理！
     };
 }, []);
 ```
 
-**Note**: With TanStack Query, this is handled automatically.
+**注意**：使用 TanStack Query 時，這會自動處理。
 
 ---
 
-## Form Performance
+## 表單效能
 
-### Watch Specific Fields (Not All)
+### 監聽特定欄位（不是全部）
 
 ```typescript
 import { useForm } from 'react-hook-form';
@@ -250,14 +250,14 @@ import { useForm } from 'react-hook-form';
 export const MyForm: React.FC = () => {
     const { register, watch, handleSubmit } = useForm();
 
-    // ❌ AVOID - Watches all fields, re-renders on any change
+    // ❌ 避免 - 監聽所有欄位，任何改變都會重新渲染
     const formValues = watch();
 
-    // ✅ CORRECT - Watch only what you need
+    // ✅ 正確 - 只監聽需要的欄位
     const username = watch('username');
     const email = watch('email');
 
-    // Or multiple specific fields
+    // 或監聽多個特定欄位
     const [username, email] = watch(['username', 'email']);
 
     return (
@@ -266,7 +266,7 @@ export const MyForm: React.FC = () => {
             <input {...register('email')} />
             <input {...register('password')} />
 
-            {/* Only re-renders when username/email change */}
+            {/* 只在 username/email 改變時重新渲染 */}
             <p>Username: {username}, Email: {email}</p>
         </form>
     );
@@ -275,27 +275,27 @@ export const MyForm: React.FC = () => {
 
 ---
 
-## List Rendering Optimization
+## 列表渲染優化
 
-### Key Prop Usage
+### Key Prop 的使用
 
 ```typescript
-// ✅ CORRECT - Stable unique keys
+// ✅ 正確 - 穩定且唯一的 key
 {items.map(item => (
     <ListItem key={item.id}>
         {item.name}
     </ListItem>
 ))}
 
-// ❌ AVOID - Index as key (unstable if list changes)
+// ❌ 避免 - 使用 index 作為 key（列表改變時不穩定）
 {items.map((item, index) => (
-    <ListItem key={index}>  // WRONG if list reorders
+    <ListItem key={index}>  // 列表重新排序時會有問題
         {item.name}
     </ListItem>
 ))}
 ```
 
-### Memoized List Items
+### 記憶化列表項目
 
 ```typescript
 const ListItem = React.memo<ListItemProps>(({ item, onAction }) => {
@@ -327,31 +327,31 @@ export const List: React.FC<{ items: Item[] }> = ({ items }) => {
 
 ---
 
-## Preventing Component Re-initialization
+## 避免元件重新初始化
 
-### The Problem
+### 問題所在
 
 ```typescript
-// ❌ AVOID - Component recreated on every render
+// ❌ 避免 - 每次渲染都重新建立元件
 export const Parent: React.FC = () => {
-    // New component definition each render!
+    // 每次渲染都建立新的元件定義！
     const ChildComponent = () => <div>Child</div>;
 
-    return <ChildComponent />;  // Unmounts and remounts every render
+    return <ChildComponent />;  // 每次渲染都會卸載和重新掛載
 };
 ```
 
-### The Solution
+### 解決方案
 
 ```typescript
-// ✅ CORRECT - Define outside or use useMemo
+// ✅ 正確 - 定義在外部或使用 useMemo
 const ChildComponent: React.FC = () => <div>Child</div>;
 
 export const Parent: React.FC = () => {
-    return <ChildComponent />;  // Stable component
+    return <ChildComponent />;  // 穩定的元件
 };
 
-// ✅ OR if dynamic, use useMemo
+// ✅ 或者如果是動態的，使用 useMemo
 export const Parent: React.FC<{ config: Config }> = ({ config }) => {
     const DynamicComponent = useMemo(() => {
         return () => <div>{config.title}</div>;
@@ -363,44 +363,44 @@ export const Parent: React.FC<{ config: Config }> = ({ config }) => {
 
 ---
 
-## Lazy Loading Heavy Dependencies
+## 延遲載入大型相依套件
 
-### Code Splitting
+### 程式碼分割
 
 ```typescript
-// ❌ AVOID - Import heavy libraries at top level
-import jsPDF from 'jspdf';  // Large library loaded immediately
-import * as XLSX from 'xlsx';  // Large library loaded immediately
+// ❌ 避免 - 在最上層匯入大型函式庫
+import jsPDF from 'jspdf';  // 大型函式庫立即載入
+import * as XLSX from 'xlsx';  // 大型函式庫立即載入
 
-// ✅ CORRECT - Dynamic import when needed
+// ✅ 正確 - 需要時才動態匯入
 const handleExportPDF = async () => {
     const { jsPDF } = await import('jspdf');
     const doc = new jsPDF();
-    // Use it
+    // 使用它
 };
 
 const handleExportExcel = async () => {
     const XLSX = await import('xlsx');
-    // Use it
+    // 使用它
 };
 ```
 
 ---
 
-## Summary
+## 總結
 
-**Performance Checklist:**
-- ✅ `useMemo` for expensive computations (filter, sort, map)
-- ✅ `useCallback` for functions passed to children
-- ✅ `React.memo` for expensive components
-- ✅ Debounce search/filter (300-500ms)
-- ✅ Cleanup timeouts/intervals in useEffect
-- ✅ Watch specific form fields (not all)
-- ✅ Stable keys in lists
-- ✅ Lazy load heavy libraries
-- ✅ Code splitting with React.lazy
+**效能檢查清單：**
+- ✅ `useMemo` 用於昂貴的運算（filter、sort、map）
+- ✅ `useCallback` 用於傳遞給子元件的函式
+- ✅ `React.memo` 用於昂貴的元件
+- ✅ 對搜尋/過濾進行防抖（300-500ms）
+- ✅ 在 useEffect 中清理 timeout/interval
+- ✅ 監聽特定表單欄位（不是全部）
+- ✅ 在列表中使用穩定的 key
+- ✅ 延遲載入大型函式庫
+- ✅ 使用 React.lazy 進行程式碼分割
 
-**See Also:**
-- [component-patterns.md](component-patterns.md) - Lazy loading
-- [data-fetching.md](data-fetching.md) - TanStack Query optimization
-- [complete-examples.md](complete-examples.md) - Performance patterns in context
+**另請參考：**
+- [component-patterns.md](component-patterns.md) - 延遲載入
+- [data-fetching.md](data-fetching.md) - TanStack Query 優化
+- [complete-examples.md](complete-examples.md) - 情境中的效能模式

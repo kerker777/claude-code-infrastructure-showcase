@@ -1,20 +1,20 @@
-# Component Patterns
+# 元件模式
 
-Modern React component architecture for the application emphasizing type safety, lazy loading, and Suspense boundaries.
+現代 React 元件架構，強調型別安全、延遲載入與 Suspense 邊界。
 
 ---
 
-## React.FC Pattern (PREFERRED)
+## React.FC 模式（建議使用）
 
-### Why React.FC
+### 為什麼使用 React.FC
 
-All components use the `React.FC<Props>` pattern for:
-- Explicit type safety for props
-- Consistent component signatures
-- Clear prop interface documentation
-- Better IDE autocomplete
+所有元件都使用 `React.FC<Props>` 模式，原因如下：
+- 明確的 props 型別安全
+- 一致的元件簽名
+- 清楚的 prop 介面文件
+- 更好的 IDE 自動完成
 
-### Basic Pattern
+### 基本模式
 
 ```typescript
 import React from 'react';
@@ -37,25 +37,25 @@ export const MyComponent: React.FC<MyComponentProps> = ({ userId, onAction }) =>
 export default MyComponent;
 ```
 
-**Key Points:**
-- Props interface defined separately with JSDoc comments
-- `React.FC<Props>` provides type safety
-- Destructure props in parameters
-- Default export at bottom
+**重點：**
+- Props 介面單獨定義，並加上 JSDoc 註解
+- `React.FC<Props>` 提供型別安全
+- 在參數中解構 props
+- 在底部放預設匯出
 
 ---
 
-## Lazy Loading Pattern
+## 延遲載入模式
 
-### When to Lazy Load
+### 何時使用延遲載入
 
-Lazy load components that are:
-- Heavy (DataGrid, charts, rich text editors)
-- Route-level components
-- Modal/dialog content (not shown initially)
-- Below-the-fold content
+延遲載入適用於以下元件：
+- 重量級元件（DataGrid、圖表、富文本編輯器）
+- 路由層級元件
+- Modal/對話框內容（初始不顯示）
+- 首屏以下的內容
 
-### How to Lazy Load
+### 如何延遲載入
 
 ```typescript
 import React from 'react';
@@ -73,7 +73,7 @@ const MyComponent = React.lazy(() =>
 );
 ```
 
-**Example from PostTable.tsx:**
+**PostTable.tsx 範例：**
 
 ```typescript
 /**
@@ -102,33 +102,33 @@ export default PostTable;
 
 ---
 
-## Suspense Boundaries
+## Suspense 邊界
 
-### SuspenseLoader Component
+### SuspenseLoader 元件
 
-**Import:**
+**引入方式：**
 ```typescript
 import { SuspenseLoader } from '~components/SuspenseLoader';
 // Or
 import { SuspenseLoader } from '@/components/SuspenseLoader';
 ```
 
-**Usage:**
+**使用方式：**
 ```typescript
 <SuspenseLoader>
     <LazyLoadedComponent />
 </SuspenseLoader>
 ```
 
-**What it does:**
-- Shows loading indicator while lazy component loads
-- Smooth fade-in animation
-- Consistent loading experience
-- Prevents layout shift
+**功能說明：**
+- 在延遲載入元件載入時顯示載入指示器
+- 平滑的淡入動畫
+- 一致的載入體驗
+- 防止版面位移
 
-### Where to Place Suspense Boundaries
+### Suspense 邊界放置位置
 
-**Route Level:**
+**路由層級：**
 ```typescript
 // routes/my-route/index.tsx
 const MyPage = lazy(() => import('@/features/my-feature/components/MyPage'));
@@ -142,7 +142,7 @@ function Route() {
 }
 ```
 
-**Component Level:**
+**元件層級：**
 ```typescript
 function ParentComponent() {
     return (
@@ -156,7 +156,7 @@ function ParentComponent() {
 }
 ```
 
-**Multiple Boundaries:**
+**多個邊界：**
 ```typescript
 function Page() {
     return (
@@ -177,13 +177,13 @@ function Page() {
 }
 ```
 
-Each section loads independently, better UX.
+每個區塊獨立載入，提供更好的使用者體驗。
 
 ---
 
-## Component Structure Template
+## 元件結構範本
 
-### Recommended Order
+### 建議順序
 
 ```typescript
 /**
@@ -302,17 +302,17 @@ export default MyComponent;
 
 ---
 
-## Component Separation
+## 元件拆分
 
-### When to Split Components
+### 何時拆分元件
 
-**Split into multiple components when:**
-- Component exceeds 300 lines
-- Multiple distinct responsibilities
-- Reusable sections
-- Complex nested JSX
+**在以下情況拆分成多個元件：**
+- 元件超過 300 行
+- 有多個明確不同的職責
+- 有可重用的區塊
+- 有複雜的巢狀 JSX
 
-**Example:**
+**範例：**
 
 ```typescript
 // ❌ AVOID - Monolithic
@@ -336,19 +336,19 @@ function ParentContainer() {
 }
 ```
 
-### When to Keep Together
+### 何時保持在一起
 
-**Keep in same file when:**
-- Component < 200 lines
-- Tightly coupled logic
-- Not reusable elsewhere
-- Simple presentation component
+**在以下情況保持在同一個檔案：**
+- 元件少於 200 行
+- 邏輯緊密耦合
+- 不會在其他地方重用
+- 簡單的呈現型元件
 
 ---
 
-## Export Patterns
+## 匯出模式
 
-### Named Const + Default Export (PREFERRED)
+### 具名 Const + 預設匯出（建議使用）
 
 ```typescript
 export const MyComponent: React.FC<Props> = ({ ... }) => {
@@ -358,12 +358,12 @@ export const MyComponent: React.FC<Props> = ({ ... }) => {
 export default MyComponent;
 ```
 
-**Why:**
-- Named export for testing/refactoring
-- Default export for lazy loading convenience
-- Both options available to consumers
+**原因：**
+- 具名匯出方便測試與重構
+- 預設匯出方便延遲載入
+- 提供兩種選項給使用者
 
-### Lazy Loading Named Exports
+### 延遲載入具名匯出
 
 ```typescript
 const MyComponent = React.lazy(() =>
@@ -375,9 +375,9 @@ const MyComponent = React.lazy(() =>
 
 ---
 
-## Component Communication
+## 元件通訊
 
-### Props Down, Events Up
+### Props 向下，事件向上
 
 ```typescript
 // Parent
@@ -407,9 +407,9 @@ export const Child: React.FC<ChildProps> = ({ data, onSelect }) => {
 };
 ```
 
-### Avoid Prop Drilling
+### 避免 Prop Drilling
 
-**Use context for deep nesting:**
+**深度巢狀時使用 context：**
 ```typescript
 // ❌ AVOID - Prop drilling 5+ levels
 <A prop={x}>
@@ -438,9 +438,9 @@ function DeepChild() {
 
 ---
 
-## Advanced Patterns
+## 進階模式
 
-### Compound Components
+### 複合元件
 
 ```typescript
 // Card.tsx
@@ -464,7 +464,7 @@ Card.Footer = CardFooter;
 </Card>
 ```
 
-### Render Props (Rare, but useful)
+### Render Props（少用，但有用）
 
 ```typescript
 interface DataProviderProps {
@@ -484,19 +484,19 @@ export const DataProvider: React.FC<DataProviderProps> = ({ children }) => {
 
 ---
 
-## Summary
+## 總結
 
-**Modern Component Recipe:**
-1. `React.FC<Props>` with TypeScript
-2. Lazy load if heavy: `React.lazy(() => import())`
-3. Wrap in `<SuspenseLoader>` for loading
-4. Use `useSuspenseQuery` for data
-5. Import aliases (@/, ~types, ~components)
-6. Event handlers with `useCallback`
-7. Default export at bottom
-8. No early returns for loading states
+**現代元件配方：**
+1. 使用 TypeScript 的 `React.FC<Props>`
+2. 如果是重量級元件，使用延遲載入：`React.lazy(() => import())`
+3. 用 `<SuspenseLoader>` 包裝以顯示載入狀態
+4. 使用 `useSuspenseQuery` 取得資料
+5. 使用匯入別名（@/、~types、~components）
+6. 事件處理器使用 `useCallback`
+7. 在底部放預設匯出
+8. 不要為載入狀態提早 return
 
-**See Also:**
-- [data-fetching.md](data-fetching.md) - useSuspenseQuery details
-- [loading-and-error-states.md](loading-and-error-states.md) - Suspense best practices
-- [complete-examples.md](complete-examples.md) - Full working examples
+**另請參閱：**
+- [data-fetching.md](data-fetching.md) - useSuspenseQuery 詳細說明
+- [loading-and-error-states.md](loading-and-error-states.md) - Suspense 最佳實踐
+- [complete-examples.md](complete-examples.md) - 完整實作範例

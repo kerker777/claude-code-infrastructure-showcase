@@ -1,12 +1,12 @@
-# Common Patterns
+# 常見模式
 
-Frequently used patterns for forms, authentication, DataGrid, dialogs, and other common UI elements.
+表單、身份驗證、DataGrid、對話框及其他常見 UI 元素的常用模式。
 
 ---
 
-## Authentication with useAuth
+## 使用 useAuth 進行身份驗證
 
-### Getting Current User
+### 取得當前使用者
 
 ```typescript
 import { useAuth } from '@/hooks/useAuth';
@@ -30,13 +30,13 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-**NEVER make direct API calls for auth** - always use `useAuth` hook.
+**絕不要直接呼叫 API 進行身份驗證** - 請一律使用 `useAuth` hook。
 
 ---
 
-## Forms with React Hook Form
+## 使用 React Hook Form 建立表單
 
-### Basic Form
+### 基本表單
 
 ```typescript
 import { useForm } from 'react-hook-form';
@@ -110,14 +110,14 @@ export const MyForm: React.FC = () => {
 
 ---
 
-## Dialog Component Pattern
+## 對話框元件模式
 
-### Standard Dialog Structure
+### 標準對話框結構
 
-From BEST_PRACTICES.md - All dialogs should have:
-- Icon in title
-- Close button (X)
-- Action buttons at bottom
+根據 BEST_PRACTICES.md - 所有對話框都應包含：
+- 標題中的圖示
+- 關閉按鈕 (X)
+- 底部的操作按鈕
 
 ```typescript
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton } from '@mui/material';
@@ -161,21 +161,21 @@ export const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, onConfirm }) 
 
 ---
 
-## DataGrid Wrapper Pattern
+## DataGrid 包裝器模式
 
-### Wrapper Component Contract
+### 包裝器元件規範
 
-From BEST_PRACTICES.md - DataGrid wrappers should accept:
+根據 BEST_PRACTICES.md - DataGrid 包裝器應接受：
 
-**Required Props:**
-- `rows`: Data array
-- `columns`: Column definitions
-- Loading/error states
+**必要的 Props：**
+- `rows`：資料陣列
+- `columns`：欄位定義
+- 載入/錯誤狀態
 
-**Optional Props:**
-- Toolbar components
-- Custom actions
-- Initial state
+**選擇性的 Props：**
+- 工具列元件
+- 自訂操作
+- 初始狀態
 
 ```typescript
 import { DataGridPro } from '@mui/x-data-grid-pro';
@@ -216,9 +216,9 @@ export const DataGridWrapper: React.FC<DataGridWrapperProps> = ({
 
 ---
 
-## Mutation Patterns
+## Mutation 模式
 
-### Update with Cache Invalidation
+### 更新並使快取失效
 
 ```typescript
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -256,44 +256,44 @@ const handleSave = () => {
 
 ---
 
-## State Management Patterns
+## 狀態管理模式
 
-### TanStack Query for Server State (PRIMARY)
+### TanStack Query 處理伺服器狀態（主要方式）
 
-Use TanStack Query for **all server data**:
-- Fetching: useSuspenseQuery
-- Mutations: useMutation
-- Caching: Automatic
-- Synchronization: Built-in
+使用 TanStack Query 處理**所有伺服器資料**：
+- 資料取得：useSuspenseQuery
+- 資料變更：useMutation
+- 快取：自動
+- 同步：內建
 
 ```typescript
-// ✅ CORRECT - TanStack Query for server data
+// ✅ 正確 - 使用 TanStack Query 處理伺服器資料
 const { data: users } = useSuspenseQuery({
     queryKey: ['users'],
     queryFn: () => userApi.getUsers(),
 });
 ```
 
-### useState for UI State
+### 使用 useState 處理 UI 狀態
 
-Use `useState` for **local UI state only**:
-- Form inputs (uncontrolled)
-- Modal open/closed
-- Selected tab
-- Temporary UI flags
+使用 `useState` **僅處理本地 UI 狀態**：
+- 表單輸入（非受控）
+- 模態框開啟/關閉
+- 已選擇的分頁
+- 暫時性的 UI 標記
 
 ```typescript
-// ✅ CORRECT - useState for UI state
+// ✅ 正確 - 使用 useState 處理 UI 狀態
 const [modalOpen, setModalOpen] = useState(false);
 const [selectedTab, setSelectedTab] = useState(0);
 ```
 
-### Zustand for Global Client State (Minimal)
+### 使用 Zustand 處理全域客戶端狀態（最小化使用）
 
-Use Zustand only for **global client state**:
-- Theme preference
-- Sidebar collapsed state
-- User preferences (not from server)
+使用 Zustand **僅處理全域客戶端狀態**：
+- 主題偏好設定
+- 側邊欄收合狀態
+- 使用者偏好設定（非來自伺服器）
 
 ```typescript
 import { create } from 'zustand';
@@ -309,23 +309,23 @@ export const useAppState = create<AppState>((set) => ({
 }));
 ```
 
-**Avoid prop drilling** - use context or Zustand instead.
+**避免 prop drilling** - 改用 context 或 Zustand。
 
 ---
 
-## Summary
+## 總結
 
-**Common Patterns:**
-- ✅ useAuth hook for current user (id, email, roles, username)
-- ✅ React Hook Form + Zod for forms
-- ✅ Dialog with icon + close button
-- ✅ DataGrid wrapper contracts
-- ✅ Mutations with cache invalidation
-- ✅ TanStack Query for server state
-- ✅ useState for UI state
-- ✅ Zustand for global client state (minimal)
+**常見模式：**
+- ✅ 使用 useAuth hook 取得當前使用者（id、email、roles、username）
+- ✅ 使用 React Hook Form + Zod 建立表單
+- ✅ 包含圖示與關閉按鈕的對話框
+- ✅ DataGrid 包裝器規範
+- ✅ 包含快取失效的 Mutation
+- ✅ 使用 TanStack Query 處理伺服器狀態
+- ✅ 使用 useState 處理 UI 狀態
+- ✅ 使用 Zustand 處理全域客戶端狀態（最小化使用）
 
-**See Also:**
-- [data-fetching.md](data-fetching.md) - TanStack Query patterns
-- [component-patterns.md](component-patterns.md) - Component structure
-- [loading-and-error-states.md](loading-and-error-states.md) - Error handling
+**另請參考：**
+- [data-fetching.md](data-fetching.md) - TanStack Query 模式
+- [component-patterns.md](component-patterns.md) - 元件結構
+- [loading-and-error-states.md](loading-and-error-states.md) - 錯誤處理

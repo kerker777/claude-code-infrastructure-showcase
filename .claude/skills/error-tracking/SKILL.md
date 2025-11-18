@@ -3,41 +3,41 @@ name: error-tracking
 description: Add Sentry v8 error tracking and performance monitoring to your project services. Use this skill when adding error handling, creating new controllers, instrumenting cron jobs, or tracking database performance. ALL ERRORS MUST BE CAPTURED TO SENTRY - no exceptions.
 ---
 
-# your project Sentry Integration Skill
+# your project Sentry 整合技能
 
-## Purpose
-This skill enforces comprehensive Sentry error tracking and performance monitoring across all your project services following Sentry v8 patterns.
+## 目的
+此技能強制在所有 your project 服務中實施全面的 Sentry 錯誤追蹤和效能監控，遵循 Sentry v8 模式。
 
-## When to Use This Skill
-- Adding error handling to any code
-- Creating new controllers or routes
-- Instrumenting cron jobs
-- Tracking database performance
-- Adding performance spans
-- Handling workflow errors
+## 何時使用此技能
+- 為任何程式碼加入錯誤處理
+- 建立新的控制器或路由
+- 為 cron job 加入監控
+- 追蹤資料庫效能
+- 加入效能 span
+- 處理工作流程錯誤
 
-## 🚨 CRITICAL RULE
+## 🚨 重要規則
 
-**ALL ERRORS MUST BE CAPTURED TO SENTRY** - No exceptions. Never use console.error alone.
+**所有錯誤都必須傳送到 Sentry** - 沒有例外。絕對不要單獨使用 console.error。
 
-## Current Status
+## 目前狀態
 
-### Form Service ✅ Complete
-- Sentry v8 fully integrated
-- All workflow errors tracked
-- SystemActionQueueProcessor instrumented
-- Test endpoints available
+### Form Service ✅ 已完成
+- Sentry v8 已完全整合
+- 所有工作流程錯誤已追蹤
+- SystemActionQueueProcessor 已加入監控
+- 測試端點可用
 
-### Email Service 🟡 In Progress
-- Phase 1-2 complete (6/22 tasks)
-- 189 ErrorLogger.log() calls remaining
+### Email Service 🟡 進行中
+- 第 1-2 階段完成（6/22 項任務）
+- 189 個 ErrorLogger.log() 呼叫待處理
 
-## Sentry Integration Patterns
+## Sentry 整合模式
 
-### 1. Controller Error Handling
+### 1. 控制器錯誤處理
 
 ```typescript
-// ✅ CORRECT - Use BaseController
+// ✅ 正確 - 使用 BaseController
 import { BaseController } from '../controllers/BaseController';
 
 export class MyController extends BaseController {
@@ -51,7 +51,7 @@ export class MyController extends BaseController {
 }
 ```
 
-### 2. Route Error Handling (Without BaseController)
+### 2. 路由錯誤處理（不使用 BaseController）
 
 ```typescript
 import * as Sentry from '@sentry/node';
@@ -69,12 +69,12 @@ router.get('/route', async (req, res) => {
 });
 ```
 
-### 3. Workflow Error Handling
+### 3. 工作流程錯誤處理
 
 ```typescript
 import { WorkflowSentryHelper } from '../workflow/utils/sentryHelper';
 
-// ✅ CORRECT - Use WorkflowSentryHelper
+// ✅ 正確 - 使用 WorkflowSentryHelper
 WorkflowSentryHelper.captureWorkflowError(error, {
     workflowCode: 'DHS_CLOSEOUT',
     instanceId: 123,
@@ -85,7 +85,7 @@ WorkflowSentryHelper.captureWorkflowError(error, {
 });
 ```
 
-### 4. Cron Jobs (MANDATORY Pattern)
+### 4. Cron Jobs（必要模式）
 
 ```typescript
 #!/usr/bin/env node
@@ -128,12 +128,12 @@ main()
     });
 ```
 
-### 5. Database Performance Monitoring
+### 5. 資料庫效能監控
 
 ```typescript
 import { DatabasePerformanceMonitor } from '../utils/databasePerformance';
 
-// ✅ CORRECT - Wrap database operations
+// ✅ 正確 - 包裝資料庫操作
 const result = await DatabasePerformanceMonitor.withPerformanceTracking(
     'findMany',
     'UserProfile',
@@ -145,7 +145,7 @@ const result = await DatabasePerformanceMonitor.withPerformanceTracking(
 );
 ```
 
-### 6. Async Operations with Spans
+### 6. 非同步操作與 Span
 
 ```typescript
 import * as Sentry from '@sentry/node';
@@ -162,28 +162,28 @@ const result = await Sentry.startSpan({
 });
 ```
 
-## Error Levels
+## 錯誤等級
 
-Use appropriate severity levels:
+使用適當的嚴重性等級：
 
-- **fatal**: System is unusable (database down, critical service failure)
-- **error**: Operation failed, needs immediate attention
-- **warning**: Recoverable issues, degraded performance
-- **info**: Informational messages, successful operations
-- **debug**: Detailed debugging information (dev only)
+- **fatal**: 系統無法使用（資料庫當機、關鍵服務故障）
+- **error**: 操作失敗，需要立即處理
+- **warning**: 可恢復的問題、效能降低
+- **info**: 資訊訊息、成功操作
+- **debug**: 詳細除錯資訊（僅開發環境）
 
-## Required Context
+## 必要的上下文
 
 ```typescript
 import * as Sentry from '@sentry/node';
 
 Sentry.withScope((scope) => {
-    // ALWAYS include these if available
+    // 如果有可用資訊，務必包含這些
     scope.setUser({ id: userId });
     scope.setTag('service', 'form'); // or 'email', 'users', etc.
     scope.setTag('environment', process.env.NODE_ENV);
 
-    // Add operation-specific context
+    // 加入操作特定的上下文
     scope.setContext('operation', {
         type: 'workflow.start',
         workflowCode: 'DHS_CLOSEOUT',
@@ -194,11 +194,11 @@ Sentry.withScope((scope) => {
 });
 ```
 
-## Service-Specific Integration
+## 服務特定整合
 
 ### Form Service
 
-**Location**: `./blog-api/src/instrument.ts`
+**位置**: `./blog-api/src/instrument.ts`
 
 ```typescript
 import * as Sentry from '@sentry/node';
@@ -215,14 +215,14 @@ Sentry.init({
 });
 ```
 
-**Key Helpers**:
-- `WorkflowSentryHelper` - Workflow-specific errors
-- `DatabasePerformanceMonitor` - DB query tracking
-- `BaseController` - Controller error handling
+**主要輔助工具**:
+- `WorkflowSentryHelper` - 工作流程特定錯誤
+- `DatabasePerformanceMonitor` - 資料庫查詢追蹤
+- `BaseController` - 控制器錯誤處理
 
 ### Email Service
 
-**Location**: `./notifications/src/instrument.ts`
+**位置**: `./notifications/src/instrument.ts`
 
 ```typescript
 import * as Sentry from '@sentry/node';
@@ -239,11 +239,11 @@ Sentry.init({
 });
 ```
 
-**Key Helpers**:
-- `EmailSentryHelper` - Email-specific errors
-- `BaseController` - Controller error handling
+**主要輔助工具**:
+- `EmailSentryHelper` - 郵件特定錯誤
+- `BaseController` - 控制器錯誤處理
 
-## Configuration (config.ini)
+## 設定檔 (config.ini)
 
 ```ini
 [sentry]
@@ -260,9 +260,9 @@ dbErrorCapture = true
 enableN1Detection = true
 ```
 
-## Testing Sentry Integration
+## 測試 Sentry 整合
 
-### Form Service Test Endpoints
+### Form Service 測試端點
 
 ```bash
 # Test basic error capture
@@ -278,7 +278,7 @@ curl http://localhost:3002/blog-api/api/sentry/test-database-performance
 curl http://localhost:3002/blog-api/api/sentry/test-error-boundary
 ```
 
-### Email Service Test Endpoints
+### Email Service 測試端點
 
 ```bash
 # Test basic error capture
@@ -291,16 +291,16 @@ curl http://localhost:3003/notifications/api/sentry/test-email-error
 curl http://localhost:3003/notifications/api/sentry/test-performance
 ```
 
-## Performance Monitoring
+## 效能監控
 
-### Requirements
+### 需求
 
-1. **All API endpoints** must have transaction tracking
-2. **Database queries > 100ms** are automatically flagged
-3. **N+1 queries** are detected and reported
-4. **Cron jobs** must track execution time
+1. **所有 API 端點**必須有交易追蹤
+2. **超過 100ms 的資料庫查詢**會自動標記
+3. **N+1 查詢**會被偵測並回報
+4. **Cron jobs** 必須追蹤執行時間
 
-### Transaction Tracking
+### 交易追蹤
 
 ```typescript
 import * as Sentry from '@sentry/node';
@@ -322,54 +322,54 @@ try {
 }
 ```
 
-## Common Mistakes to Avoid
+## 常見錯誤
 
-❌ **NEVER** use console.error without Sentry
-❌ **NEVER** swallow errors silently
-❌ **NEVER** expose sensitive data in error context
-❌ **NEVER** use generic error messages without context
-❌ **NEVER** skip error handling in async operations
-❌ **NEVER** forget to import instrument.ts as first line in cron jobs
+❌ **絕對不要**只使用 console.error 而不傳送到 Sentry
+❌ **絕對不要**靜默地吞掉錯誤
+❌ **絕對不要**在錯誤上下文中暴露敏感資料
+❌ **絕對不要**使用缺乏上下文的通用錯誤訊息
+❌ **絕對不要**跳過非同步操作的錯誤處理
+❌ **絕對不要**在 cron job 中忘記第一行引入 instrument.ts
 
-## Implementation Checklist
+## 實作檢查清單
 
-When adding Sentry to new code:
+為新程式碼加入 Sentry 時：
 
-- [ ] Imported Sentry or appropriate helper
-- [ ] All try/catch blocks capture to Sentry
-- [ ] Added meaningful context to errors
-- [ ] Used appropriate error level
-- [ ] No sensitive data in error messages
-- [ ] Added performance tracking for slow operations
-- [ ] Tested error handling paths
-- [ ] For cron jobs: instrument.ts imported first
+- [ ] 已引入 Sentry 或適當的輔助工具
+- [ ] 所有 try/catch 區塊都有傳送到 Sentry
+- [ ] 已為錯誤加入有意義的上下文
+- [ ] 使用了適當的錯誤等級
+- [ ] 錯誤訊息中沒有敏感資料
+- [ ] 已為緩慢操作加入效能追蹤
+- [ ] 已測試錯誤處理路徑
+- [ ] 對於 cron job：已在第一行引入 instrument.ts
 
-## Key Files
+## 關鍵檔案
 
 ### Form Service
-- `/blog-api/src/instrument.ts` - Sentry initialization
-- `/blog-api/src/workflow/utils/sentryHelper.ts` - Workflow errors
-- `/blog-api/src/utils/databasePerformance.ts` - DB monitoring
-- `/blog-api/src/controllers/BaseController.ts` - Controller base
+- `/blog-api/src/instrument.ts` - Sentry 初始化
+- `/blog-api/src/workflow/utils/sentryHelper.ts` - 工作流程錯誤
+- `/blog-api/src/utils/databasePerformance.ts` - 資料庫監控
+- `/blog-api/src/controllers/BaseController.ts` - 控制器基礎類別
 
 ### Email Service
-- `/notifications/src/instrument.ts` - Sentry initialization
-- `/notifications/src/utils/EmailSentryHelper.ts` - Email errors
-- `/notifications/src/controllers/BaseController.ts` - Controller base
+- `/notifications/src/instrument.ts` - Sentry 初始化
+- `/notifications/src/utils/EmailSentryHelper.ts` - 郵件錯誤
+- `/notifications/src/controllers/BaseController.ts` - 控制器基礎類別
 
-### Configuration
-- `/blog-api/config.ini` - Form service config
-- `/notifications/config.ini` - Email service config
-- `/sentry.ini` - Shared Sentry config
+### 設定檔
+- `/blog-api/config.ini` - Form service 設定
+- `/notifications/config.ini` - Email service 設定
+- `/sentry.ini` - 共用 Sentry 設定
 
-## Documentation
+## 文件
 
-- Full implementation: `/dev/active/email-sentry-integration/`
-- Form service docs: `/blog-api/docs/sentry-integration.md`
-- Email service docs: `/notifications/docs/sentry-integration.md`
+- 完整實作說明：`/dev/active/email-sentry-integration/`
+- Form service 文件：`/blog-api/docs/sentry-integration.md`
+- Email service 文件：`/notifications/docs/sentry-integration.md`
 
-## Related Skills
+## 相關技能
 
-- Use **database-verification** before database operations
-- Use **workflow-builder** for workflow error context
-- Use **database-scripts** for database error handling
+- 在資料庫操作前使用 **database-verification**
+- 使用 **workflow-builder** 取得工作流程錯誤上下文
+- 使用 **database-scripts** 處理資料庫錯誤

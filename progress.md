@@ -2,9 +2,9 @@
 
 ## 統計
 - 總檔案數：52
-- 已完成：32
+- 已完成：44
 - 進行中：0
-- 待處理：20
+- 待處理：8
 
 ## 檔案清單
 
@@ -53,20 +53,20 @@
 - [x] ./.claude/skills/backend-dev-guidelines/resources/validation-patterns.md
 
 ### Error Tracking (1)
-- [ ] ./.claude/skills/error-tracking/SKILL.md
+- [x] ./.claude/skills/error-tracking/SKILL.md
 
-### Frontend Dev Guidelines (10)
-- [ ] ./.claude/skills/frontend-dev-guidelines/SKILL.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/common-patterns.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/complete-examples.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/component-patterns.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/data-fetching.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/file-organization.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/loading-and-error-states.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/performance.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/routing-guide.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/styling-guide.md
-- [ ] ./.claude/skills/frontend-dev-guidelines/resources/typescript-standards.md
+### Frontend Dev Guidelines (11)
+- [x] ./.claude/skills/frontend-dev-guidelines/SKILL.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/common-patterns.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/complete-examples.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/component-patterns.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/data-fetching.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/file-organization.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/loading-and-error-states.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/performance.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/routing-guide.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/styling-guide.md
+- [x] ./.claude/skills/frontend-dev-guidelines/resources/typescript-standards.md
 
 ### Route Tester (1)
 - [ ] ./.claude/skills/route-tester/SKILL.md
@@ -81,4 +81,4 @@
 - [ ] ./.claude/skills/skill-developer/TROUBLESHOOTING.md
 
 ---
-最後更新：完成 Backend Dev Guidelines 與 Skills README 共 13 個檔案翻譯
+最後更新：完成 Frontend Dev Guidelines 與 Error Tracking 共 12 個檔案翻譯
