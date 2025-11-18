@@ -2,9 +2,9 @@
 
 ## 統計
 - 總檔案數：52
-- 已完成：3
+- 已完成：14
 - 進行中：0
-- 待處理：49
+- 待處理：38
 
 ## 檔案清單
 
@@ -14,17 +14,17 @@
 - [x] ./dev/README.md
 
 ### Agents (11)
-- [ ] ./.claude/agents/README.md
-- [ ] ./.claude/agents/auth-route-debugger.md
-- [ ] ./.claude/agents/auth-route-tester.md
-- [ ] ./.claude/agents/auto-error-resolver.md
-- [ ] ./.claude/agents/code-architecture-reviewer.md
-- [ ] ./.claude/agents/code-refactor-master.md
-- [ ] ./.claude/agents/documentation-architect.md
-- [ ] ./.claude/agents/frontend-error-fixer.md
-- [ ] ./.claude/agents/plan-reviewer.md
-- [ ] ./.claude/agents/refactor-planner.md
-- [ ] ./.claude/agents/web-research-specialist.md
+- [x] ./.claude/agents/README.md
+- [x] ./.claude/agents/auth-route-debugger.md
+- [x] ./.claude/agents/auth-route-tester.md
+- [x] ./.claude/agents/auto-error-resolver.md
+- [x] ./.claude/agents/code-architecture-reviewer.md
+- [x] ./.claude/agents/code-refactor-master.md
+- [x] ./.claude/agents/documentation-architect.md
+- [x] ./.claude/agents/frontend-error-fixer.md
+- [x] ./.claude/agents/plan-reviewer.md
+- [x] ./.claude/agents/refactor-planner.md
+- [x] ./.claude/agents/web-research-specialist.md
 
 ### Commands (3)
 - [ ] ./.claude/commands/dev-docs-update.md
@@ -81,4 +81,4 @@
 - [ ] ./.claude/skills/skill-developer/TROUBLESHOOTING.md
 
 ---
-最後更新：完成根目錄 3 個檔案翻譯
+最後更新：完成 Agents 資料夾 11 個檔案翻譯
