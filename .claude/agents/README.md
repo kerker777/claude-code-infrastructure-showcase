@@ -1,245 +1,245 @@
 # Agents
 
-Specialized agents for complex, multi-step tasks.
+專門處理複雜、多步驟任務的 Agent。
 
 ---
 
-## What Are Agents?
+## 什麼是 Agent？
 
-Agents are autonomous Claude instances that handle specific complex tasks. Unlike skills (which provide inline guidance), agents:
-- Run as separate sub-tasks
-- Work autonomously with minimal supervision
-- Have specialized tool access
-- Return comprehensive reports when complete
+Agent 是能夠處理特定複雜任務的自主 Claude 實例。與 Skill（提供即時指導）不同，Agent：
+- 以獨立子任務方式執行
+- 能夠自主運作，僅需最少監督
+- 擁有專用的工具存取權限
+- 完成後回傳完整報告
 
-**Key advantage:** Agents are **standalone** - just copy the `.md` file and use immediately!
+**主要優勢：** Agent 是**獨立的** - 只需複製 `.md` 檔案即可立即使用！
 
 ---
 
-## Available Agents (10)
+## 可用的 Agent（10 個）
 
 ### code-architecture-reviewer
-**Purpose:** Review code for architectural consistency and best practices
+**用途：** 檢視程式碼的架構一致性與最佳實務
 
-**When to use:**
-- After implementing a new feature
-- Before merging significant changes
-- When refactoring code
-- To validate architectural decisions
+**使用時機：**
+- 實作新功能後
+- 合併重大變更前
+- 重構程式碼時
+- 驗證架構決策時
 
-**Integration:** ✅ Copy as-is
+**整合方式：** ✅ 直接複製即可
 
 ---
 
 ### code-refactor-master
-**Purpose:** Plan and execute comprehensive refactoring
+**用途：** 規劃與執行全面性重構
 
-**When to use:**
-- Reorganizing file structures
-- Breaking down large components
-- Updating import paths after moves
-- Improving code maintainability
+**使用時機：**
+- 重組檔案結構
+- 拆解大型元件
+- 移動檔案後更新 import 路徑
+- 改善程式碼可維護性
 
-**Integration:** ✅ Copy as-is
+**整合方式：** ✅ 直接複製即可
 
 ---
 
 ### documentation-architect
-**Purpose:** Create comprehensive documentation
+**用途：** 建立完整文件
 
-**When to use:**
-- Documenting new features
-- Creating API documentation
-- Writing developer guides
-- Generating architectural overviews
+**使用時機：**
+- 撰寫新功能文件
+- 建立 API 文件
+- 撰寫開發者指南
+- 產生架構概觀
 
-**Integration:** ✅ Copy as-is
+**整合方式：** ✅ 直接複製即可
 
 ---
 
 ### frontend-error-fixer
-**Purpose:** Debug and fix frontend errors
+**用途：** 除錯與修復前端錯誤
 
-**When to use:**
-- Browser console errors
-- TypeScript compilation errors in frontend
-- React errors
-- Build failures
+**使用時機：**
+- 瀏覽器 console 錯誤
+- 前端的 TypeScript 編譯錯誤
+- React 錯誤
+- 建置失敗
 
-**Integration:** ⚠️ May reference screenshot paths - update if needed
+**整合方式：** ⚠️ 可能參照截圖路徑 - 需要時請更新
 
 ---
 
 ### plan-reviewer
-**Purpose:** Review development plans before implementation
+**用途：** 在實作前檢視開發計畫
 
-**When to use:**
-- Before starting complex features
-- Validating architectural plans
-- Identifying potential issues early
-- Getting second opinion on approach
+**使用時機：**
+- 開始複雜功能前
+- 驗證架構計畫
+- 及早發現潛在問題
+- 尋求第二意見時
 
-**Integration:** ✅ Copy as-is
+**整合方式：** ✅ 直接複製即可
 
 ---
 
 ### refactor-planner
-**Purpose:** Create comprehensive refactoring strategies
+**用途：** 建立全面的重構策略
 
-**When to use:**
-- Planning code reorganization
-- Modernizing legacy code
-- Breaking down large files
-- Improving code structure
+**使用時機：**
+- 規劃程式碼重組
+- 現代化舊有程式碼
+- 拆解大型檔案
+- 改善程式碼結構
 
-**Integration:** ✅ Copy as-is
+**整合方式：** ✅ 直接複製即可
 
 ---
 
 ### web-research-specialist
-**Purpose:** Research technical issues online
+**用途：** 線上研究技術問題
 
-**When to use:**
-- Debugging obscure errors
-- Finding solutions to problems
-- Researching best practices
-- Comparing implementation approaches
+**使用時機：**
+- 除錯罕見錯誤
+- 尋找問題解決方案
+- 研究最佳實務
+- 比較實作方法
 
-**Integration:** ✅ Copy as-is
+**整合方式：** ✅ 直接複製即可
 
 ---
 
 ### auth-route-tester
-**Purpose:** Test authenticated API endpoints
+**用途：** 測試需要驗證的 API 端點
 
-**When to use:**
-- Testing routes with JWT cookie auth
-- Validating endpoint functionality
-- Debugging authentication issues
+**使用時機：**
+- 測試使用 JWT cookie 驗證的路由
+- 驗證端點功能
+- 除錯驗證問題
 
-**Integration:** ⚠️ Requires JWT cookie-based auth
+**整合方式：** ⚠️ 需要 JWT cookie 驗證機制
 
 ---
 
 ### auth-route-debugger
-**Purpose:** Debug authentication issues
+**用途：** 除錯驗證問題
 
-**When to use:**
-- Auth failures
-- Token issues
-- Cookie problems
-- Permission errors
+**使用時機：**
+- 驗證失敗
+- Token 問題
+- Cookie 問題
+- 權限錯誤
 
-**Integration:** ⚠️ Requires JWT cookie-based auth
+**整合方式：** ⚠️ 需要 JWT cookie 驗證機制
 
 ---
 
 ### auto-error-resolver
-**Purpose:** Automatically fix TypeScript compilation errors
+**用途：** 自動修復 TypeScript 編譯錯誤
 
-**When to use:**
-- Build failures with TypeScript errors
-- After refactoring that breaks types
-- Systematic error resolution needed
+**使用時機：**
+- TypeScript 錯誤導致建置失敗
+- 重構後破壞型別
+- 需要系統性錯誤解決
 
-**Integration:** ⚠️ May need path updates
+**整合方式：** ⚠️ 可能需要更新路徑
 
 ---
 
-## How to Integrate an Agent
+## 如何整合 Agent
 
-### Standard Integration (Most Agents)
+### 標準整合方式（大多數 Agent）
 
-**Step 1: Copy the file**
+**步驟 1：複製檔案**
 ```bash
-cp showcase/.claude/agents/agent-name.md \\
+cp showcase/.claude/agents/agent-name.md \
    your-project/.claude/agents/
 ```
 
-**Step 2: Verify (optional)**
+**步驟 2：驗證（選用）**
 ```bash
-# Check for hardcoded paths
+# 檢查是否有寫死的路徑
 grep -n "~/git/\|/root/git/\|/Users/" your-project/.claude/agents/agent-name.md
 ```
 
-**Step 3: Use it**
-Ask Claude: "Use the [agent-name] agent to [task]"
+**步驟 3：使用**
+詢問 Claude：「使用 [agent-name] agent 來 [任務]」
 
-That's it! Agents work immediately.
-
----
-
-### Agents Requiring Customization
-
-**frontend-error-fixer:**
-- May reference screenshot paths
-- Ask user: "Where should screenshots be saved?"
-- Update paths in agent file
-
-**auth-route-tester / auth-route-debugger:**
-- Require JWT cookie authentication
-- Update service URLs from examples
-- Customize for user's auth setup
-
-**auto-error-resolver:**
-- May have hardcoded project paths
-- Update to use `$CLAUDE_PROJECT_DIR` or relative paths
+就這樣！Agent 可以立即運作。
 
 ---
 
-## When to Use Agents vs Skills
+### 需要客製化的 Agent
 
-| Use Agents When... | Use Skills When... |
+**frontend-error-fixer：**
+- 可能參照截圖路徑
+- 詢問使用者：「截圖應該存放在哪裡？」
+- 在 agent 檔案中更新路徑
+
+**auth-route-tester / auth-route-debugger：**
+- 需要 JWT cookie 驗證機制
+- 從範例更新服務 URL
+- 依據使用者的驗證設定進行客製化
+
+**auto-error-resolver：**
+- 可能有寫死的專案路徑
+- 更新為使用 `$CLAUDE_PROJECT_DIR` 或相對路徑
+
+---
+
+## 何時使用 Agent vs Skill
+
+| 使用 Agent 的時機... | 使用 Skill 的時機... |
 |-------------------|-------------------|
-| Task requires multiple steps | Need inline guidance |
-| Complex analysis needed | Checking best practices |
-| Autonomous work preferred | Want to maintain control |
-| Task has clear end goal | Ongoing development work |
-| Example: "Review all controllers" | Example: "Creating a new route" |
+| 任務需要多個步驟 | 需要即時指導 |
+| 需要複雜分析 | 檢查最佳實務 |
+| 偏好自主運作 | 希望保持控制權 |
+| 任務有明確終點 | 持續開發工作 |
+| 範例：「檢視所有 controller」 | 範例：「建立新的 route」 |
 
-**Both can work together:**
-- Skill provides patterns during development
-- Agent reviews the result when complete
+**兩者可以搭配使用：**
+- Skill 在開發期間提供模式指導
+- Agent 在完成後檢視結果
 
 ---
 
-## Agent Quick Reference
+## Agent 快速參考
 
-| Agent | Complexity | Customization | Auth Required |
+| Agent | 複雜度 | 客製化需求 | 需要驗證 |
 |-------|-----------|---------------|---------------|
-| code-architecture-reviewer | Medium | ✅ None | No |
-| code-refactor-master | High | ✅ None | No |
-| documentation-architect | Medium | ✅ None | No |
-| frontend-error-fixer | Medium | ⚠️ Screenshot paths | No |
-| plan-reviewer | Low | ✅ None | No |
-| refactor-planner | Medium | ✅ None | No |
-| web-research-specialist | Low | ✅ None | No |
-| auth-route-tester | Medium | ⚠️ Auth setup | JWT cookies |
-| auth-route-debugger | Medium | ⚠️ Auth setup | JWT cookies |
-| auto-error-resolver | Low | ⚠️ Paths | No |
+| code-architecture-reviewer | 中等 | ✅ 無 | 否 |
+| code-refactor-master | 高 | ✅ 無 | 否 |
+| documentation-architect | 中等 | ✅ 無 | 否 |
+| frontend-error-fixer | 中等 | ⚠️ 截圖路徑 | 否 |
+| plan-reviewer | 低 | ✅ 無 | 否 |
+| refactor-planner | 中等 | ✅ 無 | 否 |
+| web-research-specialist | 低 | ✅ 無 | 否 |
+| auth-route-tester | 中等 | ⚠️ 驗證設定 | JWT cookies |
+| auth-route-debugger | 中等 | ⚠️ 驗證設定 | JWT cookies |
+| auto-error-resolver | 低 | ⚠️ 路徑 | 否 |
 
 ---
 
-## For Claude Code
+## 給 Claude Code
 
-**When integrating agents for a user:**
+**為使用者整合 agent 時：**
 
-1. **Read [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)**
-2. **Just copy the .md file** - agents are standalone
-3. **Check for hardcoded paths:**
+1. **閱讀 [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)**
+2. **直接複製 .md 檔案** - agent 是獨立的
+3. **檢查是否有寫死的路徑：**
    ```bash
    grep "~/git/\|/root/" agent-name.md
    ```
-4. **Update paths if found** to `$CLAUDE_PROJECT_DIR` or `.`
-5. **For auth agents:** Ask if they use JWT cookie auth first
+4. **如有發現則更新路徑**為 `$CLAUDE_PROJECT_DIR` 或 `.`
+5. **針對驗證 agent：** 先詢問是否使用 JWT cookie 驗證
 
-**That's it!** Agents are the easiest components to integrate.
+**就這樣！** Agent 是最容易整合的元件。
 
 ---
 
-## Creating Your Own Agents
+## 建立自己的 Agent
 
-Agents are markdown files with optional YAML frontmatter:
+Agent 是 markdown 檔案，可包含選用的 YAML frontmatter：
 
 ```markdown
 # Agent Name
@@ -257,44 +257,44 @@ List of tools this agent can use
 What format to return results in
 ```
 
-**Tips:**
-- Be very specific in instructions
-- Break complex tasks into numbered steps
-- Specify exactly what to return
-- Include examples of good output
-- List available tools explicitly
+**提示：**
+- 指示要非常具體
+- 將複雜任務拆解為編號步驟
+- 明確指定要回傳的內容
+- 包含良好輸出的範例
+- 明確列出可用的工具
 
 ---
 
-## Troubleshooting
+## 疑難排解
 
-### Agent not found
+### 找不到 Agent
 
-**Check:**
+**檢查：**
 ```bash
-# Is agent file present?
+# agent 檔案是否存在？
 ls -la .claude/agents/[agent-name].md
 ```
 
-### Agent fails with path errors
+### Agent 因路徑錯誤而失敗
 
-**Check for hardcoded paths:**
+**檢查是否有寫死的路徑：**
 ```bash
 grep "~/\|/root/\|/Users/" .claude/agents/[agent-name].md
 ```
 
-**Fix:**
+**修復：**
 ```bash
 sed -i 's|~/git/.*project|$CLAUDE_PROJECT_DIR|g' .claude/agents/[agent-name].md
 ```
 
 ---
 
-## Next Steps
+## 下一步
 
-1. **Browse agents above** - Find ones useful for your work
-2. **Copy what you need** - Just the .md file
-3. **Ask Claude to use them** - "Use [agent] to [task]"
-4. **Create your own** - Follow the pattern for your specific needs
+1. **瀏覽上述 agent** - 找出對你有用的
+2. **複製需要的** - 只需要 .md 檔案
+3. **請 Claude 使用它們** - 「使用 [agent] 來 [任務]」
+4. **建立自己的** - 依據這個模式滿足你的特定需求
 
-**Questions?** See [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)
+**有問題？** 請參閱 [CLAUDE_INTEGRATION_GUIDE.md](../../CLAUDE_INTEGRATION_GUIDE.md)

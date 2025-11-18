@@ -1,23 +1,23 @@
-# Middleware Guide - Express Middleware Patterns
+# Middleware 指南 - Express Middleware 模式
 
-Complete guide to creating and using middleware in backend microservices.
+後端微服務中建立和使用 middleware 的完整指南。
 
-## Table of Contents
+## 目錄
 
-- [Authentication Middleware](#authentication-middleware)
-- [Audit Middleware with AsyncLocalStorage](#audit-middleware-with-asynclocalstorage)
-- [Error Boundary Middleware](#error-boundary-middleware)
-- [Validation Middleware](#validation-middleware)
-- [Composable Middleware](#composable-middleware)
-- [Middleware Ordering](#middleware-ordering)
+- [驗證 Middleware](#authentication-middleware)
+- [稽核 Middleware 與 AsyncLocalStorage](#audit-middleware-with-asynclocalstorage)
+- [錯誤邊界 Middleware](#error-boundary-middleware)
+- [驗證 Middleware](#validation-middleware)
+- [可組合的 Middleware](#composable-middleware)
+- [Middleware 順序](#middleware-ordering)
 
 ---
 
 ## Authentication Middleware
 
-### SSOMiddleware Pattern
+### SSOMiddleware 模式
 
-**File:** `/form/src/middleware/SSOMiddleware.ts`
+**檔案：** `/form/src/middleware/SSOMiddleware.ts`
 
 ```typescript
 export class SSOMiddlewareClient {
@@ -44,9 +44,9 @@ export class SSOMiddlewareClient {
 
 ## Audit Middleware with AsyncLocalStorage
 
-### Excellent Pattern from Blog API
+### Blog API 的優秀模式
 
-**File:** `/form/src/middleware/auditMiddleware.ts`
+**檔案：** `/form/src/middleware/auditMiddleware.ts`
 
 ```typescript
 import { AsyncLocalStorage } from 'async_hooks';
@@ -82,13 +82,13 @@ export function getAuditContext(): AuditContext | null {
 }
 ```
 
-**Benefits:**
-- Context propagates through entire request
-- No need to pass context through every function
-- Automatically available in services, repositories
-- Type-safe context access
+**優點：**
+- Context 會在整個請求過程中傳遞
+- 不需要在每個函式中傳遞 context
+- 在 service 和 repository 層自動可用
+- 型別安全的 context 存取
 
-**Usage in Services:**
+**在 Service 中的使用方式：**
 ```typescript
 import { getAuditContext } from '../middleware/auditMiddleware';
 
@@ -102,9 +102,9 @@ async function someOperation() {
 
 ## Error Boundary Middleware
 
-### Comprehensive Error Handler
+### 完整的錯誤處理器
 
-**File:** `/form/src/middleware/errorBoundary.ts`
+**檔案：** `/form/src/middleware/errorBoundary.ts`
 
 ```typescript
 export function errorBoundary(
@@ -156,7 +156,7 @@ export function asyncErrorWrapper(
 
 ## Composable Middleware
 
-### withAuthAndAudit Pattern
+### withAuthAndAudit 模式
 
 ```typescript
 export function withAuthAndAudit(...authMiddleware: any[]) {
@@ -177,7 +177,7 @@ router.post('/:formID/submit',
 
 ## Middleware Ordering
 
-### Critical Order (Must Follow)
+### 關鍵順序（必須遵守）
 
 ```typescript
 // 1. Sentry request handler (FIRST)
@@ -203,11 +203,11 @@ app.use(errorBoundary);
 app.use(Sentry.Handlers.errorHandler());
 ```
 
-**Rule:** Error handlers MUST be registered AFTER all routes!
+**規則：** 錯誤處理器必須在所有路由之後註冊！
 
 ---
 
-**Related Files:**
+**相關檔案：**
 - [SKILL.md](SKILL.md)
 - [routing-and-controllers.md](routing-and-controllers.md)
 - [async-and-errors.md](async-and-errors.md)

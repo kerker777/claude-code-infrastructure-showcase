@@ -1,19 +1,19 @@
-# Loading & Error States
+# 載入與錯誤狀態
 
-**CRITICAL**: Proper loading and error state handling prevents layout shift and provides better user experience.
+**重要**：正確處理載入與錯誤狀態可避免版面位移並提供更好的使用者體驗。
 
 ---
 
-## ⚠️ CRITICAL RULE: Never Use Early Returns
+## ⚠️ 重要規則：絕不使用提早返回
 
-### The Problem
+### 問題說明
 
 ```typescript
-// ❌ NEVER DO THIS - Early return with loading spinner
+// ❌ 絕對不要這樣做 - 提早返回並顯示載入旋轉圖示
 const Component = () => {
     const { data, isLoading } = useQuery();
 
-    // WRONG: This causes layout shift and poor UX
+    // 錯誤：這會造成版面位移和糟糕的使用者體驗
     if (isLoading) {
         return <LoadingSpinner />;
     }
@@ -22,15 +22,15 @@ const Component = () => {
 };
 ```
 
-**Why this is bad:**
-1. **Layout Shift**: Content position jumps when loading completes
-2. **CLS (Cumulative Layout Shift)**: Poor Core Web Vital score
-3. **Jarring UX**: Page structure changes suddenly
-4. **Lost Scroll Position**: User loses place on page
+**為什麼這樣不好：**
+1. **版面位移**：載入完成時內容位置會跳動
+2. **CLS (Cumulative Layout Shift)**：Core Web Vital 分數變差
+3. **不順暢的使用者體驗**：頁面結構突然改變
+4. **失去捲動位置**：使用者會失去在頁面上的位置
 
-### The Solutions
+### 解決方案
 
-**Option 1: SuspenseLoader (PREFERRED for new components)**
+**方案 1：SuspenseLoader（新元件的首選方式）**
 
 ```typescript
 import { SuspenseLoader } from '~components/SuspenseLoader';
@@ -46,7 +46,7 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-**Option 2: LoadingOverlay (for legacy useQuery patterns)**
+**方案 2：LoadingOverlay（用於舊有的 useQuery 模式）**
 
 ```typescript
 import { LoadingOverlay } from '~components/LoadingOverlay';
@@ -64,24 +64,24 @@ export const MyComponent: React.FC = () => {
 
 ---
 
-## SuspenseLoader Component
+## SuspenseLoader 元件
 
-### What It Does
+### 功能說明
 
-- Shows loading indicator while lazy components load
-- Smooth fade-in animation
-- Prevents layout shift
-- Consistent loading experience across app
+- 在延遲載入元件載入時顯示載入指示器
+- 平滑的淡入動畫
+- 避免版面位移
+- 在整個應用程式中提供一致的載入體驗
 
-### Import
+### 引入方式
 
 ```typescript
 import { SuspenseLoader } from '~components/SuspenseLoader';
-// Or
+// 或
 import { SuspenseLoader } from '@/components/SuspenseLoader';
 ```
 
-### Basic Usage
+### 基本用法
 
 ```typescript
 <SuspenseLoader>
@@ -89,14 +89,14 @@ import { SuspenseLoader } from '@/components/SuspenseLoader';
 </SuspenseLoader>
 ```
 
-### With useSuspenseQuery
+### 搭配 useSuspenseQuery 使用
 
 ```typescript
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { SuspenseLoader } from '~components/SuspenseLoader';
 
 const Inner: React.FC = () => {
-    // No isLoading needed!
+    // 不需要 isLoading！
     const { data } = useSuspenseQuery({
         queryKey: ['data'],
         queryFn: () => api.getData(),
@@ -105,7 +105,7 @@ const Inner: React.FC = () => {
     return <Display data={data} />;
 };
 
-// Outer component wraps in Suspense
+// 外層元件包裹 Suspense
 export const Outer: React.FC = () => {
     return (
         <SuspenseLoader>
@@ -115,9 +115,9 @@ export const Outer: React.FC = () => {
 };
 ```
 
-### Multiple Suspense Boundaries
+### 多個 Suspense 邊界
 
-**Pattern**: Separate loading for independent sections
+**模式**：為獨立區塊分別載入
 
 ```typescript
 export const Dashboard: React.FC = () => {
@@ -139,21 +139,21 @@ export const Dashboard: React.FC = () => {
 };
 ```
 
-**Benefits:**
-- Each section loads independently
-- User sees partial content sooner
-- Better perceived performance
+**優點：**
+- 每個區塊獨立載入
+- 使用者可以更早看到部分內容
+- 更好的感知效能
 
-### Nested Suspense
+### 巢狀 Suspense
 
 ```typescript
 export const ParentComponent: React.FC = () => {
     return (
         <SuspenseLoader>
-            {/* Parent suspends while loading */}
+            {/* 父元件在載入時暫停 */}
             <ParentContent>
                 <SuspenseLoader>
-                    {/* Nested suspense for child */}
+                    {/* 子元件的巢狀 suspense */}
                     <ChildComponent />
                 </SuspenseLoader>
             </ParentContent>
@@ -164,15 +164,15 @@ export const ParentComponent: React.FC = () => {
 
 ---
 
-## LoadingOverlay Component
+## LoadingOverlay 元件
 
-### When to Use
+### 使用時機
 
-- Legacy components with `useQuery` (not refactored to Suspense yet)
-- Overlay loading state needed
-- Can't use Suspense boundaries
+- 尚未重構為 Suspense 的舊有 `useQuery` 元件
+- 需要覆蓋式載入狀態
+- 無法使用 Suspense 邊界的情況
 
-### Usage
+### 用法
 
 ```typescript
 import { LoadingOverlay } from '~components/LoadingOverlay';
@@ -193,18 +193,18 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-**What it does:**
-- Shows semi-transparent overlay with spinner
-- Content area reserved (no layout shift)
-- Prevents interaction while loading
+**功能：**
+- 顯示半透明覆蓋層與旋轉圖示
+- 保留內容區域（無版面位移）
+- 載入時防止互動
 
 ---
 
-## Error Handling
+## 錯誤處理
 
-### useMuiSnackbar Hook (REQUIRED)
+### useMuiSnackbar Hook（必須使用）
 
-**NEVER use react-toastify** - Project standard is MUI Snackbar
+**絕對不要使用 react-toastify** - 專案標準是 MUI Snackbar
 
 ```typescript
 import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
@@ -215,23 +215,23 @@ export const MyComponent: React.FC = () => {
     const handleAction = async () => {
         try {
             await api.doSomething();
-            showSuccess('Operation completed successfully');
+            showSuccess('操作成功完成');
         } catch (error) {
-            showError('Operation failed');
+            showError('操作失敗');
         }
     };
 
-    return <Button onClick={handleAction}>Do Action</Button>;
+    return <Button onClick={handleAction}>執行動作</Button>;
 };
 ```
 
-**Available Methods:**
-- `showSuccess(message)` - Green success message
-- `showError(message)` - Red error message
-- `showWarning(message)` - Orange warning message
-- `showInfo(message)` - Blue info message
+**可用方法：**
+- `showSuccess(message)` - 綠色成功訊息
+- `showError(message)` - 紅色錯誤訊息
+- `showWarning(message)` - 橘色警告訊息
+- `showInfo(message)` - 藍色資訊訊息
 
-### TanStack Query Error Callbacks
+### TanStack Query 錯誤回呼
 
 ```typescript
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -244,9 +244,9 @@ export const MyComponent: React.FC = () => {
         queryKey: ['data'],
         queryFn: () => api.getData(),
 
-        // Handle errors
+        // 處理錯誤
         onError: (error) => {
-            showError('Failed to load data');
+            showError('載入資料失敗');
             console.error('Query error:', error);
         },
     });
@@ -255,7 +255,7 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-### Error Boundaries
+### 錯誤邊界
 
 ```typescript
 import { ErrorBoundary } from 'react-error-boundary';
@@ -264,10 +264,10 @@ function ErrorFallback({ error, resetErrorBoundary }) {
     return (
         <Box sx={{ p: 4, textAlign: 'center' }}>
             <Typography variant='h5' color='error'>
-                Something went wrong
+                發生錯誤
             </Typography>
             <Typography>{error.message}</Typography>
-            <Button onClick={resetErrorBoundary}>Try Again</Button>
+            <Button onClick={resetErrorBoundary}>重試</Button>
         </Box>
     );
 }
@@ -288,9 +288,9 @@ export const MyPage: React.FC = () => {
 
 ---
 
-## Complete Examples
+## 完整範例
 
-### Example 1: Modern Component with Suspense
+### 範例 1：使用 Suspense 的現代元件
 
 ```typescript
 import React from 'react';
@@ -299,14 +299,14 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { SuspenseLoader } from '~components/SuspenseLoader';
 import { myFeatureApi } from '../api/myFeatureApi';
 
-// Inner component uses useSuspenseQuery
+// 內層元件使用 useSuspenseQuery
 const InnerComponent: React.FC<{ id: number }> = ({ id }) => {
     const { data } = useSuspenseQuery({
         queryKey: ['entity', id],
         queryFn: () => myFeatureApi.getEntity(id),
     });
 
-    // data is always defined - no isLoading needed!
+    // data 永遠有定義 - 不需要 isLoading！
     return (
         <Paper sx={{ p: 2 }}>
             <h2>{data.title}</h2>
@@ -315,7 +315,7 @@ const InnerComponent: React.FC<{ id: number }> = ({ id }) => {
     );
 };
 
-// Outer component provides Suspense boundary
+// 外層元件提供 Suspense 邊界
 export const OuterComponent: React.FC<{ id: number }> = ({ id }) => {
     return (
         <Box>
@@ -329,7 +329,7 @@ export const OuterComponent: React.FC<{ id: number }> = ({ id }) => {
 export default OuterComponent;
 ```
 
-### Example 2: Legacy Pattern with LoadingOverlay
+### 範例 2：使用 LoadingOverlay 的舊有模式
 
 ```typescript
 import React from 'react';
@@ -355,7 +355,7 @@ export const LegacyComponent: React.FC<{ id: number }> = ({ id }) => {
 };
 ```
 
-### Example 3: Error Handling with Snackbar
+### 範例 3：使用 Snackbar 的錯誤處理
 
 ```typescript
 import React from 'react';
@@ -372,7 +372,7 @@ export const EntityEditor: React.FC<{ id: number }> = ({ id }) => {
         queryKey: ['entity', id],
         queryFn: () => myFeatureApi.getEntity(id),
         onError: () => {
-            showError('Failed to load entity');
+            showError('載入實體失敗');
         },
     });
 
@@ -381,17 +381,17 @@ export const EntityEditor: React.FC<{ id: number }> = ({ id }) => {
 
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['entity', id] });
-            showSuccess('Entity updated successfully');
+            showSuccess('實體更新成功');
         },
 
         onError: () => {
-            showError('Failed to update entity');
+            showError('實體更新失敗');
         },
     });
 
     return (
         <Button onClick={() => updateMutation.mutate({ name: 'New' })}>
-            Update
+            更新
         </Button>
     );
 };
@@ -399,20 +399,20 @@ export const EntityEditor: React.FC<{ id: number }> = ({ id }) => {
 
 ---
 
-## Loading State Anti-Patterns
+## 載入狀態反模式
 
-### ❌ What NOT to Do
+### ❌ 不該做的事
 
 ```typescript
-// ❌ NEVER - Early return
+// ❌ 絕對不要 - 提早返回
 if (isLoading) {
     return <CircularProgress />;
 }
 
-// ❌ NEVER - Conditional rendering
+// ❌ 絕對不要 - 條件式渲染
 {isLoading ? <Spinner /> : <Content />}
 
-// ❌ NEVER - Layout changes
+// ❌ 絕對不要 - 版面改變
 if (isLoading) {
     return (
         <Box sx={{ height: 100 }}>
@@ -421,26 +421,26 @@ if (isLoading) {
     );
 }
 return (
-    <Box sx={{ height: 500 }}>  // Different height!
+    <Box sx={{ height: 500 }}>  // 不同的高度！
         <Content />
     </Box>
 );
 ```
 
-### ✅ What TO Do
+### ✅ 該做的事
 
 ```typescript
-// ✅ BEST - useSuspenseQuery + SuspenseLoader
+// ✅ 最佳 - useSuspenseQuery + SuspenseLoader
 <SuspenseLoader>
     <ComponentWithSuspenseQuery />
 </SuspenseLoader>
 
-// ✅ ACCEPTABLE - LoadingOverlay
+// ✅ 可接受 - LoadingOverlay
 <LoadingOverlay loading={isLoading}>
     <Content />
 </LoadingOverlay>
 
-// ✅ OK - Inline skeleton with same layout
+// ✅ 可以 - 相同版面的內嵌骨架屏
 <Box sx={{ height: 500 }}>
     {isLoading ? <Skeleton variant='rectangular' height='100%' /> : <Content />}
 </Box>
@@ -448,9 +448,9 @@ return (
 
 ---
 
-## Skeleton Loading (Alternative)
+## 骨架屏載入（替代方案）
 
-### MUI Skeleton Component
+### MUI Skeleton 元件
 
 ```typescript
 import { Skeleton, Box } from '@mui/material';
@@ -478,24 +478,24 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-**Key**: Skeleton must have **same layout** as actual content (no shift)
+**關鍵**：骨架屏必須與實際內容有**相同的版面**（無位移）
 
 ---
 
-## Summary
+## 總結
 
-**Loading States:**
-- ✅ **PREFERRED**: SuspenseLoader + useSuspenseQuery (modern pattern)
-- ✅ **ACCEPTABLE**: LoadingOverlay (legacy pattern)
-- ✅ **OK**: Skeleton with same layout
-- ❌ **NEVER**: Early returns or conditional layout
+**載入狀態：**
+- ✅ **首選**：SuspenseLoader + useSuspenseQuery（現代模式）
+- ✅ **可接受**：LoadingOverlay（舊有模式）
+- ✅ **可以**：相同版面的骨架屏
+- ❌ **絕對不要**：提早返回或條件式版面
 
-**Error Handling:**
-- ✅ **ALWAYS**: useMuiSnackbar for user feedback
-- ❌ **NEVER**: react-toastify
-- ✅ Use onError callbacks in queries/mutations
-- ✅ Error boundaries for component-level errors
+**錯誤處理：**
+- ✅ **永遠使用**：useMuiSnackbar 提供使用者回饋
+- ❌ **絕對不要**：react-toastify
+- ✅ 在查詢/變更中使用 onError 回呼
+- ✅ 使用錯誤邊界處理元件層級錯誤
 
-**See Also:**
-- [component-patterns.md](component-patterns.md) - Suspense integration
-- [data-fetching.md](data-fetching.md) - useSuspenseQuery details
+**參考資料：**
+- [component-patterns.md](component-patterns.md) - Suspense 整合
+- [data-fetching.md](data-fetching.md) - useSuspenseQuery 詳細說明

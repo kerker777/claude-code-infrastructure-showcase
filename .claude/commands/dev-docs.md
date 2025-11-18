@@ -1,51 +1,51 @@
 ---
-description: Create a comprehensive strategic plan with structured task breakdown
-argument-hint: Describe what you need planned (e.g., "refactor authentication system", "implement microservices")
+description: 建立包含結構化任務分解的全面性策略規劃
+argument-hint: 描述你需要規劃的內容（例如：「重構認證系統」、「實作微服務」）
 ---
 
-You are an elite strategic planning specialist. Create a comprehensive, actionable plan for: $ARGUMENTS
+你是一位資深策略規劃專家。為以下需求建立全面且可執行的計畫：$ARGUMENTS
 
-## Instructions
+## 指示
 
-1. **Analyze the request** and determine the scope of planning needed
-2. **Examine relevant files** in the codebase to understand current state
-3. **Create a structured plan** with:
-   - Executive Summary
-   - Current State Analysis
-   - Proposed Future State
-   - Implementation Phases (broken into sections)
-   - Detailed Tasks (actionable items with clear acceptance criteria)
-   - Risk Assessment and Mitigation Strategies
-   - Success Metrics
-   - Required Resources and Dependencies
-   - Timeline Estimates
+1. **分析需求**並確定所需的規劃範圍
+2. **檢視相關檔案**以了解程式碼庫的現況
+3. **建立結構化計畫**，包含：
+   - 執行摘要
+   - 現況分析
+   - 預期未來狀態
+   - 實作階段（分段說明）
+   - 詳細任務（可執行項目及明確的驗收標準）
+   - 風險評估與緩解策略
+   - 成功指標
+   - 所需資源與相依性
+   - 時程估算
 
-4. **Task Breakdown Structure**: 
-   - Each major section represents a phase or component
-   - Number and prioritize tasks within sections
-   - Include clear acceptance criteria for each task
-   - Specify dependencies between tasks
-   - Estimate effort levels (S/M/L/XL)
+4. **任務分解結構**：
+   - 每個主要段落代表一個階段或元件
+   - 在段落內為任務編號並排定優先順序
+   - 為每項任務列出明確的驗收標準
+   - 指定任務之間的相依性
+   - 估算工作量級別（S/M/L/XL）
 
-5. **Create task management structure**:
-   - Create directory: `dev/active/[task-name]/` (relative to project root)
-   - Generate three files:
-     - `[task-name]-plan.md` - The comprehensive plan
-     - `[task-name]-context.md` - Key files, decisions, dependencies
-     - `[task-name]-tasks.md` - Checklist format for tracking progress
-   - Include "Last Updated: YYYY-MM-DD" in each file
+5. **建立任務管理結構**：
+   - 建立目錄：`dev/active/[task-name]/`（相對於專案根目錄）
+   - 產生三個檔案：
+     - `[task-name]-plan.md` - 全面性計畫
+     - `[task-name]-context.md` - 關鍵檔案、決策、相依性
+     - `[task-name]-tasks.md` - 追蹤進度的檢查清單格式
+   - 在每個檔案中加入「Last Updated: YYYY-MM-DD」
 
-## Quality Standards
-- Plans must be self-contained with all necessary context
-- Use clear, actionable language
-- Include specific technical details where relevant
-- Consider both technical and business perspectives
-- Account for potential risks and edge cases
+## 品質標準
+- 計畫必須自成一體，包含所有必要的背景資訊
+- 使用清楚、可執行的文字
+- 適當加入具體的技術細節
+- 同時考量技術面與商業面
+- 將潛在風險與邊界情況納入考量
 
-## Context References
-- Check `PROJECT_KNOWLEDGE.md` for architecture overview (if exists)
-- Consult `BEST_PRACTICES.md` for coding standards (if exists)
-- Reference `TROUBLESHOOTING.md` for common issues to avoid (if exists)
-- Use `dev/README.md` for task management guidelines (if exists)
+## 脈絡參考
+- 檢查 `PROJECT_KNOWLEDGE.md` 以了解架構概觀（如果存在）
+- 參考 `BEST_PRACTICES.md` 以了解程式碼撰寫規範（如果存在）
+- 參考 `TROUBLESHOOTING.md` 以避免常見問題（如果存在）
+- 使用 `dev/README.md` 來了解任務管理指南（如果存在）
 
-**Note**: This command is ideal to use AFTER exiting plan mode when you have a clear vision of what needs to be done. It will create the persistent task structure that survives context resets.
+**注意**：此指令最適合在退出規劃模式後使用，當你對需要完成的事項已有清楚的想法時。它會建立能在脈絡重置後保留的持久性任務結構。

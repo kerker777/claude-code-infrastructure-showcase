@@ -1,34 +1,34 @@
-# Sentry Integration and Monitoring
+# Sentry 整合與監控
 
-Complete guide to error tracking and performance monitoring with Sentry v8.
+Sentry v8 錯誤追蹤與效能監控完整指南。
 
-## Table of Contents
+## 目錄
 
-- [Core Principles](#core-principles)
-- [Sentry Initialization](#sentry-initialization)
-- [Error Capture Patterns](#error-capture-patterns)
-- [Performance Monitoring](#performance-monitoring)
-- [Cron Job Monitoring](#cron-job-monitoring)
-- [Error Context Best Practices](#error-context-best-practices)
-- [Common Mistakes](#common-mistakes)
-
----
-
-## Core Principles
-
-**MANDATORY**: All errors MUST be captured to Sentry. No exceptions.
-
-**ALL ERRORS MUST BE CAPTURED** - Use Sentry v8 with comprehensive error tracking across all services.
+- [核心原則](#核心原則)
+- [Sentry 初始化](#sentry-初始化)
+- [錯誤捕捉模式](#錯誤捕捉模式)
+- [效能監控](#效能監控)
+- [Cron 任務監控](#cron-任務監控)
+- [錯誤上下文最佳實務](#錯誤上下文最佳實務)
+- [常見錯誤](#常見錯誤)
 
 ---
 
-## Sentry Initialization
+## 核心原則
 
-### instrument.ts Pattern
+**必須遵守**：所有錯誤都必須被捕捉到 Sentry。無一例外。
 
-**Location:** `src/instrument.ts` (MUST be first import in server.ts and all cron jobs)
+**所有錯誤都必須被捕捉** - 在所有服務中使用 Sentry v8 進行全面的錯誤追蹤。
 
-**Template for Microservices:**
+---
+
+## Sentry 初始化
+
+### instrument.ts 模式
+
+**位置：** `src/instrument.ts`（必須是 server.ts 和所有 cron 任務中的第一個 import）
+
+**微服務範本：**
 
 ```typescript
 import * as Sentry from '@sentry/node';
@@ -66,18 +66,18 @@ Sentry.init({
     ],
 
     beforeSend(event, hint) {
-        // Filter health checks
+        // 過濾健康檢查
         if (event.request?.url?.includes('/healthcheck')) {
             return null;
         }
 
-        // Scrub sensitive headers
+        // 清除敏感標頭
         if (event.request?.headers) {
             delete event.request.headers['authorization'];
             delete event.request.headers['cookie'];
         }
 
-        // Mask emails for PII
+        // 遮罩電子郵件以保護個人資訊
         if (event.user?.email) {
             event.user.email = event.user.email.replace(/^(.{2}).*(@.*)$/, '$1***$2');
         }
@@ -92,7 +92,7 @@ Sentry.init({
     ],
 });
 
-// Set service context
+// 設定服務上下文
 Sentry.setTags({
     service: 'form',
     version: '1.0.1',
@@ -104,18 +104,18 @@ Sentry.setContext('runtime', {
 });
 ```
 
-**Critical Points:**
-- PII protection built-in (beforeSend)
-- Filter non-critical errors
-- Comprehensive integrations
-- Prisma instrumentation
-- Service-specific tagging
+**重點事項：**
+- 內建個人資訊保護（beforeSend）
+- 過濾非關鍵錯誤
+- 完整的整合
+- Prisma 監測
+- 服務特定標籤
 
 ---
 
-## Error Capture Patterns
+## 錯誤捕捉模式
 
-### 1. BaseController Pattern
+### 1. BaseController 模式
 
 ```typescript
 // Use BaseController.handleError
@@ -134,7 +134,7 @@ protected handleError(error: unknown, res: Response, context: string, statusCode
 }
 ```
 
-### 2. Workflow Error Handling
+### 2. 工作流程錯誤處理
 
 ```typescript
 import { SentryHelper } from '../utils/sentryHelper';
@@ -152,7 +152,7 @@ try {
 }
 ```
 
-### 3. Service Layer Error Handling
+### 3. 服務層錯誤處理
 
 ```typescript
 try {
@@ -174,9 +174,9 @@ try {
 
 ---
 
-## Performance Monitoring
+## 效能監控
 
-### Database Performance Tracking
+### 資料庫效能追蹤
 
 ```typescript
 import { DatabasePerformanceMonitor } from '../utils/databasePerformance';
@@ -190,7 +190,7 @@ const result = await DatabasePerformanceMonitor.withPerformanceTracking(
 );
 ```
 
-### API Endpoint Spans
+### API 端點 Span
 
 ```typescript
 router.post('/operation', async (req, res) => {
@@ -210,13 +210,13 @@ router.post('/operation', async (req, res) => {
 
 ---
 
-## Cron Job Monitoring
+## Cron 任務監控
 
-### Mandatory Pattern
+### 必須遵守的模式
 
 ```typescript
 #!/usr/bin/env node
-import '../instrument'; // FIRST LINE after shebang
+import '../instrument'; // shebang 之後的第一行
 import * as Sentry from '@sentry/node';
 
 async function main() {
@@ -229,7 +229,7 @@ async function main() {
         }
     }, async () => {
         try {
-            // Cron job logic here
+            // Cron 任務邏輯放在這裡
         } catch (error) {
             Sentry.captureException(error, {
                 tags: {
@@ -254,32 +254,32 @@ main().then(() => {
 
 ---
 
-## Error Context Best Practices
+## 錯誤上下文最佳實務
 
-### Rich Context Example
+### 豐富上下文範例
 
 ```typescript
 Sentry.withScope((scope) => {
-    // User context
+    // 使用者上下文
     scope.setUser({
         id: user.id,
         email: user.email,
         username: user.username
     });
 
-    // Tags for filtering
+    // 用於過濾的標籤
     scope.setTag('service', 'form');
     scope.setTag('endpoint', req.path);
     scope.setTag('method', req.method);
 
-    // Structured context
+    // 結構化上下文
     scope.setContext('operation', {
         type: 'workflow.complete',
         workflowId: 123,
         stepId: 456
     });
 
-    // Breadcrumbs for timeline
+    // 時間軸麵包屑
     scope.addBreadcrumb({
         category: 'workflow',
         message: 'Starting step completion',
@@ -293,30 +293,30 @@ Sentry.withScope((scope) => {
 
 ---
 
-## Common Mistakes
+## 常見錯誤
 
 ```typescript
-// ❌ Swallowing errors
+// ❌ 吞掉錯誤
 try {
     await riskyOperation();
 } catch (error) {
-    // Silent failure
+    // 靜默失敗
 }
 
-// ❌ Generic error messages
+// ❌ 通用錯誤訊息
 throw new Error('Error occurred');
 
-// ❌ Exposing sensitive data
+// ❌ 暴露敏感資料
 Sentry.captureException(error, {
     extra: { password: user.password } // NEVER
 });
 
-// ❌ Missing async error handling
+// ❌ 缺少非同步錯誤處理
 async function bad() {
-    fetchData().then(data => processResult(data)); // Unhandled
+    fetchData().then(data => processResult(data)); // 未處理
 }
 
-// ✅ Proper async handling
+// ✅ 正確的非同步處理
 async function good() {
     try {
         const data = await fetchData();
@@ -330,7 +330,7 @@ async function good() {
 
 ---
 
-**Related Files:**
+**相關檔案：**
 - [SKILL.md](SKILL.md)
 - [routing-and-controllers.md](routing-and-controllers.md)
 - [async-and-errors.md](async-and-errors.md)

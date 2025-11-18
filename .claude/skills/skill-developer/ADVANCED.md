@@ -1,35 +1,35 @@
-# Advanced Topics & Future Enhancements
+# 進階主題與未來改進
 
-Ideas and concepts for future improvements to the skill system.
-
----
-
-## Dynamic Rule Updates
-
-**Current State:** Requires Claude Code restart to pick up changes to skill-rules.json
-
-**Future Enhancement:** Hot-reload configuration without restart
-
-**Implementation Ideas:**
-- Watch skill-rules.json for changes
-- Reload on file modification
-- Invalidate cached compiled regexes
-- Notify user of reload
-
-**Benefits:**
-- Faster iteration during skill development
-- No need to restart Claude Code
-- Better developer experience
+關於 skill 系統未來改進的想法與概念。
 
 ---
 
-## Skill Dependencies
+## 動態規則更新
 
-**Current State:** Skills are independent
+**目前狀態：** 需要重新啟動 Claude Code 才能載入 skill-rules.json 的變更
 
-**Future Enhancement:** Specify skill dependencies and load order
+**未來改進：** 在不重新啟動的情況下熱重載設定檔
 
-**Configuration Idea:**
+**實作想法：**
+- 監控 skill-rules.json 的變更
+- 檔案修改時重新載入
+- 清除已快取的編譯過的正規表示式
+- 通知使用者已重新載入
+
+**優點：**
+- skill 開發時能更快速迭代
+- 不需要重新啟動 Claude Code
+- 更好的開發體驗
+
+---
+
+## Skill 依賴關係
+
+**目前狀態：** Skills 彼此獨立
+
+**未來改進：** 指定 skill 依賴關係與載入順序
+
+**設定概念：**
 ```json
 {
   "my-advanced-skill": {
@@ -40,25 +40,25 @@ Ideas and concepts for future improvements to the skill system.
 }
 ```
 
-**Use Cases:**
-- Advanced skill builds on base skill knowledge
-- Ensure foundational skills loaded first
-- Chain skills for complex workflows
+**使用情境：**
+- 進階 skill 建立在基礎 skill 知識之上
+- 確保基礎 skills 優先載入
+- 串連 skills 以執行複雜的工作流程
 
-**Benefits:**
-- Better skill composition
-- Clearer skill relationships
-- Progressive disclosure
+**優點：**
+- 更好的 skill 組合
+- 更清楚的 skill 關係
+- 漸進式揭露
 
 ---
 
-## Conditional Enforcement
+## 條件式強制執行
 
-**Current State:** Enforcement level is static
+**目前狀態：** 執行層級是靜態的
 
-**Future Enhancement:** Enforce based on context or environment
+**未來改進：** 根據情境或環境來強制執行
 
-**Configuration Idea:**
+**設定概念：**
 ```json
 {
   "enforcement": {
@@ -72,52 +72,52 @@ Ideas and concepts for future improvements to the skill system.
 }
 ```
 
-**Use Cases:**
-- Stricter enforcement in production
-- Relaxed rules during development
-- CI/CD pipeline requirements
+**使用情境：**
+- 正式環境採用更嚴格的強制執行
+- 開發期間放寬規則
+- CI/CD pipeline 的需求
 
-**Benefits:**
-- Environment-appropriate enforcement
-- Flexible rule application
-- Context-aware guardrails
-
----
-
-## Skill Analytics
-
-**Current State:** No usage tracking
-
-**Future Enhancement:** Track skill usage patterns and effectiveness
-
-**Metrics to Collect:**
-- Skill trigger frequency
-- False positive rate
-- False negative rate
-- Time to skill usage after suggestion
-- User override rate (skip markers, env vars)
-- Performance metrics (execution time)
-
-**Dashbord Ideas:**
-- Most/least used skills
-- Skills with highest false positive rate
-- Performance bottlenecks
-- Skill effectiveness scores
-
-**Benefits:**
-- Data-driven skill improvement
-- Identify problems early
-- Optimize patterns based on real usage
+**優點：**
+- 符合環境的適當強制執行
+- 彈性的規則應用
+- 根據情境的防護機制
 
 ---
 
-## Skill Versioning
+## Skill 分析
 
-**Current State:** No version tracking
+**目前狀態：** 沒有使用追蹤
 
-**Future Enhancement:** Version skills and track compatibility
+**未來改進：** 追蹤 skill 使用模式與成效
 
-**Configuration Idea:**
+**要收集的指標：**
+- Skill 觸發頻率
+- 誤判率（false positive）
+- 漏判率（false negative）
+- 建議後到實際使用 skill 的時間
+- 使用者覆寫率（skip markers、環境變數）
+- 效能指標（執行時間）
+
+**儀表板概念：**
+- 最常/最少使用的 skills
+- 誤判率最高的 skills
+- 效能瓶頸
+- Skill 成效評分
+
+**優點：**
+- 根據資料改進 skill
+- 及早發現問題
+- 根據實際使用狀況最佳化模式
+
+---
+
+## Skill 版本控制
+
+**目前狀態：** 沒有版本追蹤
+
+**未來改進：** 為 skills 加上版本並追蹤相容性
+
+**設定概念：**
 ```json
 {
   "my-skill": {
@@ -129,45 +129,45 @@ Ideas and concepts for future improvements to the skill system.
 }
 ```
 
-**Benefits:**
-- Track skill evolution
-- Ensure compatibility
-- Document changes
-- Support migration paths
+**優點：**
+- 追蹤 skill 演進
+- 確保相容性
+- 記錄變更
+- 支援遷移路徑
 
 ---
 
-## Multi-Language Support
+## 多語言支援
 
-**Current State:** English only
+**目前狀態：** 僅支援英文
 
-**Future Enhancement:** Support multiple languages for skill content
+**未來改進：** 支援多種語言的 skill 內容
 
-**Implementation Ideas:**
-- Language-specific SKILL.md variants
-- Automatic language detection
-- Fallback to English
+**實作想法：**
+- 特定語言的 SKILL.md 變體
+- 自動語言偵測
+- 回退至英文
 
-**Use Cases:**
-- International teams
-- Localized documentation
-- Multi-language projects
+**使用情境：**
+- 國際團隊
+- 在地化文件
+- 多語言專案
 
 ---
 
-## Skill Testing Framework
+## Skill 測試框架
 
-**Current State:** Manual testing with npx tsx commands
+**目前狀態：** 使用 npx tsx 指令進行手動測試
 
-**Future Enhancement:** Automated skill testing
+**未來改進：** 自動化 skill 測試
 
-**Features:**
-- Test cases for trigger patterns
-- Assertion framework
-- CI/CD integration
-- Coverage reports
+**功能：**
+- 觸發模式的測試案例
+- 斷言框架
+- CI/CD 整合
+- 涵蓋率報告
 
-**Example Test:**
+**測試範例：**
 ```typescript
 describe('database-verification', () => {
   it('triggers on Prisma imports', () => {
@@ -183,15 +183,15 @@ describe('database-verification', () => {
 });
 ```
 
-**Benefits:**
-- Prevent regressions
-- Validate patterns before deployment
-- Confidence in changes
+**優點：**
+- 防止功能退化
+- 在部署前驗證模式
+- 對變更更有信心
 
 ---
 
-## Related Files
+## 相關檔案
 
-- [SKILL.md](SKILL.md) - Main skill guide
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Current debugging guide
-- [HOOK_MECHANISMS.md](HOOK_MECHANISMS.md) - How hooks work today
+- [SKILL.md](SKILL.md) - 主要 skill 指南
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - 目前的除錯指南
+- [HOOK_MECHANISMS.md](HOOK_MECHANISMS.md) - 今日 hooks 的運作方式

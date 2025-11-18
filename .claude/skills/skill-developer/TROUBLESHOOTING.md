@@ -1,194 +1,194 @@
-# Troubleshooting - Skill Activation Issues
+# 故障排除 - Skill 啟動問題
 
-Complete debugging guide for skill activation problems.
+Skill 啟動問題的完整除錯指南。
 
-## Table of Contents
+## 目錄
 
-- [Skill Not Triggering](#skill-not-triggering)
-  - [UserPromptSubmit Not Suggesting](#userpromptsubmit-not-suggesting)
-  - [PreToolUse Not Blocking](#pretooluse-not-blocking)
-- [False Positives](#false-positives)
-- [Hook Not Executing](#hook-not-executing)
-- [Performance Issues](#performance-issues)
+- [Skill 無法觸發](#skill-無法觸發)
+  - [UserPromptSubmit 未建議](#userpromptsubmit-未建議)
+  - [PreToolUse 未阻擋](#pretooluse-未阻擋)
+- [誤判](#誤判)
+- [Hook 未執行](#hook-未執行)
+- [效能問題](#效能問題)
 
 ---
 
-## Skill Not Triggering
+## Skill 無法觸發
 
-### UserPromptSubmit Not Suggesting
+### UserPromptSubmit 未建議
 
-**Symptoms:** Ask a question, but no skill suggestion appears in output.
+**症狀：**提出問題後，輸出中沒有出現 skill 建議。
 
-**Common Causes:**
+**常見原因：**
 
-####  1. Keywords Don't Match
+####  1. 關鍵字不符
 
-**Check:**
-- Look at `promptTriggers.keywords` in skill-rules.json
-- Are the keywords actually in your prompt?
-- Remember: case-insensitive substring matching
+**檢查：**
+- 查看 skill-rules.json 中的 `promptTriggers.keywords`
+- 你的提示詞中是否真的包含這些關鍵字？
+- 記住：不區分大小寫的子字串比對
 
-**Example:**
+**範例：**
 ```json
 "keywords": ["layout", "grid"]
 ```
-- "how does the layout work?" → ✅ Matches "layout"
-- "how does the grid system work?" → ✅ Matches "grid"
-- "how do layouts work?" → ✅ Matches "layout"
-- "how does it work?" → ❌ No match
+- "how does the layout work?" → ✅ 符合 "layout"
+- "how does the grid system work?" → ✅ 符合 "grid"
+- "how do layouts work?" → ✅ 符合 "layout"
+- "how does it work?" → ❌ 不符合
 
-**Fix:** Add more keyword variations to skill-rules.json
+**修正：**在 skill-rules.json 中新增更多關鍵字變化
 
-#### 2. Intent Patterns Too Specific
+#### 2. 意圖模式太過具體
 
-**Check:**
-- Look at `promptTriggers.intentPatterns`
-- Test regex at https://regex101.com/
-- May need broader patterns
+**檢查：**
+- 查看 `promptTriggers.intentPatterns`
+- 在 https://regex101.com/ 測試 regex
+- 可能需要更廣泛的模式
 
-**Example:**
+**範例：**
 ```json
 "intentPatterns": [
-  "(create|add).*?(database.*?table)"  // Too specific
+  "(create|add).*?(database.*?table)"  // 太過具體
 ]
 ```
-- "create a database table" → ✅ Matches
-- "add new table" → ❌ Doesn't match (missing "database")
+- "create a database table" → ✅ 符合
+- "add new table" → ❌ 不符合（缺少 "database"）
 
-**Fix:** Broaden the pattern:
+**修正：**擴大模式範圍：
 ```json
 "intentPatterns": [
-  "(create|add).*?(table|database)"  // Better
+  "(create|add).*?(table|database)"  // 較好
 ]
 ```
 
-#### 3. Typo in Skill Name
+#### 3. Skill 名稱拼寫錯誤
 
-**Check:**
-- Skill name in SKILL.md frontmatter
-- Skill name in skill-rules.json
-- Must match exactly
+**檢查：**
+- SKILL.md frontmatter 中的 skill 名稱
+- skill-rules.json 中的 skill 名稱
+- 必須完全一致
 
-**Example:**
+**範例：**
 ```yaml
 # SKILL.md
 name: project-catalog-developer
 ```
 ```json
 // skill-rules.json
-"project-catalogue-developer": {  // ❌ Typo: catalogue vs catalog
+"project-catalogue-developer": {  // ❌ 拼寫錯誤：catalogue vs catalog
   ...
 }
 ```
 
-**Fix:** Make names match exactly
+**修正：**確保名稱完全一致
 
-#### 4. JSON Syntax Error
+#### 4. JSON 語法錯誤
 
-**Check:**
+**檢查：**
 ```bash
 cat .claude/skills/skill-rules.json | jq .
 ```
 
-If invalid JSON, jq will show the error.
+如果 JSON 無效，jq 會顯示錯誤。
 
-**Common errors:**
-- Trailing commas
-- Missing quotes
-- Single quotes instead of double
-- Unescaped characters in strings
+**常見錯誤：**
+- 結尾多餘的逗號
+- 缺少引號
+- 使用單引號而非雙引號
+- 字串中未跳脫的字元
 
-**Fix:** Correct JSON syntax, validate with jq
+**修正：**修正 JSON 語法，使用 jq 驗證
 
-#### Debug Command
+#### 除錯指令
 
-Test the hook manually:
+手動測試 hook：
 
 ```bash
 echo '{"session_id":"debug","prompt":"your test prompt here"}' | \
   npx tsx .claude/hooks/skill-activation-prompt.ts
 ```
 
-Expected: Your skill should appear in the output.
+預期結果：輸出中應該出現你的 skill。
 
 ---
 
-### PreToolUse Not Blocking
+### PreToolUse 未阻擋
 
-**Symptoms:** Edit a file that should trigger a guardrail, but no block occurs.
+**症狀：**編輯應該觸發防護機制的檔案，但沒有發生阻擋。
 
-**Common Causes:**
+**常見原因：**
 
-#### 1. File Path Doesn't Match Patterns
+#### 1. 檔案路徑不符合模式
 
-**Check:**
-- File path being edited
-- `fileTriggers.pathPatterns` in skill-rules.json
-- Glob pattern syntax
+**檢查：**
+- 正在編輯的檔案路徑
+- skill-rules.json 中的 `fileTriggers.pathPatterns`
+- Glob 模式語法
 
-**Example:**
+**範例：**
 ```json
 "pathPatterns": [
   "frontend/src/**/*.tsx"
 ]
 ```
-- Editing: `frontend/src/components/Dashboard.tsx` → ✅ Matches
-- Editing: `frontend/tests/Dashboard.test.tsx` → ✅ Matches (add exclusion!)
-- Editing: `backend/src/app.ts` → ❌ Doesn't match
+- 編輯：`frontend/src/components/Dashboard.tsx` → ✅ 符合
+- 編輯：`frontend/tests/Dashboard.test.tsx` → ✅ 符合（需新增排除規則！）
+- 編輯：`backend/src/app.ts` → ❌ 不符合
 
-**Fix:** Adjust glob patterns or add the missing path
+**修正：**調整 glob 模式或新增缺少的路徑
 
-#### 2. Excluded by pathExclusions
+#### 2. 被 pathExclusions 排除
 
-**Check:**
-- Are you editing a test file?
-- Look at `fileTriggers.pathExclusions`
+**檢查：**
+- 你是否在編輯測試檔案？
+- 查看 `fileTriggers.pathExclusions`
 
-**Example:**
+**範例：**
 ```json
 "pathExclusions": [
   "**/*.test.ts",
   "**/*.spec.ts"
 ]
 ```
-- Editing: `services/user.test.ts` → ❌ Excluded
-- Editing: `services/user.ts` → ✅ Not excluded
+- 編輯：`services/user.test.ts` → ❌ 被排除
+- 編輯：`services/user.ts` → ✅ 未被排除
 
-**Fix:** If test exclusion too broad, narrow it or remove
+**修正：**如果測試排除規則太廣，縮小範圍或移除
 
-#### 3. Content Pattern Not Found
+#### 3. 找不到內容模式
 
-**Check:**
-- Does the file actually contain the pattern?
-- Look at `fileTriggers.contentPatterns`
-- Is the regex correct?
+**檢查：**
+- 檔案中是否真的包含該模式？
+- 查看 `fileTriggers.contentPatterns`
+- Regex 是否正確？
 
-**Example:**
+**範例：**
 ```json
 "contentPatterns": [
   "import.*[Pp]risma"
 ]
 ```
-- File has: `import { PrismaService } from './prisma'` → ✅ Matches
-- File has: `import { Database } from './db'` → ❌ Doesn't match
+- 檔案內容：`import { PrismaService } from './prisma'` → ✅ 符合
+- 檔案內容：`import { Database } from './db'` → ❌ 不符合
 
-**Debug:**
+**除錯：**
 ```bash
-# Check if pattern exists in file
+# 檢查檔案中是否存在該模式
 grep -i "prisma" path/to/file.ts
 ```
 
-**Fix:** Adjust content patterns or add missing imports
+**修正：**調整內容模式或新增缺少的 import
 
-#### 4. Session Already Used Skill
+#### 4. Session 已使用過該 Skill
 
-**Check session state:**
+**檢查 session 狀態：**
 ```bash
 ls .claude/hooks/state/
 cat .claude/hooks/state/skills-used-{session-id}.json
 ```
 
-**Example:**
+**範例：**
 ```json
 {
   "skills_used": ["database-verification"],
@@ -196,42 +196,42 @@ cat .claude/hooks/state/skills-used-{session-id}.json
 }
 ```
 
-If the skill is in `skills_used`, it won't block again in this session.
+如果 skill 在 `skills_used` 中，它在此 session 中不會再次阻擋。
 
-**Fix:** Delete the state file to reset:
+**修正：**刪除狀態檔案以重置：
 ```bash
 rm .claude/hooks/state/skills-used-{session-id}.json
 ```
 
-#### 5. File Marker Present
+#### 5. 檔案中存在標記
 
-**Check file for skip marker:**
+**檢查檔案中的跳過標記：**
 ```bash
 grep "@skip-validation" path/to/file.ts
 ```
 
-If found, the file is permanently skipped.
+如果找到，該檔案會被永久跳過。
 
-**Fix:** Remove the marker if verification is needed again
+**修正：**如果需要再次驗證，移除該標記
 
-#### 6. Environment Variable Override
+#### 6. 環境變數覆寫
 
-**Check:**
+**檢查：**
 ```bash
 echo $SKIP_DB_VERIFICATION
 echo $SKIP_SKILL_GUARDRAILS
 ```
 
-If set, the skill is disabled.
+如果有設定，該 skill 會被停用。
 
-**Fix:** Unset the environment variable:
+**修正：**取消設定環境變數：
 ```bash
 unset SKIP_DB_VERIFICATION
 ```
 
-#### Debug Command
+#### 除錯指令
 
-Test the hook manually:
+手動測試 hook：
 
 ```bash
 cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts 2>&1
@@ -244,27 +244,27 @@ EOF
 echo "Exit code: $?"
 ```
 
-Expected:
-- Exit code 2 + stderr message if should block
-- Exit code 0 + no output if should allow
+預期結果：
+- 如果應該阻擋：exit code 2 + stderr 訊息
+- 如果應該允許：exit code 0 + 無輸出
 
 ---
 
-## False Positives
+## 誤判
 
-**Symptoms:** Skill triggers when it shouldn't.
+**症狀：**Skill 在不應該觸發時觸發了。
 
-**Common Causes & Solutions:**
+**常見原因與解決方案：**
 
-### 1. Keywords Too Generic
+### 1. 關鍵字太過廣泛
 
-**Problem:**
+**問題：**
 ```json
-"keywords": ["user", "system", "create"]  // Too broad
+"keywords": ["user", "system", "create"]  // 太廣泛
 ```
-- Triggers on: "user manual", "file system", "create directory"
+- 會觸發於："user manual"、"file system"、"create directory"
 
-**Solution:** Make keywords more specific
+**解決方案：**讓關鍵字更具體
 ```json
 "keywords": [
   "user authentication",
@@ -273,97 +273,97 @@ Expected:
 ]
 ```
 
-### 2. Intent Patterns Too Broad
+### 2. 意圖模式太過廣泛
 
-**Problem:**
+**問題：**
 ```json
 "intentPatterns": [
-  "(create)"  // Matches everything with "create"
+  "(create)"  // 符合所有包含 "create" 的內容
 ]
 ```
-- Triggers on: "create file", "create folder", "create account"
+- 會觸發於："create file"、"create folder"、"create account"
 
-**Solution:** Add context to patterns
+**解決方案：**為模式增加上下文
 ```json
 "intentPatterns": [
-  "(create|add).*?(database|table|feature)"  // More specific
+  "(create|add).*?(database|table|feature)"  // 更具體
 ]
 ```
 
-**Advanced:** Use negative lookaheads to exclude
+**進階：**使用 negative lookaheads 排除特定情況
 ```regex
-(create)(?!.*test).*?(feature)  // Don't match if "test" appears
+(create)(?!.*test).*?(feature)  // 如果出現 "test" 則不符合
 ```
 
-### 3. File Paths Too Generic
+### 3. 檔案路徑太過廣泛
 
-**Problem:**
+**問題：**
 ```json
 "pathPatterns": [
-  "form/**"  // Matches everything in form/
+  "form/**"  // 符合 form/ 下的所有內容
 ]
 ```
-- Triggers on: test files, config files, everything
+- 會觸發於：測試檔案、設定檔、所有內容
 
-**Solution:** Use narrower patterns
+**解決方案：**使用更窄的模式
 ```json
 "pathPatterns": [
-  "form/src/services/**/*.ts",  // Only service files
+  "form/src/services/**/*.ts",  // 僅 service 檔案
   "form/src/controllers/**/*.ts"
 ]
 ```
 
-### 4. Content Patterns Catching Unrelated Code
+### 4. 內容模式捕捉到無關程式碼
 
-**Problem:**
+**問題：**
 ```json
 "contentPatterns": [
-  "Prisma"  // Matches in comments, strings, etc.
+  "Prisma"  // 會在註解、字串等處符合
 ]
 ```
-- Triggers on: `// Don't use Prisma here`
-- Triggers on: `const note = "Prisma is cool"`
+- 會觸發於：`// Don't use Prisma here`
+- 會觸發於：`const note = "Prisma is cool"`
 
-**Solution:** Make patterns more specific
+**解決方案：**讓模式更具體
 ```json
 "contentPatterns": [
-  "import.*[Pp]risma",        // Only imports
-  "PrismaService\\.",         // Only actual usage
-  "prisma\\.(findMany|create)" // Specific methods
+  "import.*[Pp]risma",        // 僅 import
+  "PrismaService\\.",         // 僅實際使用
+  "prisma\\.(findMany|create)" // 特定方法
 ]
 ```
 
-### 5. Adjust Enforcement Level
+### 5. 調整強制等級
 
-**Last resort:** If false positives are frequent:
+**最後手段：**如果誤判很頻繁：
 
 ```json
 {
-  "enforcement": "block"  // Change to "suggest"
+  "enforcement": "block"  // 改為 "suggest"
 }
 ```
 
-This makes it advisory instead of blocking.
+這會讓它變成建議性質而非阻擋性質。
 
 ---
 
-## Hook Not Executing
+## Hook 未執行
 
-**Symptoms:** Hook doesn't run at all - no suggestion, no block.
+**症狀：**Hook 完全沒有執行 - 沒有建議，沒有阻擋。
 
-**Common Causes:**
+**常見原因：**
 
-### 1. Hook Not Registered
+### 1. Hook 未註冊
 
-**Check `.claude/settings.json`:**
+**檢查 `.claude/settings.json`：**
 ```bash
 cat .claude/settings.json | jq '.hooks.UserPromptSubmit'
 cat .claude/settings.json | jq '.hooks.PreToolUse'
 ```
 
-Expected: Hook entries present
+預期結果：應該有 hook 項目
 
-**Fix:** Add missing hook registration:
+**修正：**新增缺少的 hook 註冊：
 ```json
 {
   "hooks": {
@@ -381,116 +381,116 @@ Expected: Hook entries present
 }
 ```
 
-### 2. Bash Wrapper Not Executable
+### 2. Bash Wrapper 無執行權限
 
-**Check:**
+**檢查：**
 ```bash
 ls -l .claude/hooks/*.sh
 ```
 
-Expected: `-rwxr-xr-x` (executable)
+預期結果：`-rwxr-xr-x`（可執行）
 
-**Fix:**
+**修正：**
 ```bash
 chmod +x .claude/hooks/*.sh
 ```
 
-### 3. Incorrect Shebang
+### 3. Shebang 不正確
 
-**Check:**
+**檢查：**
 ```bash
 head -1 .claude/hooks/skill-activation-prompt.sh
 ```
 
-Expected: `#!/bin/bash`
+預期結果：`#!/bin/bash`
 
-**Fix:** Add correct shebang to first line
+**修正：**在第一行新增正確的 shebang
 
-### 4. npx/tsx Not Available
+### 4. npx/tsx 不可用
 
-**Check:**
+**檢查：**
 ```bash
 npx tsx --version
 ```
 
-Expected: Version number
+預期結果：版本編號
 
-**Fix:** Install dependencies:
+**修正：**安裝依賴套件：
 ```bash
 cd .claude/hooks
 npm install
 ```
 
-### 5. TypeScript Compilation Error
+### 5. TypeScript 編譯錯誤
 
-**Check:**
+**檢查：**
 ```bash
 cd .claude/hooks
 npx tsc --noEmit skill-activation-prompt.ts
 ```
 
-Expected: No output (no errors)
+預期結果：無輸出（無錯誤）
 
-**Fix:** Correct TypeScript syntax errors
+**修正：**修正 TypeScript 語法錯誤
 
 ---
 
-## Performance Issues
+## 效能問題
 
-**Symptoms:** Hooks are slow, noticeable delay before prompt/edit.
+**症狀：**Hooks 執行緩慢，在提示詞/編輯前有明顯延遲。
 
-**Common Causes:**
+**常見原因：**
 
-### 1. Too Many Patterns
+### 1. 模式數量過多
 
-**Check:**
-- Count patterns in skill-rules.json
-- Each pattern = regex compilation + matching
+**檢查：**
+- 計算 skill-rules.json 中的模式數量
+- 每個模式 = regex 編譯 + 比對
 
-**Solution:** Reduce patterns
-- Combine similar patterns
-- Remove redundant patterns
-- Use more specific patterns (faster matching)
+**解決方案：**減少模式
+- 合併相似的模式
+- 移除重複的模式
+- 使用更具體的模式（比對更快）
 
-### 2. Complex Regex
+### 2. 複雜的 Regex
 
-**Problem:**
+**問題：**
 ```regex
 (create|add|modify|update|implement|build).*?(feature|endpoint|route|service|controller|component|UI|page)
 ```
-- Long alternations = slow
+- 長的選擇列表 = 慢
 
-**Solution:** Simplify
+**解決方案：**簡化
 ```regex
-(create|add).*?(feature|endpoint)  // Fewer alternatives
+(create|add).*?(feature|endpoint)  // 較少的選擇項
 ```
 
-### 3. Too Many Files Checked
+### 3. 檢查太多檔案
 
-**Problem:**
+**問題：**
 ```json
 "pathPatterns": [
-  "**/*.ts"  // Checks ALL TypeScript files
+  "**/*.ts"  // 檢查所有 TypeScript 檔案
 ]
 ```
 
-**Solution:** Be more specific
+**解決方案：**更具體
 ```json
 "pathPatterns": [
-  "form/src/services/**/*.ts",  // Only specific directory
+  "form/src/services/**/*.ts",  // 僅特定目錄
   "form/src/controllers/**/*.ts"
 ]
 ```
 
-### 4. Large Files
+### 4. 大型檔案
 
-Content pattern matching reads entire file - slow for large files.
+內容模式比對會讀取整個檔案 - 對大型檔案很慢。
 
-**Solution:**
-- Only use content patterns when necessary
-- Consider file size limits (future enhancement)
+**解決方案：**
+- 只在必要時使用內容模式
+- 考慮檔案大小限制（未來改進項目）
 
-### Measure Performance
+### 測量效能
 
 ```bash
 # UserPromptSubmit
@@ -502,13 +502,13 @@ time cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts
 EOF
 ```
 
-**Target metrics:**
-- UserPromptSubmit: < 100ms
-- PreToolUse: < 200ms
+**目標指標：**
+- UserPromptSubmit：< 100ms
+- PreToolUse：< 200ms
 
 ---
 
-**Related Files:**
-- [SKILL.md](SKILL.md) - Main skill guide
-- [HOOK_MECHANISMS.md](HOOK_MECHANISMS.md) - How hooks work
-- [SKILL_RULES_REFERENCE.md](SKILL_RULES_REFERENCE.md) - Configuration reference
+**相關檔案：**
+- [SKILL.md](SKILL.md) - 主要 skill 指南
+- [HOOK_MECHANISMS.md](HOOK_MECHANISMS.md) - Hook 運作方式
+- [SKILL_RULES_REFERENCE.md](SKILL_RULES_REFERENCE.md) - 設定參考

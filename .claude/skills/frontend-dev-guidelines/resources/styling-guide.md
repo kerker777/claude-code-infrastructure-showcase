@@ -1,14 +1,14 @@
-# Styling Guide
+# 樣式指南
 
-Modern styling patterns for using MUI v7 sx prop, inline styles, and theme integration.
+使用 MUI v7 sx prop、inline 樣式和主題整合的現代化樣式寫法。
 
 ---
 
-## Inline vs Separate Styles
+## Inline 與分離樣式
 
-### Decision Threshold
+### 判斷門檻
 
-**<100 lines: Inline styles at top of component**
+**<100 行：在元件頂部使用 inline 樣式**
 
 ```typescript
 import type { SxProps, Theme } from '@mui/material';
@@ -38,7 +38,7 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-**>100 lines: Separate `.styles.ts` file**
+**>100 行：使用獨立的 `.styles.ts` 檔案**
 
 ```typescript
 // MyComponent.styles.ts
@@ -58,9 +58,9 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-### Real Example: UnifiedForm.tsx
+### 實際範例：UnifiedForm.tsx
 
-**Lines 48-126**: 78 lines of inline styles (acceptable)
+**第 48-126 行**：78 行 inline 樣式（可接受）
 
 ```typescript
 const formStyles: Record<string, SxProps<Theme>> = {
@@ -78,13 +78,13 @@ const formStyles: Record<string, SxProps<Theme>> = {
 };
 ```
 
-**Guideline**: User is comfortable with ~80 lines inline. Use your judgment around 100 lines.
+**指導原則**：使用者能接受約 80 行的 inline 樣式。在 100 行左右時自行判斷。
 
 ---
 
-## sx Prop Patterns
+## sx Prop 使用模式
 
-### Basic Usage
+### 基本用法
 
 ```typescript
 <Box sx={{ p: 2, mb: 3, display: 'flex' }}>
@@ -92,7 +92,7 @@ const formStyles: Record<string, SxProps<Theme>> = {
 </Box>
 ```
 
-### With Theme Access
+### 使用主題
 
 ```typescript
 <Box
@@ -107,7 +107,7 @@ const formStyles: Record<string, SxProps<Theme>> = {
 </Box>
 ```
 
-### Responsive Styles
+### 響應式樣式
 
 ```typescript
 <Box
@@ -121,7 +121,7 @@ const formStyles: Record<string, SxProps<Theme>> = {
 </Box>
 ```
 
-### Pseudo-Selectors
+### 偽選擇器
 
 ```typescript
 <Box
@@ -144,14 +144,14 @@ const formStyles: Record<string, SxProps<Theme>> = {
 
 ---
 
-## MUI v7 Patterns
+## MUI v7 寫法
 
-### Grid Component (v7 Syntax)
+### Grid 元件（v7 語法）
 
 ```typescript
 import { Grid } from '@mui/material';
 
-// ✅ CORRECT - v7 syntax with size prop
+// ✅ 正確 - v7 語法使用 size prop
 <Grid container spacing={2}>
     <Grid size={{ xs: 12, md: 6 }}>
         Left Column
@@ -161,7 +161,7 @@ import { Grid } from '@mui/material';
     </Grid>
 </Grid>
 
-// ❌ WRONG - Old v6 syntax
+// ❌ 錯誤 - 舊的 v6 語法
 <Grid container spacing={2}>
     <Grid xs={12} md={6}>  {/* OLD - Don't use */}
         Content
@@ -169,9 +169,9 @@ import { Grid } from '@mui/material';
 </Grid>
 ```
 
-**Key Change**: `size={{ xs: 12, md: 6 }}` instead of `xs={12} md={6}`
+**關鍵變更**：使用 `size={{ xs: 12, md: 6 }}` 而不是 `xs={12} md={6}`
 
-### Responsive Grid
+### 響應式 Grid
 
 ```typescript
 <Grid container spacing={3}>
@@ -181,7 +181,7 @@ import { Grid } from '@mui/material';
 </Grid>
 ```
 
-### Nested Grids
+### 巢狀 Grid
 
 ```typescript
 <Grid container spacing={2}>
@@ -204,9 +204,9 @@ import { Grid } from '@mui/material';
 
 ---
 
-## Type-Safe Styles
+## 型別安全的樣式
 
-### Style Object Type
+### 樣式物件型別
 
 ```typescript
 import type { SxProps, Theme } from '@mui/material';
@@ -226,7 +226,7 @@ const containerStyle: SxProps<Theme> = {
 };
 ```
 
-### Theme-Aware Styles
+### 主題感知樣式
 
 ```typescript
 const styles: Record<string, SxProps<Theme>> = {
@@ -246,12 +246,12 @@ const styles: Record<string, SxProps<Theme>> = {
 
 ---
 
-## What NOT to Use
+## 不要使用的寫法
 
-### ❌ makeStyles (MUI v4 pattern)
+### ❌ makeStyles（MUI v4 寫法）
 
 ```typescript
-// ❌ AVOID - Old Material-UI v4 pattern
+// ❌ 避免 - 舊的 Material-UI v4 寫法
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -261,12 +261,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 ```
 
-**Why avoid**: Deprecated, v7 doesn't support it well
+**為何避免**：已棄用，v7 支援不佳
 
-### ❌ styled() Components
+### ❌ styled() 元件
 
 ```typescript
-// ❌ AVOID - styled-components pattern
+// ❌ 避免 - styled-components 寫法
 import { styled } from '@mui/material/styles';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -274,12 +274,12 @@ const StyledBox = styled(Box)(({ theme }) => ({
 }));
 ```
 
-**Why avoid**: sx prop is more flexible and doesn't create new components
+**為何避免**：sx prop 更靈活且不會建立新元件
 
-### ✅ Use sx Prop Instead
+### ✅ 改用 sx Prop
 
 ```typescript
-// ✅ PREFERRED
+// ✅ 建議用法
 <Box
     sx={{
         p: 2,
@@ -292,11 +292,11 @@ const StyledBox = styled(Box)(({ theme }) => ({
 
 ---
 
-## Code Style Standards
+## 程式碼風格規範
 
-### Indentation
+### 縮排
 
-**4 spaces** (not 2, not tabs)
+**4 個空格**（不是 2 個，也不是 tabs）
 
 ```typescript
 const styles: Record<string, SxProps<Theme>> = {
@@ -308,26 +308,26 @@ const styles: Record<string, SxProps<Theme>> = {
 };
 ```
 
-### Quotes
+### 引號
 
-**Single quotes** for strings (project standard)
+**單引號**（專案標準）
 
 ```typescript
-// ✅ CORRECT
+// ✅ 正確
 const color = 'primary.main';
 import { Box } from '@mui/material';
 
-// ❌ WRONG
+// ❌ 錯誤
 const color = "primary.main";
 import { Box } from "@mui/material";
 ```
 
-### Trailing Commas
+### 結尾逗號
 
-**Always use trailing commas** in objects and arrays
+**物件和陣列都要加上結尾逗號**
 
 ```typescript
-// ✅ CORRECT
+// ✅ 正確
 const styles = {
     container: { p: 2 },
     header: { mb: 1 },  // Trailing comma
@@ -338,7 +338,7 @@ const items = [
     'item2',  // Trailing comma
 ];
 
-// ❌ WRONG - No trailing comma
+// ❌ 錯誤 - 沒有結尾逗號
 const styles = {
     container: { p: 2 },
     header: { mb: 1 }  // Missing comma
@@ -347,9 +347,9 @@ const styles = {
 
 ---
 
-## Common Style Patterns
+## 常用樣式模式
 
-### Flexbox Layout
+### Flexbox 版面配置
 
 ```typescript
 const styles = {
@@ -372,7 +372,7 @@ const styles = {
 };
 ```
 
-### Spacing
+### 間距
 
 ```typescript
 // Padding
@@ -389,7 +389,7 @@ p: 2  // = 16px
 p: 0.5  // = 4px
 ```
 
-### Positioning
+### 定位
 
 ```typescript
 const styles = {
@@ -411,18 +411,18 @@ const styles = {
 
 ---
 
-## Summary
+## 總結
 
-**Styling Checklist:**
-- ✅ Use `sx` prop for MUI styling
-- ✅ Type-safe with `SxProps<Theme>`
-- ✅ <100 lines: inline; >100 lines: separate file
-- ✅ MUI v7 Grid: `size={{ xs: 12 }}`
-- ✅ 4 space indentation
-- ✅ Single quotes
-- ✅ Trailing commas
-- ❌ No makeStyles or styled()
+**樣式檢查清單：**
+- ✅ 使用 `sx` prop 進行 MUI 樣式設定
+- ✅ 使用 `SxProps<Theme>` 做型別安全
+- ✅ <100 行：inline；>100 行：獨立檔案
+- ✅ MUI v7 Grid：`size={{ xs: 12 }}`
+- ✅ 4 個空格縮排
+- ✅ 單引號
+- ✅ 結尾逗號
+- ❌ 不要使用 makeStyles 或 styled()
 
-**See Also:**
-- [component-patterns.md](component-patterns.md) - Component structure
-- [complete-examples.md](complete-examples.md) - Full styling examples
+**另請參考：**
+- [component-patterns.md](component-patterns.md) - 元件結構
+- [complete-examples.md](complete-examples.md) - 完整樣式範例

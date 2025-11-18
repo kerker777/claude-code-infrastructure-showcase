@@ -1,360 +1,360 @@
-# Claude Code Infrastructure Showcase
+# Claude Code 基礎建設展示
 
-**A curated reference library of production-tested Claude Code infrastructure.**
+**實戰驗證的 Claude Code 基礎建設參考資源庫。**
 
-Born from 6 months of real-world use managing a complex TypeScript microservices project, this showcase provides the patterns and systems that solved the "skills don't activate automatically" problem and scaled Claude Code for enterprise development.
+這個展示專案源自 6 個月的實際使用經驗，用於管理複雜的 TypeScript 微服務專案。提供了解決「技能無法自動啟動」問題的模式與系統，讓 Claude Code 能夠應用於企業級開發。
 
-> **This is NOT a working application** - it's a reference library. Copy what you need into your own projects.
-
----
-
-## What's Inside
-
-**Production-tested infrastructure for:**
-- ✅ **Auto-activating skills** via hooks
-- ✅ **Modular skill pattern** (500-line rule with progressive disclosure)
-- ✅ **Specialized agents** for complex tasks
-- ✅ **Dev docs system** that survives context resets
-- ✅ **Comprehensive examples** using generic blog domain
-
-**Time investment to build:** 6 months of iteration
-**Time to integrate into your project:** 15-30 minutes
+> **這不是一個可運行的應用程式** - 這是一個參考資源庫。請複製您需要的部分到自己的專案中。
 
 ---
 
-## Quick Start - Pick Your Path
+## 內容說明
 
-### 🤖 Using Claude Code to Integrate?
+**實戰驗證的基礎建設包括：**
+- ✅ **透過 hooks 自動啟動的 skills**
+- ✅ **模組化 skill 模式**（500 行規則與漸進式揭露）
+- ✅ **專門處理複雜任務的 agents**
+- ✅ **能夠承受 context 重置的 dev docs 系統**
+- ✅ **使用通用部落格領域的完整範例**
 
-**Claude:** Read [`CLAUDE_INTEGRATION_GUIDE.md`](CLAUDE_INTEGRATION_GUIDE.md) for step-by-step integration instructions tailored for AI-assisted setup.
-
-### 🎯 I want skill auto-activation
-
-**The breakthrough feature:** Skills that actually activate when you need them.
-
-**What you need:**
-1. The skill-activation hooks (2 files)
-2. A skill or two relevant to your work
-3. 15 minutes
-
-**👉 [Setup Guide: .claude/hooks/README.md](.claude/hooks/README.md)**
-
-### 📚 I want to add ONE skill
-
-Browse the [skills catalog](.claude/skills/) and copy what you need.
-
-**Available:**
-- **backend-dev-guidelines** - Node.js/Express/TypeScript patterns
-- **frontend-dev-guidelines** - React/TypeScript/MUI v7 patterns
-- **skill-developer** - Meta-skill for creating skills
-- **route-tester** - Test authenticated API routes
-- **error-tracking** - Sentry integration patterns
-
-**👉 [Skills Guide: .claude/skills/README.md](.claude/skills/README.md)**
-
-### 🤖 I want specialized agents
-
-10 production-tested agents for complex tasks:
-- Code architecture review
-- Refactoring assistance
-- Documentation generation
-- Error debugging
-- And more...
-
-**👉 [Agents Guide: .claude/agents/README.md](.claude/agents/README.md)**
+**建置所需時間：** 6 個月的反覆調整
+**整合到您的專案所需時間：** 15-30 分鐘
 
 ---
 
-## What Makes This Different?
+## 快速開始 - 選擇您的路徑
 
-### The Auto-Activation Breakthrough
+### 🤖 使用 Claude Code 來整合？
 
-**Problem:** Claude Code skills just sit there. You have to remember to use them.
+**Claude：** 請閱讀 [`CLAUDE_INTEGRATION_GUIDE.md`](CLAUDE_INTEGRATION_GUIDE.md) 獲取為 AI 輔助設置量身定做的逐步整合說明。
 
-**Solution:** UserPromptSubmit hook that:
-- Analyzes your prompts
-- Checks file context
-- Automatically suggests relevant skills
-- Works via `skill-rules.json` configuration
+### 🎯 我想要 skill 自動啟動
 
-**Result:** Skills activate when you need them, not when you remember them.
+**突破性功能：** 真正能在您需要時自動啟動的 Skills。
 
-### Production-Tested Patterns
+**您需要的東西：**
+1. skill 啟動的 hooks（2 個檔案）
+2. 一兩個與您工作相關的 skill
+3. 15 分鐘
 
-These aren't theoretical examples - they're extracted from:
-- ✅ 6 microservices in production
-- ✅ 50,000+ lines of TypeScript
-- ✅ React frontend with complex data grids
-- ✅ Sophisticated workflow engine
-- ✅ 6 months of daily Claude Code use
+**👉 [設置指南：.claude/hooks/README.md](.claude/hooks/README.md)**
 
-The patterns work because they solved real problems.
+### 📚 我想新增一個 skill
 
-### Modular Skills (500-Line Rule)
+瀏覽 [skills 目錄](.claude/skills/) 並複製您需要的內容。
 
-Large skills hit context limits. The solution:
+**可用的 skills：**
+- **backend-dev-guidelines** - Node.js/Express/TypeScript 模式
+- **frontend-dev-guidelines** - React/TypeScript/MUI v7 模式
+- **skill-developer** - 用於建立 skills 的 meta-skill
+- **route-tester** - 測試需要驗證的 API routes
+- **error-tracking** - Sentry 整合模式
+
+**👉 [Skills 指南：.claude/skills/README.md](.claude/skills/README.md)**
+
+### 🤖 我想要專門的 agents
+
+10 個實戰驗證的 agents 用於處理複雜任務：
+- 程式碼架構審查
+- 重構協助
+- 文件生成
+- 錯誤除錯
+- 以及更多...
+
+**👉 [Agents 指南：.claude/agents/README.md](.claude/agents/README.md)**
+
+---
+
+## 有什麼不同？
+
+### 自動啟動的突破
+
+**問題：** Claude Code skills 只是靜靜地待在那裡。您必須記得去使用它們。
+
+**解決方案：** UserPromptSubmit hook 能夠：
+- 分析您的提示
+- 檢查檔案 context
+- 自動建議相關的 skills
+- 透過 `skill-rules.json` 配置運作
+
+**結果：** Skills 在您需要時啟動，而不是在您記得時才啟動。
+
+### 實戰驗證的模式
+
+這些不是理論範例 - 它們是從實際專案中提取的：
+- ✅ 6 個正在運作的微服務
+- ✅ 50,000+ 行 TypeScript
+- ✅ 具有複雜資料網格的 React 前端
+- ✅ 精密的工作流程引擎
+- ✅ 6 個月的每日 Claude Code 使用
+
+這些模式能夠運作，是因為它們解決了真實的問題。
+
+### 模組化 Skills（500 行規則）
+
+大型 skills 會碰到 context 限制。解決方案：
 
 ```
 skill-name/
-  SKILL.md                  # <500 lines, high-level guide
+  SKILL.md                  # <500 行，高階指南
   resources/
-    topic-1.md              # <500 lines each
+    topic-1.md              # 每個 <500 行
     topic-2.md
     topic-3.md
 ```
 
-**Progressive disclosure:** Claude loads main skill first, loads resources only when needed.
+**漸進式揭露：** Claude 首先載入主要的 skill，只在需要時才載入資源檔案。
 
 ---
 
-## Repository Structure
+## 專案結構
 
 ```
 .claude/
-├── skills/                 # 5 production skills
-│   ├── backend-dev-guidelines/  (12 resource files)
-│   ├── frontend-dev-guidelines/ (11 resource files)
-│   ├── skill-developer/         (7 resource files)
+├── skills/                 # 5 個實戰 skills
+│   ├── backend-dev-guidelines/  (12 個資源檔案)
+│   ├── frontend-dev-guidelines/ (11 個資源檔案)
+│   ├── skill-developer/         (7 個資源檔案)
 │   ├── route-tester/
 │   ├── error-tracking/
-│   └── skill-rules.json    # Skill activation configuration
-├── hooks/                  # 6 hooks for automation
-│   ├── skill-activation-prompt.*  (ESSENTIAL)
-│   ├── post-tool-use-tracker.sh   (ESSENTIAL)
-│   ├── tsc-check.sh        (optional, needs customization)
-│   └── trigger-build-resolver.sh  (optional)
-├── agents/                 # 10 specialized agents
+│   └── skill-rules.json    # Skill 啟動配置
+├── hooks/                  # 6 個自動化 hooks
+│   ├── skill-activation-prompt.*  (必要)
+│   ├── post-tool-use-tracker.sh   (必要)
+│   ├── tsc-check.sh        (選用，需要自訂)
+│   └── trigger-build-resolver.sh  (選用)
+├── agents/                 # 10 個專門的 agents
 │   ├── code-architecture-reviewer.md
 │   ├── refactor-planner.md
 │   ├── frontend-error-fixer.md
-│   └── ... 7 more
-└── commands/               # 3 slash commands
+│   └── ... 另外 7 個
+└── commands/               # 3 個 slash commands
     ├── dev-docs.md
     └── ...
 
 dev/
-└── active/                 # Dev docs pattern examples
+└── active/                 # Dev docs 模式範例
     └── public-infrastructure-repo/
 ```
 
 ---
 
-## Component Catalog
+## 元件目錄
 
 ### 🎨 Skills (5)
 
-| Skill | Lines | Purpose | Best For |
+| Skill | 行數 | 用途 | 最適合 |
 |-------|-------|---------|----------|
-| [**skill-developer**](.claude/skills/skill-developer/) | 426 | Creating and managing skills | Meta-development |
-| [**backend-dev-guidelines**](.claude/skills/backend-dev-guidelines/) | 304 | Express/Prisma/Sentry patterns | Backend APIs |
-| [**frontend-dev-guidelines**](.claude/skills/frontend-dev-guidelines/) | 398 | React/MUI v7/TypeScript | React frontends |
-| [**route-tester**](.claude/skills/route-tester/) | 389 | Testing authenticated routes | API testing |
-| [**error-tracking**](.claude/skills/error-tracking/) | ~250 | Sentry integration | Error monitoring |
+| [**skill-developer**](.claude/skills/skill-developer/) | 426 | 建立和管理 skills | Meta-開發 |
+| [**backend-dev-guidelines**](.claude/skills/backend-dev-guidelines/) | 304 | Express/Prisma/Sentry 模式 | Backend APIs |
+| [**frontend-dev-guidelines**](.claude/skills/frontend-dev-guidelines/) | 398 | React/MUI v7/TypeScript | React 前端 |
+| [**route-tester**](.claude/skills/route-tester/) | 389 | 測試需要驗證的 routes | API 測試 |
+| [**error-tracking**](.claude/skills/error-tracking/) | ~250 | Sentry 整合 | 錯誤監控 |
 
-**All skills follow the modular pattern** - main file + resource files for progressive disclosure.
+**所有 skills 都遵循模組化模式** - 主檔案 + 資源檔案以達成漸進式揭露。
 
-**👉 [How to integrate skills →](.claude/skills/README.md)**
+**👉 [如何整合 skills →](.claude/skills/README.md)**
 
 ### 🪝 Hooks (6)
 
-| Hook | Type | Essential? | Customization |
+| Hook | 類型 | 必要？ | 自訂程度 |
 |------|------|-----------|---------------|
-| skill-activation-prompt | UserPromptSubmit | ✅ YES | ✅ None needed |
-| post-tool-use-tracker | PostToolUse | ✅ YES | ✅ None needed |
-| tsc-check | Stop | ⚠️ Optional | ⚠️ Heavy - monorepo only |
-| trigger-build-resolver | Stop | ⚠️ Optional | ⚠️ Heavy - monorepo only |
-| error-handling-reminder | Stop | ⚠️ Optional | ⚠️ Moderate |
-| stop-build-check-enhanced | Stop | ⚠️ Optional | ⚠️ Moderate |
+| skill-activation-prompt | UserPromptSubmit | ✅ 是 | ✅ 不需要 |
+| post-tool-use-tracker | PostToolUse | ✅ 是 | ✅ 不需要 |
+| tsc-check | Stop | ⚠️ 選用 | ⚠️ 重度 - 僅限 monorepo |
+| trigger-build-resolver | Stop | ⚠️ 選用 | ⚠️ 重度 - 僅限 monorepo |
+| error-handling-reminder | Stop | ⚠️ 選用 | ⚠️ 中度 |
+| stop-build-check-enhanced | Stop | ⚠️ 選用 | ⚠️ 中度 |
 
-**Start with the two essential hooks** - they enable skill auto-activation and work out of the box.
+**從兩個必要的 hooks 開始** - 它們能啟用 skill 自動啟動並且可以直接使用。
 
-**👉 [Hook setup guide →](.claude/hooks/README.md)**
+**👉 [Hook 設置指南 →](.claude/hooks/README.md)**
 
 ### 🤖 Agents (10)
 
-**Standalone - just copy and use!**
+**獨立使用 - 直接複製即可！**
 
-| Agent | Purpose |
+| Agent | 用途 |
 |-------|---------|
-| code-architecture-reviewer | Review code for architectural consistency |
-| code-refactor-master | Plan and execute refactoring |
-| documentation-architect | Generate comprehensive documentation |
-| frontend-error-fixer | Debug frontend errors |
-| plan-reviewer | Review development plans |
-| refactor-planner | Create refactoring strategies |
-| web-research-specialist | Research technical issues online |
-| auth-route-tester | Test authenticated endpoints |
-| auth-route-debugger | Debug auth issues |
-| auto-error-resolver | Auto-fix TypeScript errors |
+| code-architecture-reviewer | 審查程式碼的架構一致性 |
+| code-refactor-master | 規劃並執行重構 |
+| documentation-architect | 生成完整的文件 |
+| frontend-error-fixer | 除錯前端錯誤 |
+| plan-reviewer | 審查開發計劃 |
+| refactor-planner | 建立重構策略 |
+| web-research-specialist | 線上研究技術問題 |
+| auth-route-tester | 測試需要驗證的端點 |
+| auth-route-debugger | 除錯驗證問題 |
+| auto-error-resolver | 自動修復 TypeScript 錯誤 |
 
-**👉 [How agents work →](.claude/agents/README.md)**
+**👉 [Agents 運作方式 →](.claude/agents/README.md)**
 
 ### 💬 Slash Commands (3)
 
-| Command | Purpose |
+| Command | 用途 |
 |---------|---------|
-| /dev-docs | Create structured dev documentation |
-| /dev-docs-update | Update docs before context reset |
-| /route-research-for-testing | Research route patterns for testing |
+| /dev-docs | 建立結構化的開發文件 |
+| /dev-docs-update | 在 context 重置前更新文件 |
+| /route-research-for-testing | 研究用於測試的 route 模式 |
 
 ---
 
-## Key Concepts
+## 核心概念
 
-### Hooks + skill-rules.json = Auto-Activation
+### Hooks + skill-rules.json = 自動啟動
 
-**The system:**
-1. **skill-activation-prompt hook** runs on every user prompt
-2. Checks **skill-rules.json** for trigger patterns
-3. Suggests relevant skills automatically
-4. Skills load only when needed
+**系統運作方式：**
+1. **skill-activation-prompt hook** 在每次使用者提示時執行
+2. 檢查 **skill-rules.json** 尋找觸發模式
+3. 自動建議相關的 skills
+4. Skills 只在需要時載入
 
-**This solves the #1 problem** with Claude Code skills: they don't activate on their own.
+**這解決了第一大問題** - Claude Code skills 不會自己啟動。
 
-### Progressive Disclosure (500-Line Rule)
+### 漸進式揭露（500 行規則）
 
-**Problem:** Large skills hit context limits
+**問題：** 大型 skills 會碰到 context 限制
 
-**Solution:** Modular structure
-- Main SKILL.md <500 lines (overview + navigation)
-- Resource files <500 lines each (deep dives)
-- Claude loads incrementally as needed
+**解決方案：** 模組化結構
+- 主要的 SKILL.md <500 行（概觀 + 導覽）
+- 資源檔案每個 <500 行（深入探討）
+- Claude 根據需要逐步載入
 
-**Example:** backend-dev-guidelines has 12 resource files covering routing, controllers, services, repositories, testing, etc.
+**範例：** backend-dev-guidelines 有 12 個資源檔案，涵蓋 routing、controllers、services、repositories、testing 等。
 
-### Dev Docs Pattern
+### Dev Docs 模式
 
-**Problem:** Context resets lose project context
+**問題：** Context 重置會失去專案 context
 
-**Solution:** Three-file structure
-- `[task]-plan.md` - Strategic plan
-- `[task]-context.md` - Key decisions and files
-- `[task]-tasks.md` - Checklist format
+**解決方案：** 三檔案結構
+- `[task]-plan.md` - 策略計劃
+- `[task]-context.md` - 關鍵決策和檔案
+- `[task]-tasks.md` - 檢查清單格式
 
-**Works with:** `/dev-docs` slash command to generate these automatically
+**搭配使用：** `/dev-docs` slash command 自動生成這些檔案
 
 ---
 
-## ⚠️ Important: What Won't Work As-Is
+## ⚠️ 重要：哪些無法直接使用
 
 ### settings.json
-The included `settings.json` is an **example only**:
-- Stop hooks reference specific monorepo structure
-- Service names (blog-api, etc.) are examples
-- MCP servers may not exist in your setup
+包含的 `settings.json` **僅為範例**：
+- Stop hooks 參照特定的 monorepo 結構
+- 服務名稱（blog-api 等）是範例
+- MCP servers 可能不存在於您的設置中
 
-**To use it:**
-1. Extract ONLY UserPromptSubmit and PostToolUse hooks
-2. Customize or skip Stop hooks
-3. Update MCP server list for your setup
+**如何使用：**
+1. 僅提取 UserPromptSubmit 和 PostToolUse hooks
+2. 自訂或略過 Stop hooks
+3. 根據您的設置更新 MCP server 清單
 
-### Blog Domain Examples
-Skills use generic blog examples (Post/Comment/User):
-- These are **teaching examples**, not requirements
-- Patterns work for any domain (e-commerce, SaaS, etc.)
-- Adapt the patterns to your business logic
+### 部落格領域範例
+Skills 使用通用的部落格範例（Post/Comment/User）：
+- 這些是**教學範例**，不是必要條件
+- 模式適用於任何領域（電子商務、SaaS 等）
+- 將模式調整為您的商業邏輯
 
-### Hook Directory Structures
-Some hooks expect specific structures:
-- `tsc-check.sh` expects service directories
-- Customize based on YOUR project layout
-
----
-
-## Integration Workflow
-
-**Recommended approach:**
-
-### Phase 1: Skill Activation (15 min)
-1. Copy skill-activation-prompt hook
-2. Copy post-tool-use-tracker hook
-3. Update settings.json
-4. Install hook dependencies
-
-### Phase 2: Add First Skill (10 min)
-1. Pick ONE relevant skill
-2. Copy skill directory
-3. Create/update skill-rules.json
-4. Customize path patterns
-
-### Phase 3: Test & Iterate (5 min)
-1. Edit a file - skill should activate
-2. Ask a question - skill should be suggested
-3. Add more skills as needed
-
-### Phase 4: Optional Enhancements
-- Add agents you find useful
-- Add slash commands
-- Customize Stop hooks (advanced)
+### Hook 目錄結構
+某些 hooks 預期特定的結構：
+- `tsc-check.sh` 預期有 service 目錄
+- 根據您的專案配置進行自訂
 
 ---
 
-## Getting Help
+## 整合流程
 
-### For Users
-**Issues with integration?**
-1. Check [CLAUDE_INTEGRATION_GUIDE.md](CLAUDE_INTEGRATION_GUIDE.md)
-2. Ask Claude: "Why isn't [skill] activating?"
-3. Open an issue with your project structure
+**建議方式：**
 
-### For Claude Code
-When helping users integrate:
-1. **Read CLAUDE_INTEGRATION_GUIDE.md FIRST**
-2. Ask about their project structure
-3. Customize, don't blindly copy
-4. Verify after integration
+### 階段 1：Skill 啟動（15 分鐘）
+1. 複製 skill-activation-prompt hook
+2. 複製 post-tool-use-tracker hook
+3. 更新 settings.json
+4. 安裝 hook 相依套件
 
----
+### 階段 2：新增第一個 Skill（10 分鐘）
+1. 挑選一個相關的 skill
+2. 複製 skill 目錄
+3. 建立/更新 skill-rules.json
+4. 自訂路徑模式
 
-## What This Solves
+### 階段 3：測試與調整（5 分鐘）
+1. 編輯檔案 - skill 應該要啟動
+2. 提出問題 - skill 應該要被建議
+3. 根據需要新增更多 skills
 
-### Before This Infrastructure
-
-❌ Skills don't activate automatically
-❌ Have to remember which skill to use
-❌ Large skills hit context limits
-❌ Context resets lose project knowledge
-❌ No consistency across development
-❌ Manual agent invocation every time
-
-### After This Infrastructure
-
-✅ Skills suggest themselves based on context
-✅ Hooks trigger skills at the right time
-✅ Modular skills stay under context limits
-✅ Dev docs preserve knowledge across resets
-✅ Consistent patterns via guardrails
-✅ Agents streamline complex tasks
+### 階段 4：選用的增強功能
+- 新增您覺得有用的 agents
+- 新增 slash commands
+- 自訂 Stop hooks（進階）
 
 ---
 
-## Community
+## 取得協助
 
-**Found this useful?**
+### 給使用者
+**整合遇到問題？**
+1. 檢查 [CLAUDE_INTEGRATION_GUIDE.md](CLAUDE_INTEGRATION_GUIDE.md)
+2. 詢問 Claude：「為什麼 [skill] 沒有啟動？」
+3. 提出 issue 並附上您的專案結構
 
-- ⭐ Star this repo
-- 🐛 Report issues or suggest improvements
-- 💬 Share your own skills/hooks/agents
-- 📝 Contribute examples from your domain
+### 給 Claude Code
+協助使用者整合時：
+1. **先閱讀 CLAUDE_INTEGRATION_GUIDE.md**
+2. 詢問他們的專案結構
+3. 自訂，不要盲目複製
+4. 整合後驗證
 
-**Background:**
-This infrastructure was detailed in a post I made to Reddit ["Claude Code is a Beast – Tips from 6 Months of Hardcore Use"](https://www.reddit.com/r/ClaudeAI/comments/1oivjvm/claude_code_is_a_beast_tips_from_6_months_of/). After hundreds of requests, this showcase was created to help the community implement these patterns.
+---
+
+## 這解決了什麼問題
+
+### 使用這個基礎建設之前
+
+❌ Skills 不會自動啟動
+❌ 必須記得要使用哪個 skill
+❌ 大型 skills 會碰到 context 限制
+❌ Context 重置會失去專案知識
+❌ 開發過程缺乏一致性
+❌ 每次都需要手動調用 agent
+
+### 使用這個基礎建設之後
+
+✅ Skills 根據 context 自己建議
+✅ Hooks 在正確時機觸發 skills
+✅ 模組化 skills 保持在 context 限制內
+✅ Dev docs 在重置後保留知識
+✅ 透過防護機制確保一致的模式
+✅ Agents 簡化複雜任務
+
+---
+
+## 社群
+
+**覺得有用嗎？**
+
+- ⭐ 為這個專案加星
+- 🐛 回報問題或建議改進
+- 💬 分享您自己的 skills/hooks/agents
+- 📝 貢獻來自您領域的範例
+
+**背景：**
+這個基礎建設在我發表到 Reddit 的文章 ["Claude Code is a Beast – Tips from 6 Months of Hardcore Use"](https://www.reddit.com/r/ClaudeAI/comments/1oivjvm/claude_code_is_a_beast_tips_from_6_months_of/) 中有詳細說明。在收到數百個請求後，建立了這個展示專案來協助社群實作這些模式。
 
 
 ---
 
-## License
+## 授權
 
-MIT License - Use freely in your projects, commercial or personal.
+MIT License - 可自由用於您的專案，商業或個人皆可。
 
 ---
 
-## Quick Links
+## 快速連結
 
-- 📖 [Claude Integration Guide](CLAUDE_INTEGRATION_GUIDE.md) - For AI-assisted setup
-- 🎨 [Skills Documentation](.claude/skills/README.md)
-- 🪝 [Hooks Setup](.claude/hooks/README.md)
-- 🤖 [Agents Guide](.claude/agents/README.md)
-- 📝 [Dev Docs Pattern](dev/README.md)
+- 📖 [Claude 整合指南](CLAUDE_INTEGRATION_GUIDE.md) - 用於 AI 輔助設置
+- 🎨 [Skills 文件](.claude/skills/README.md)
+- 🪝 [Hooks 設置](.claude/hooks/README.md)
+- 🤖 [Agents 指南](.claude/agents/README.md)
+- 📝 [Dev Docs 模式](dev/README.md)
 
-**Start here:** Copy the two essential hooks, add one skill, and see the auto-activation magic happen.
+**從這裡開始：** 複製兩個必要的 hooks，新增一個 skill，然後見證自動啟動的魔法。

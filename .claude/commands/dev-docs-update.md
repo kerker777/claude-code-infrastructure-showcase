@@ -1,55 +1,55 @@
 ---
-description: Update dev documentation before context compaction
-argument-hint: Optional - specific context or tasks to focus on (leave empty for comprehensive update)
+description: 在 context 壓縮前更新開發文件
+argument-hint: 選填 - 要聚焦的特定 context 或任務（留空則進行全面更新）
 ---
 
-We're approaching context limits. Please update the development documentation to ensure seamless continuation after context reset.
+我們即將到達 context 上限。請更新開發文件以確保 context 重置後能無縫接續。
 
-## Required Updates
+## 必要更新
 
-### 1. Update Active Task Documentation
-For each task in `/dev/active/`:
-- Update `[task-name]-context.md` with:
-  - Current implementation state
-  - Key decisions made this session
-  - Files modified and why
-  - Any blockers or issues discovered
-  - Next immediate steps
-  - Last Updated timestamp
+### 1. 更新進行中的任務文件
+針對 `/dev/active/` 中的每個任務：
+- 更新 `[task-name]-context.md`，包含：
+  - 目前的實作狀態
+  - 本次 session 中做出的關鍵決策
+  - 修改了哪些檔案以及原因
+  - 發現的任何阻礙或問題
+  - 接下來的立即步驟
+  - 最後更新時間戳記
 
-- Update `[task-name]-tasks.md` with:
-  - Mark completed tasks as ✅ 
-  - Add any new tasks discovered
-  - Update in-progress tasks with current status
-  - Reorder priorities if needed
+- 更新 `[task-name]-tasks.md`，包含：
+  - 將完成的任務標記為 ✅
+  - 加入任何新發現的任務
+  - 更新進行中任務的目前狀態
+  - 如有需要，重新排序優先順序
 
-### 2. Capture Session Context
-Include any relevant information about:
-- Complex problems solved
-- Architectural decisions made
-- Tricky bugs found and fixed
-- Integration points discovered
-- Testing approaches used
-- Performance optimizations made
+### 2. 擷取 Session Context
+包含任何相關資訊，如：
+- 解決的複雜問題
+- 做出的架構決策
+- 找到並修復的棘手 bug
+- 發現的整合點
+- 使用的測試方法
+- 進行的效能最佳化
 
-### 3. Update Memory (if applicable)
-- Store any new patterns or solutions in project memory/documentation
-- Update entity relationships discovered
-- Add observations about system behavior
+### 3. 更新 Memory（如適用）
+- 將任何新的模式或解決方案儲存到專案 memory/文件中
+- 更新發現的實體關係
+- 加入關於系統行為的觀察
 
-### 4. Document Unfinished Work
-- What was being worked on when context limit approached
-- Exact state of any partially completed features
-- Commands that need to be run on restart
-- Any temporary workarounds that need permanent fixes
+### 4. 記錄未完成的工作
+- 當 context 上限逼近時正在進行的工作
+- 任何部分完成功能的確切狀態
+- 重啟時需要執行的指令
+- 任何需要永久修復的暫時性解決方案
 
-### 5. Create Handoff Notes
-If switching to a new conversation:
-- Exact file and line being edited
-- The goal of current changes
-- Any uncommitted changes that need attention
-- Test commands to verify work
+### 5. 建立交接筆記
+如果要切換到新的對話：
+- 正在編輯的確切檔案和行數
+- 目前修改的目標
+- 任何需要注意的未提交變更
+- 用於驗證工作的測試指令
 
-## Additional Context: $ARGUMENTS
+## 額外 Context：$ARGUMENTS
 
-**Priority**: Focus on capturing information that would be hard to rediscover or reconstruct from code alone.
+**優先重點**：著重擷取那些光從程式碼難以重新發現或重建的資訊。

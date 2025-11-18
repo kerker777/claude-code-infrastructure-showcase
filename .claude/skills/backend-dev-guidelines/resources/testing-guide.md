@@ -1,21 +1,21 @@
-# Testing Guide - Backend Testing Strategies
+# 測試指南 - 後端測試策略
 
-Complete guide to testing backend services with Jest and best practices.
+使用 Jest 進行後端服務測試的完整指南及最佳實踐。
 
-## Table of Contents
+## 目錄
 
-- [Unit Testing](#unit-testing)
-- [Integration Testing](#integration-testing)
-- [Mocking Strategies](#mocking-strategies)
-- [Test Data Management](#test-data-management)
-- [Testing Authenticated Routes](#testing-authenticated-routes)
-- [Coverage Targets](#coverage-targets)
+- [單元測試](#單元測試)
+- [整合測試](#整合測試)
+- [Mock 策略](#mock-策略)
+- [測試資料管理](#測試資料管理)
+- [測試認證路由](#測試認證路由)
+- [涵蓋率目標](#涵蓋率目標)
 
 ---
 
-## Unit Testing
+## 單元測試
 
-### Test Structure
+### 測試結構
 
 ```typescript
 // services/userService.test.ts
@@ -74,9 +74,9 @@ describe('UserService', () => {
 
 ---
 
-## Integration Testing
+## 整合測試
 
-### Test with Real Database
+### 使用真實資料庫測試
 
 ```typescript
 import { PrismaService } from '@project-lifecycle-portal/database';
@@ -85,7 +85,7 @@ describe('UserService Integration', () => {
     let testUser: any;
 
     beforeAll(async () => {
-        // Create test data
+        // 建立測試資料
         testUser = await PrismaService.main.user.create({
             data: {
                 email: 'test@test.com',
@@ -95,7 +95,7 @@ describe('UserService Integration', () => {
     });
 
     afterAll(async () => {
-        // Cleanup
+        // 清理資料
         await PrismaService.main.user.delete({ where: { id: testUser.id } });
     });
 
@@ -109,7 +109,7 @@ describe('UserService Integration', () => {
 
 ---
 
-## Mocking Strategies
+## Mock 策略
 
 ### Mock PrismaService
 
@@ -141,16 +141,16 @@ const mockUserService = {
 
 ---
 
-## Test Data Management
+## 測試資料管理
 
-### Setup and Teardown
+### 建立與清理
 
 ```typescript
 describe('PermissionService', () => {
     let instanceId: number;
 
     beforeAll(async () => {
-        // Create test post
+        // 建立測試貼文
         const post = await PrismaService.main.post.create({
             data: { title: 'Test Post', content: 'Test', authorId: 'test-user' },
         });
@@ -158,14 +158,14 @@ describe('PermissionService', () => {
     });
 
     afterAll(async () => {
-        // Cleanup
+        // 清理資料
         await PrismaService.main.post.delete({
             where: { id: instanceId },
         });
     });
 
     beforeEach(() => {
-        // Clear caches
+        // 清除快取
         permissionService.clearCache();
     });
 
@@ -182,22 +182,22 @@ describe('PermissionService', () => {
 
 ---
 
-## Testing Authenticated Routes
+## 測試認證路由
 
-### Using test-auth-route.js
+### 使用 test-auth-route.js
 
 ```bash
-# Test authenticated endpoint
+# 測試認證端點
 node scripts/test-auth-route.js http://localhost:3002/form/api/users
 
-# Test with POST data
+# 使用 POST 資料測試
 node scripts/test-auth-route.js http://localhost:3002/form/api/users POST '{"email":"test@test.com"}'
 ```
 
-### Mock Authentication in Tests
+### 在測試中 Mock 認證
 
 ```typescript
-// Mock auth middleware
+// Mock 認證 middleware
 jest.mock('../middleware/SSOMiddleware', () => ({
     SSOMiddlewareClient: {
         verifyLoginStatus: (req, res, next) => {
@@ -213,15 +213,15 @@ jest.mock('../middleware/SSOMiddleware', () => ({
 
 ---
 
-## Coverage Targets
+## 涵蓋率目標
 
-### Recommended Coverage
+### 建議涵蓋率
 
-- **Unit Tests**: 70%+ coverage
-- **Integration Tests**: Critical paths covered
-- **E2E Tests**: Happy paths covered
+- **單元測試**：70% 以上涵蓋率
+- **整合測試**：涵蓋關鍵路徑
+- **E2E 測試**：涵蓋正常流程
 
-### Run Coverage
+### 執行涵蓋率檢查
 
 ```bash
 npm test -- --coverage
@@ -229,7 +229,7 @@ npm test -- --coverage
 
 ---
 
-**Related Files:**
+**相關檔案：**
 - [SKILL.md](SKILL.md)
 - [services-and-repositories.md](services-and-repositories.md)
 - [complete-examples.md](complete-examples.md)

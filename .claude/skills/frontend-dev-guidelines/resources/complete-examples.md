@@ -1,12 +1,12 @@
-# Complete Examples
+# 完整範例
 
-Full working examples combining all modern patterns: React.FC, lazy loading, Suspense, useSuspenseQuery, styling, routing, and error handling.
+結合所有現代化模式的完整範例:React.FC、lazy loading、Suspense、useSuspenseQuery、樣式、路由以及錯誤處理。
 
 ---
 
-## Example 1: Complete Modern Component
+## 範例 1:完整的現代化元件
 
-Combines: React.FC, useSuspenseQuery, cache-first, useCallback, styling, error handling
+結合:React.FC、useSuspenseQuery、cache-first、useCallback、樣式、錯誤處理
 
 ```typescript
 /**
@@ -145,7 +145,7 @@ export const UserProfile: React.FC<UserProfileProps> = ({ userId, onUpdate }) =>
 export default UserProfile;
 ```
 
-**Usage:**
+**使用方式:**
 ```typescript
 <SuspenseLoader>
     <UserProfile userId='123' onUpdate={() => console.log('Updated')} />
@@ -154,9 +154,9 @@ export default UserProfile;
 
 ---
 
-## Example 2: Complete Feature Structure
+## 範例 2:完整的功能結構
 
-Real example based on `features/posts/`:
+基於 `features/posts/` 的實際範例:
 
 ```
 features/
@@ -284,7 +284,7 @@ export type { User, CreateUserPayload, UpdateUserPayload } from './types';
 
 ---
 
-## Example 3: Complete Route with Lazy Loading
+## 範例 3:使用 Lazy Loading 的完整路由
 
 ```typescript
 /**
@@ -328,7 +328,7 @@ export default UserProfilePage;
 
 ---
 
-## Example 4: List with Search and Filtering
+## 範例 4:具備搜尋和篩選的列表
 
 ```typescript
 import React, { useState, useMemo } from 'react';
@@ -380,7 +380,7 @@ export const UserList: React.FC = () => {
 
 ---
 
-## Example 5: Blog with Validation
+## 範例 5:具備驗證功能的表單
 
 ```typescript
 import React from 'react';
@@ -493,7 +493,7 @@ export default CreateUserBlog;
 
 ---
 
-## Example 2: Parent Container with Lazy Loading
+## 範例 2:使用 Lazy Loading 的父容器
 
 ```typescript
 import React from 'react';
@@ -532,16 +532,16 @@ export const UserDashboard: React.FC = () => {
 export default UserDashboard;
 ```
 
-**Benefits:**
-- Each section loads independently
-- User sees partial content sooner
-- Better perceived perblogance
+**優點:**
+- 每個區塊獨立載入
+- 使用者能更早看到部分內容
+- 更好的感知效能
 
 ---
 
-## Example 3: Cache-First Strategy Implementation
+## 範例 3:Cache-First 策略實作
 
-Complete example based on useSuspensePost.ts:
+基於 useSuspensePost.ts 的完整範例:
 
 ```typescript
 import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
@@ -589,15 +589,15 @@ export function useSuspensePost(blogId: number, postId: number) {
 }
 ```
 
-**Why this pattern:**
-- Checks grid cache before API
-- Instant data if user came from grid
-- Falls back to API if not cached
-- Configurable cache times
+**為何使用此模式:**
+- 在呼叫 API 前先檢查 grid cache
+- 如果使用者來自 grid,可立即取得資料
+- 若無快取則回退至 API
+- 可設定快取時間
 
 ---
 
-## Example 4: Complete Route File
+## 範例 4:完整的路由檔案
 
 ```typescript
 /**
@@ -642,7 +642,7 @@ export default ProjectCatalogPage;
 
 ---
 
-## Example 5: Dialog with Blog
+## 範例 5:具備表單的對話框
 
 ```typescript
 import React from 'react';
@@ -744,7 +744,7 @@ export const AddUserDialog: React.FC<AddUserDialogProps> = ({
 
 ---
 
-## Example 6: Parallel Data Fetching
+## 範例 6:平行資料獲取
 
 ```typescript
 import React from 'react';
@@ -809,7 +809,7 @@ export const Dashboard: React.FC = () => {
 
 ---
 
-## Example 7: Optimistic Update
+## 範例 7:樂觀更新
 
 ```typescript
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -856,17 +856,17 @@ export const useToggleUserStatus = () => {
 
 ---
 
-## Summary
+## 總結
 
-**Key Takeaways:**
+**重點整理:**
 
-1. **Component Pattern**: React.FC + lazy + Suspense + useSuspenseQuery
-2. **Feature Structure**: Organized subdirectories (api/, components/, hooks/, etc.)
-3. **Routing**: Folder-based with lazy loading
-4. **Data Fetching**: useSuspenseQuery with cache-first strategy
-5. **Blogs**: React Hook Blog + Zod validation
-6. **Error Handling**: useMuiSnackbar + onError callbacks
-7. **Perblogance**: useMemo, useCallback, React.memo, debouncing
-8. **Styling**: Inline <100 lines, sx prop, MUI v7 syntax
+1. **元件模式**:React.FC + lazy + Suspense + useSuspenseQuery
+2. **功能結構**:組織化的子目錄 (api/、components/、hooks/ 等)
+3. **路由**:基於資料夾結構並使用 lazy loading
+4. **資料獲取**:使用 cache-first 策略的 useSuspenseQuery
+5. **表單**:React Hook Form + Zod 驗證
+6. **錯誤處理**:useMuiSnackbar + onError callbacks
+7. **效能**:useMemo、useCallback、React.memo、debouncing
+8. **樣式**:行內 <100 行、sx prop、MUI v7 語法
 
-**See other resources for detailed explanations of each pattern.**
+**詳細說明請參閱其他資源文件。**

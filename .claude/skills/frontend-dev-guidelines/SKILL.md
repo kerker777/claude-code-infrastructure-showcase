@@ -3,71 +3,71 @@ name: frontend-dev-guidelines
 description: Frontend development guidelines for React/TypeScript applications. Modern patterns including Suspense, lazy loading, useSuspenseQuery, file organization with features directory, MUI v7 styling, TanStack Router, performance optimization, and TypeScript best practices. Use when creating components, pages, features, fetching data, styling, routing, or working with frontend code.
 ---
 
-# Frontend Development Guidelines
+# Frontend 開發指南
 
-## Purpose
+## 目的
 
-Comprehensive guide for modern React development, emphasizing Suspense-based data fetching, lazy loading, proper file organization, and performance optimization.
+現代 React 開發的完整指南，著重於基於 Suspense 的資料抓取、延遲載入、適當的檔案組織以及效能優化。
 
-## When to Use This Skill
+## 何時使用此技能
 
-- Creating new components or pages
-- Building new features
-- Fetching data with TanStack Query
-- Setting up routing with TanStack Router
-- Styling components with MUI v7
-- Performance optimization
-- Organizing frontend code
-- TypeScript best practices
-
----
-
-## Quick Start
-
-### New Component Checklist
-
-Creating a component? Follow this checklist:
-
-- [ ] Use `React.FC<Props>` pattern with TypeScript
-- [ ] Lazy load if heavy component: `React.lazy(() => import())`
-- [ ] Wrap in `<SuspenseLoader>` for loading states
-- [ ] Use `useSuspenseQuery` for data fetching
-- [ ] Import aliases: `@/`, `~types`, `~components`, `~features`
-- [ ] Styles: Inline if <100 lines, separate file if >100 lines
-- [ ] Use `useCallback` for event handlers passed to children
-- [ ] Default export at bottom
-- [ ] No early returns with loading spinners
-- [ ] Use `useMuiSnackbar` for user notifications
-
-### New Feature Checklist
-
-Creating a feature? Set up this structure:
-
-- [ ] Create `features/{feature-name}/` directory
-- [ ] Create subdirectories: `api/`, `components/`, `hooks/`, `helpers/`, `types/`
-- [ ] Create API service file: `api/{feature}Api.ts`
-- [ ] Set up TypeScript types in `types/`
-- [ ] Create route in `routes/{feature-name}/index.tsx`
-- [ ] Lazy load feature components
-- [ ] Use Suspense boundaries
-- [ ] Export public API from feature `index.ts`
+- 建立新元件或頁面
+- 開發新功能
+- 使用 TanStack Query 抓取資料
+- 使用 TanStack Router 設定路由
+- 使用 MUI v7 為元件設定樣式
+- 效能優化
+- 組織前端程式碼
+- TypeScript 最佳實踐
 
 ---
 
-## Import Aliases Quick Reference
+## 快速開始
 
-| Alias | Resolves To | Example |
+### 新元件檢查清單
+
+建立元件時，請遵循此檢查清單：
+
+- [ ] 使用 `React.FC<Props>` 模式搭配 TypeScript
+- [ ] 如果是大型元件，使用延遲載入：`React.lazy(() => import())`
+- [ ] 使用 `<SuspenseLoader>` 包裝以處理載入狀態
+- [ ] 使用 `useSuspenseQuery` 抓取資料
+- [ ] 使用 import 別名：`@/`、`~types`、`~components`、`~features`
+- [ ] 樣式：少於 100 行使用 inline，超過 100 行使用獨立檔案
+- [ ] 對傳遞給子元件的事件處理器使用 `useCallback`
+- [ ] 在檔案底部使用 default export
+- [ ] 不要使用 early return 搭配 loading spinner
+- [ ] 使用 `useMuiSnackbar` 顯示使用者通知
+
+### 新功能檢查清單
+
+建立功能時，請設定以下結構：
+
+- [ ] 建立 `features/{feature-name}/` 目錄
+- [ ] 建立子目錄：`api/`、`components/`、`hooks/`、`helpers/`、`types/`
+- [ ] 建立 API 服務檔案：`api/{feature}Api.ts`
+- [ ] 在 `types/` 中設定 TypeScript 型別
+- [ ] 在 `routes/{feature-name}/index.tsx` 建立路由
+- [ ] 延遲載入功能元件
+- [ ] 使用 Suspense 邊界
+- [ ] 從功能的 `index.ts` 匯出公開 API
+
+---
+
+## Import 別名快速參考
+
+| 別名 | 解析至 | 範例 |
 |-------|-------------|---------|
 | `@/` | `src/` | `import { apiClient } from '@/lib/apiClient'` |
 | `~types` | `src/types` | `import type { User } from '~types/user'` |
 | `~components` | `src/components` | `import { SuspenseLoader } from '~components/SuspenseLoader'` |
 | `~features` | `src/features` | `import { authApi } from '~features/auth'` |
 
-Defined in: [vite.config.ts](../../vite.config.ts) lines 180-185
+定義於：[vite.config.ts](../../vite.config.ts) 第 180-185 行
 
 ---
 
-## Common Imports Cheatsheet
+## 常用 Import 速查表
 
 ```typescript
 // React & Lazy Loading
@@ -97,95 +97,95 @@ import type { Post } from '~types/post';
 
 ---
 
-## Topic Guides
+## 主題指南
 
-### 🎨 Component Patterns
+### 🎨 元件模式
 
-**Modern React components use:**
-- `React.FC<Props>` for type safety
-- `React.lazy()` for code splitting
-- `SuspenseLoader` for loading states
-- Named const + default export pattern
+**現代 React 元件使用：**
+- `React.FC<Props>` 提供型別安全
+- `React.lazy()` 進行程式碼分割
+- `SuspenseLoader` 處理載入狀態
+- 具名 const + default export 模式
 
-**Key Concepts:**
-- Lazy load heavy components (DataGrid, charts, editors)
-- Always wrap lazy components in Suspense
-- Use SuspenseLoader component (with fade animation)
-- Component structure: Props → Hooks → Handlers → Render → Export
+**關鍵概念：**
+- 延遲載入大型元件（DataGrid、圖表、編輯器）
+- 總是使用 Suspense 包裝延遲載入的元件
+- 使用 SuspenseLoader 元件（帶淡入動畫）
+- 元件結構：Props → Hooks → Handlers → Render → Export
 
-**[📖 Complete Guide: resources/component-patterns.md](resources/component-patterns.md)**
-
----
-
-### 📊 Data Fetching
-
-**PRIMARY PATTERN: useSuspenseQuery**
-- Use with Suspense boundaries
-- Cache-first strategy (check grid cache before API)
-- Replaces `isLoading` checks
-- Type-safe with generics
-
-**API Service Layer:**
-- Create `features/{feature}/api/{feature}Api.ts`
-- Use `apiClient` axios instance
-- Centralized methods per feature
-- Route format: `/form/route` (NOT `/api/form/route`)
-
-**[📖 Complete Guide: resources/data-fetching.md](resources/data-fetching.md)**
+**[📖 完整指南：resources/component-patterns.md](resources/component-patterns.md)**
 
 ---
 
-### 📁 File Organization
+### 📊 資料抓取
 
-**features/ vs components/:**
-- `features/`: Domain-specific (posts, comments, auth)
-- `components/`: Truly reusable (SuspenseLoader, CustomAppBar)
+**主要模式：useSuspenseQuery**
+- 搭配 Suspense 邊界使用
+- 快取優先策略（在呼叫 API 前先檢查 grid 快取）
+- 取代 `isLoading` 檢查
+- 使用泛型提供型別安全
 
-**Feature Subdirectories:**
+**API 服務層：**
+- 建立 `features/{feature}/api/{feature}Api.ts`
+- 使用 `apiClient` axios 實例
+- 每個功能的集中化方法
+- 路由格式：`/form/route`（不是 `/api/form/route`）
+
+**[📖 完整指南：resources/data-fetching.md](resources/data-fetching.md)**
+
+---
+
+### 📁 檔案組織
+
+**features/ vs components/：**
+- `features/`：領域特定的（posts、comments、auth）
+- `components/`：真正可重用的（SuspenseLoader、CustomAppBar）
+
+**功能子目錄：**
 ```
 features/
   my-feature/
-    api/          # API service layer
-    components/   # Feature components
-    hooks/        # Custom hooks
-    helpers/      # Utility functions
-    types/        # TypeScript types
+    api/          # API 服務層
+    components/   # 功能元件
+    hooks/        # 自訂 hooks
+    helpers/      # 工具函式
+    types/        # TypeScript 型別
 ```
 
-**[📖 Complete Guide: resources/file-organization.md](resources/file-organization.md)**
+**[📖 完整指南：resources/file-organization.md](resources/file-organization.md)**
 
 ---
 
-### 🎨 Styling
+### 🎨 樣式設定
 
-**Inline vs Separate:**
-- <100 lines: Inline `const styles: Record<string, SxProps<Theme>>`
-- >100 lines: Separate `.styles.ts` file
+**Inline vs 獨立檔案：**
+- 少於 100 行：Inline `const styles: Record<string, SxProps<Theme>>`
+- 超過 100 行：獨立的 `.styles.ts` 檔案
 
-**Primary Method:**
-- Use `sx` prop for MUI components
-- Type-safe with `SxProps<Theme>`
-- Theme access: `(theme) => theme.palette.primary.main`
+**主要方法：**
+- 對 MUI 元件使用 `sx` prop
+- 使用 `SxProps<Theme>` 提供型別安全
+- 存取主題：`(theme) => theme.palette.primary.main`
 
-**MUI v7 Grid:**
+**MUI v7 Grid：**
 ```typescript
-<Grid size={{ xs: 12, md: 6 }}>  // ✅ v7 syntax
-<Grid xs={12} md={6}>             // ❌ Old syntax
+<Grid size={{ xs: 12, md: 6 }}>  // ✅ v7 語法
+<Grid xs={12} md={6}>             // ❌ 舊語法
 ```
 
-**[📖 Complete Guide: resources/styling-guide.md](resources/styling-guide.md)**
+**[📖 完整指南：resources/styling-guide.md](resources/styling-guide.md)**
 
 ---
 
-### 🛣️ Routing
+### 🛣️ 路由
 
-**TanStack Router - Folder-Based:**
-- Directory: `routes/my-route/index.tsx`
-- Lazy load components
-- Use `createFileRoute`
-- Breadcrumb data in loader
+**TanStack Router - 資料夾架構：**
+- 目錄：`routes/my-route/index.tsx`
+- 延遲載入元件
+- 使用 `createFileRoute`
+- 在 loader 中設定麵包屑資料
 
-**Example:**
+**範例：**
 ```typescript
 import { createFileRoute } from '@tanstack/react-router';
 import { lazy } from 'react';
@@ -198,155 +198,155 @@ export const Route = createFileRoute('/my-route/')({
 });
 ```
 
-**[📖 Complete Guide: resources/routing-guide.md](resources/routing-guide.md)**
+**[📖 完整指南：resources/routing-guide.md](resources/routing-guide.md)**
 
 ---
 
-### ⏳ Loading & Error States
+### ⏳ 載入與錯誤狀態
 
-**CRITICAL RULE: No Early Returns**
+**重要規則：不要使用 Early Return**
 
 ```typescript
-// ❌ NEVER - Causes layout shift
+// ❌ 絕對不要 - 會造成版面位移
 if (isLoading) {
     return <LoadingSpinner />;
 }
 
-// ✅ ALWAYS - Consistent layout
+// ✅ 永遠使用 - 保持版面一致
 <SuspenseLoader>
     <Content />
 </SuspenseLoader>
 ```
 
-**Why:** Prevents Cumulative Layout Shift (CLS), better UX
+**原因：**防止累積版面位移（CLS），提供更好的使用者體驗
 
-**Error Handling:**
-- Use `useMuiSnackbar` for user feedback
-- NEVER `react-toastify`
-- TanStack Query `onError` callbacks
+**錯誤處理：**
+- 使用 `useMuiSnackbar` 提供使用者回饋
+- 絕對不要使用 `react-toastify`
+- 使用 TanStack Query 的 `onError` 回呼
 
-**[📖 Complete Guide: resources/loading-and-error-states.md](resources/loading-and-error-states.md)**
+**[📖 完整指南：resources/loading-and-error-states.md](resources/loading-and-error-states.md)**
 
 ---
 
-### ⚡ Performance
+### ⚡ 效能
 
-**Optimization Patterns:**
-- `useMemo`: Expensive computations (filter, sort, map)
-- `useCallback`: Event handlers passed to children
-- `React.memo`: Expensive components
-- Debounced search (300-500ms)
-- Memory leak prevention (cleanup in useEffect)
+**優化模式：**
+- `useMemo`：昂貴的計算（filter、sort、map）
+- `useCallback`：傳遞給子元件的事件處理器
+- `React.memo`：昂貴的元件
+- 防抖搜尋（300-500ms）
+- 記憶體洩漏預防（在 useEffect 中清理）
 
-**[📖 Complete Guide: resources/performance.md](resources/performance.md)**
+**[📖 完整指南：resources/performance.md](resources/performance.md)**
 
 ---
 
 ### 📘 TypeScript
 
-**Standards:**
-- Strict mode, no `any` type
-- Explicit return types on functions
-- Type imports: `import type { User } from '~types/user'`
-- Component prop interfaces with JSDoc
+**標準：**
+- 嚴格模式，不使用 `any` 型別
+- 函式要明確宣告回傳型別
+- 型別 import：`import type { User } from '~types/user'`
+- 元件 prop 介面要加上 JSDoc
 
-**[📖 Complete Guide: resources/typescript-standards.md](resources/typescript-standards.md)**
-
----
-
-### 🔧 Common Patterns
-
-**Covered Topics:**
-- React Hook Form with Zod validation
-- DataGrid wrapper contracts
-- Dialog component standards
-- `useAuth` hook for current user
-- Mutation patterns with cache invalidation
-
-**[📖 Complete Guide: resources/common-patterns.md](resources/common-patterns.md)**
+**[📖 完整指南：resources/typescript-standards.md](resources/typescript-standards.md)**
 
 ---
 
-### 📚 Complete Examples
+### 🔧 常見模式
 
-**Full working examples:**
-- Modern component with all patterns
-- Complete feature structure
-- API service layer
-- Route with lazy loading
+**涵蓋主題：**
+- React Hook Form 搭配 Zod 驗證
+- DataGrid wrapper 契約
+- Dialog 元件標準
+- 使用 `useAuth` hook 取得當前使用者
+- 搭配快取失效的 Mutation 模式
+
+**[📖 完整指南：resources/common-patterns.md](resources/common-patterns.md)**
+
+---
+
+### 📚 完整範例
+
+**完整的工作範例：**
+- 包含所有模式的現代元件
+- 完整的功能結構
+- API 服務層
+- 帶延遲載入的路由
 - Suspense + useSuspenseQuery
-- Form with validation
+- 帶驗證的表單
 
-**[📖 Complete Guide: resources/complete-examples.md](resources/complete-examples.md)**
+**[📖 完整指南：resources/complete-examples.md](resources/complete-examples.md)**
 
 ---
 
-## Navigation Guide
+## 導覽指南
 
-| Need to... | Read this resource |
+| 需要... | 閱讀此資源 |
 |------------|-------------------|
-| Create a component | [component-patterns.md](resources/component-patterns.md) |
-| Fetch data | [data-fetching.md](resources/data-fetching.md) |
-| Organize files/folders | [file-organization.md](resources/file-organization.md) |
-| Style components | [styling-guide.md](resources/styling-guide.md) |
-| Set up routing | [routing-guide.md](resources/routing-guide.md) |
-| Handle loading/errors | [loading-and-error-states.md](resources/loading-and-error-states.md) |
-| Optimize performance | [performance.md](resources/performance.md) |
-| TypeScript types | [typescript-standards.md](resources/typescript-standards.md) |
-| Forms/Auth/DataGrid | [common-patterns.md](resources/common-patterns.md) |
-| See full examples | [complete-examples.md](resources/complete-examples.md) |
+| 建立元件 | [component-patterns.md](resources/component-patterns.md) |
+| 抓取資料 | [data-fetching.md](resources/data-fetching.md) |
+| 組織檔案/資料夾 | [file-organization.md](resources/file-organization.md) |
+| 設定元件樣式 | [styling-guide.md](resources/styling-guide.md) |
+| 設定路由 | [routing-guide.md](resources/routing-guide.md) |
+| 處理載入/錯誤 | [loading-and-error-states.md](resources/loading-and-error-states.md) |
+| 優化效能 | [performance.md](resources/performance.md) |
+| TypeScript 型別 | [typescript-standards.md](resources/typescript-standards.md) |
+| 表單/認證/DataGrid | [common-patterns.md](resources/common-patterns.md) |
+| 查看完整範例 | [complete-examples.md](resources/complete-examples.md) |
 
 ---
 
-## Core Principles
+## 核心原則
 
-1. **Lazy Load Everything Heavy**: Routes, DataGrid, charts, editors
-2. **Suspense for Loading**: Use SuspenseLoader, not early returns
-3. **useSuspenseQuery**: Primary data fetching pattern for new code
-4. **Features are Organized**: api/, components/, hooks/, helpers/ subdirs
-5. **Styles Based on Size**: <100 inline, >100 separate
-6. **Import Aliases**: Use @/, ~types, ~components, ~features
-7. **No Early Returns**: Prevents layout shift
-8. **useMuiSnackbar**: For all user notifications
+1. **延遲載入所有大型元件**：路由、DataGrid、圖表、編輯器
+2. **使用 Suspense 處理載入**：使用 SuspenseLoader，不要用 early return
+3. **useSuspenseQuery**：新程式碼的主要資料抓取模式
+4. **功能要有組織**：包含 api/、components/、hooks/、helpers/ 子目錄
+5. **依據大小決定樣式位置**：少於 100 行用 inline，超過 100 行用獨立檔案
+6. **使用 Import 別名**：使用 @/、~types、~components、~features
+7. **不要 Early Return**：防止版面位移
+8. **useMuiSnackbar**：所有使用者通知都用這個
 
 ---
 
-## Quick Reference: File Structure
+## 快速參考：檔案結構
 
 ```
 src/
   features/
     my-feature/
       api/
-        myFeatureApi.ts       # API service
+        myFeatureApi.ts       # API 服務
       components/
-        MyFeature.tsx         # Main component
-        SubComponent.tsx      # Related components
+        MyFeature.tsx         # 主元件
+        SubComponent.tsx      # 相關元件
       hooks/
-        useMyFeature.ts       # Custom hooks
+        useMyFeature.ts       # 自訂 hooks
         useSuspenseMyFeature.ts  # Suspense hooks
       helpers/
-        myFeatureHelpers.ts   # Utilities
+        myFeatureHelpers.ts   # 工具函式
       types/
-        index.ts              # TypeScript types
-      index.ts                # Public exports
+        index.ts              # TypeScript 型別
+      index.ts                # 公開匯出
 
   components/
     SuspenseLoader/
-      SuspenseLoader.tsx      # Reusable loader
+      SuspenseLoader.tsx      # 可重用的載入器
     CustomAppBar/
-      CustomAppBar.tsx        # Reusable app bar
+      CustomAppBar.tsx        # 可重用的應用程式列
 
   routes/
     my-route/
-      index.tsx               # Route component
+      index.tsx               # 路由元件
       create/
-        index.tsx             # Nested route
+        index.tsx             # 巢狀路由
 ```
 
 ---
 
-## Modern Component Template (Quick Copy)
+## 現代元件範本（快速複製）
 
 ```typescript
 import React, { useState, useCallback } from 'react';
@@ -385,15 +385,15 @@ export const MyComponent: React.FC<MyComponentProps> = ({ id, onAction }) => {
 export default MyComponent;
 ```
 
-For complete examples, see [resources/complete-examples.md](resources/complete-examples.md)
+完整範例請參見 [resources/complete-examples.md](resources/complete-examples.md)
 
 ---
 
-## Related Skills
+## 相關技能
 
-- **error-tracking**: Error tracking with Sentry (applies to frontend too)
-- **backend-dev-guidelines**: Backend API patterns that frontend consumes
+- **error-tracking**：使用 Sentry 進行錯誤追蹤（也適用於前端）
+- **backend-dev-guidelines**：前端使用的後端 API 模式
 
 ---
 
-**Skill Status**: Modular structure with progressive loading for optimal context management
+**技能狀態**：模組化結構，漸進式載入以達到最佳的上下文管理

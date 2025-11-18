@@ -1,56 +1,56 @@
 ---
 name: backend-dev-guidelines
-description: Comprehensive backend development guide for Node.js/Express/TypeScript microservices. Use when creating routes, controllers, services, repositories, middleware, or working with Express APIs, Prisma database access, Sentry error tracking, Zod validation, unifiedConfig, dependency injection, or async patterns. Covers layered architecture (routes → controllers → services → repositories), BaseController pattern, error handling, performance monitoring, testing strategies, and migration from legacy patterns.
+description: Node.js/Express/TypeScript 微服務的完整後端開發指南。適用於建立 routes、controllers、services、repositories、middleware，或處理 Express API、Prisma 資料庫存取、Sentry 錯誤追蹤、Zod 驗證、unifiedConfig、依賴注入或非同步模式。涵蓋分層架構（routes → controllers → services → repositories）、BaseController 模式、錯誤處理、效能監控、測試策略，以及從舊有模式的遷移。
 ---
 
-# Backend Development Guidelines
+# 後端開發指南
 
-## Purpose
+## 目的
 
-Establish consistency and best practices across backend microservices (blog-api, auth-service, notifications-service) using modern Node.js/Express/TypeScript patterns.
+在後端微服務（blog-api、auth-service、notifications-service）中建立一致性和最佳實務，使用現代化的 Node.js/Express/TypeScript 模式。
 
-## When to Use This Skill
+## 何時使用此技能
 
-Automatically activates when working on:
-- Creating or modifying routes, endpoints, APIs
-- Building controllers, services, repositories
-- Implementing middleware (auth, validation, error handling)
-- Database operations with Prisma
-- Error tracking with Sentry
-- Input validation with Zod
-- Configuration management
-- Backend testing and refactoring
-
----
-
-## Quick Start
-
-### New Backend Feature Checklist
-
-- [ ] **Route**: Clean definition, delegate to controller
-- [ ] **Controller**: Extend BaseController
-- [ ] **Service**: Business logic with DI
-- [ ] **Repository**: Database access (if complex)
-- [ ] **Validation**: Zod schema
-- [ ] **Sentry**: Error tracking
-- [ ] **Tests**: Unit + integration tests
-- [ ] **Config**: Use unifiedConfig
-
-### New Microservice Checklist
-
-- [ ] Directory structure (see [architecture-overview.md](architecture-overview.md))
-- [ ] instrument.ts for Sentry
-- [ ] unifiedConfig setup
-- [ ] BaseController class
-- [ ] Middleware stack
-- [ ] Error boundary
-- [ ] Testing framework
+在以下情況下會自動啟動：
+- 建立或修改 routes、endpoints、APIs
+- 建立 controllers、services、repositories
+- 實作 middleware（身份驗證、資料驗證、錯誤處理）
+- 使用 Prisma 進行資料庫操作
+- 使用 Sentry 進行錯誤追蹤
+- 使用 Zod 進行輸入驗證
+- 設定管理
+- 後端測試與重構
 
 ---
 
-## Architecture Overview
+## 快速開始
 
-### Layered Architecture
+### 新後端功能檢查清單
+
+- [ ] **Route**：清楚定義，委派給 controller
+- [ ] **Controller**：繼承 BaseController
+- [ ] **Service**：使用 DI 的業務邏輯
+- [ ] **Repository**：資料庫存取（如果複雜的話）
+- [ ] **Validation**：Zod schema
+- [ ] **Sentry**：錯誤追蹤
+- [ ] **Tests**：單元測試與整合測試
+- [ ] **Config**：使用 unifiedConfig
+
+### 新微服務檢查清單
+
+- [ ] 目錄結構（參見 [architecture-overview.md](architecture-overview.md)）
+- [ ] instrument.ts 用於 Sentry
+- [ ] unifiedConfig 設定
+- [ ] BaseController 類別
+- [ ] Middleware 堆疊
+- [ ] 錯誤邊界
+- [ ] 測試框架
+
+---
+
+## 架構概觀
+
+### 分層架構
 
 ```
 HTTP Request
@@ -66,13 +66,13 @@ Repositories (data access)
 Database (Prisma)
 ```
 
-**Key Principle:** Each layer has ONE responsibility.
+**核心原則：**每一層只有一個職責。
 
-See [architecture-overview.md](architecture-overview.md) for complete details.
+詳細內容請參見 [architecture-overview.md](architecture-overview.md)。
 
 ---
 
-## Directory Structure
+## 目錄結構
 
 ```
 service/src/
@@ -91,29 +91,29 @@ service/src/
 └── server.ts            # HTTP server
 ```
 
-**Naming Conventions:**
-- Controllers: `PascalCase` - `UserController.ts`
-- Services: `camelCase` - `userService.ts`
-- Routes: `camelCase + Routes` - `userRoutes.ts`
-- Repositories: `PascalCase + Repository` - `UserRepository.ts`
+**命名慣例：**
+- Controllers：`PascalCase` - `UserController.ts`
+- Services：`camelCase` - `userService.ts`
+- Routes：`camelCase + Routes` - `userRoutes.ts`
+- Repositories：`PascalCase + Repository` - `UserRepository.ts`
 
 ---
 
-## Core Principles (7 Key Rules)
+## 核心原則（7 個關鍵規則）
 
-### 1. Routes Only Route, Controllers Control
+### 1. Routes 只負責路由，Controllers 負責控制
 
 ```typescript
-// ❌ NEVER: Business logic in routes
+// ❌ 絕對不要：在 routes 中寫業務邏輯
 router.post('/submit', async (req, res) => {
-    // 200 lines of logic
+    // 200 行的邏輯
 });
 
-// ✅ ALWAYS: Delegate to controller
+// ✅ 永遠這樣做：委派給 controller
 router.post('/submit', (req, res) => controller.submit(req, res));
 ```
 
-### 2. All Controllers Extend BaseController
+### 2. 所有 Controllers 都要繼承 BaseController
 
 ```typescript
 export class UserController extends BaseController {
@@ -128,7 +128,7 @@ export class UserController extends BaseController {
 }
 ```
 
-### 3. All Errors to Sentry
+### 3. 所有錯誤都要傳送到 Sentry
 
 ```typescript
 try {
@@ -139,32 +139,32 @@ try {
 }
 ```
 
-### 4. Use unifiedConfig, NEVER process.env
+### 4. 使用 unifiedConfig，絕對不要用 process.env
 
 ```typescript
-// ❌ NEVER
+// ❌ 絕對不要
 const timeout = process.env.TIMEOUT_MS;
 
-// ✅ ALWAYS
+// ✅ 永遠這樣做
 import { config } from './config/unifiedConfig';
 const timeout = config.timeouts.default;
 ```
 
-### 5. Validate All Input with Zod
+### 5. 使用 Zod 驗證所有輸入
 
 ```typescript
 const schema = z.object({ email: z.string().email() });
 const validated = schema.parse(req.body);
 ```
 
-### 6. Use Repository Pattern for Data Access
+### 6. 使用 Repository 模式進行資料存取
 
 ```typescript
 // Service → Repository → Database
 const users = await userRepository.findActive();
 ```
 
-### 7. Comprehensive Testing Required
+### 7. 需要完整的測試
 
 ```typescript
 describe('UserService', () => {
@@ -176,7 +176,7 @@ describe('UserService', () => {
 
 ---
 
-## Common Imports
+## 常用 Imports
 
 ```typescript
 // Express
@@ -202,101 +202,101 @@ import { asyncErrorWrapper } from './middleware/errorBoundary';
 
 ---
 
-## Quick Reference
+## 快速參考
 
-### HTTP Status Codes
+### HTTP 狀態碼
 
-| Code | Use Case |
+| 代碼 | 使用情境 |
 |------|----------|
-| 200 | Success |
-| 201 | Created |
-| 400 | Bad Request |
-| 401 | Unauthorized |
-| 403 | Forbidden |
-| 404 | Not Found |
-| 500 | Server Error |
+| 200 | 成功 |
+| 201 | 已建立 |
+| 400 | 錯誤的請求 |
+| 401 | 未經授權 |
+| 403 | 禁止存取 |
+| 404 | 找不到 |
+| 500 | 伺服器錯誤 |
 
-### Service Templates
+### 服務範本
 
-**Blog API** (✅ Mature) - Use as template for REST APIs
-**Auth Service** (✅ Mature) - Use as template for authentication patterns
-
----
-
-## Anti-Patterns to Avoid
-
-❌ Business logic in routes
-❌ Direct process.env usage
-❌ Missing error handling
-❌ No input validation
-❌ Direct Prisma everywhere
-❌ console.log instead of Sentry
+**Blog API**（✅ 成熟）- 作為 REST API 的範本
+**Auth Service**（✅ 成熟）- 作為身份驗證模式的範本
 
 ---
 
-## Navigation Guide
+## 應避免的反模式
 
-| Need to... | Read this |
+❌ 在 routes 中寫業務邏輯
+❌ 直接使用 process.env
+❌ 缺少錯誤處理
+❌ 沒有輸入驗證
+❌ 到處直接使用 Prisma
+❌ 使用 console.log 而非 Sentry
+
+---
+
+## 導覽指南
+
+| 需要... | 閱讀此文件 |
 |------------|-----------|
-| Understand architecture | [architecture-overview.md](architecture-overview.md) |
-| Create routes/controllers | [routing-and-controllers.md](routing-and-controllers.md) |
-| Organize business logic | [services-and-repositories.md](services-and-repositories.md) |
-| Validate input | [validation-patterns.md](validation-patterns.md) |
-| Add error tracking | [sentry-and-monitoring.md](sentry-and-monitoring.md) |
-| Create middleware | [middleware-guide.md](middleware-guide.md) |
-| Database access | [database-patterns.md](database-patterns.md) |
-| Manage config | [configuration.md](configuration.md) |
-| Handle async/errors | [async-and-errors.md](async-and-errors.md) |
-| Write tests | [testing-guide.md](testing-guide.md) |
-| See examples | [complete-examples.md](complete-examples.md) |
+| 了解架構 | [architecture-overview.md](architecture-overview.md) |
+| 建立 routes/controllers | [routing-and-controllers.md](routing-and-controllers.md) |
+| 組織業務邏輯 | [services-and-repositories.md](services-and-repositories.md) |
+| 驗證輸入 | [validation-patterns.md](validation-patterns.md) |
+| 新增錯誤追蹤 | [sentry-and-monitoring.md](sentry-and-monitoring.md) |
+| 建立 middleware | [middleware-guide.md](middleware-guide.md) |
+| 資料庫存取 | [database-patterns.md](database-patterns.md) |
+| 管理設定 | [configuration.md](configuration.md) |
+| 處理非同步/錯誤 | [async-and-errors.md](async-and-errors.md) |
+| 撰寫測試 | [testing-guide.md](testing-guide.md) |
+| 查看範例 | [complete-examples.md](complete-examples.md) |
 
 ---
 
-## Resource Files
+## 資源檔案
 
 ### [architecture-overview.md](architecture-overview.md)
-Layered architecture, request lifecycle, separation of concerns
+分層架構、請求生命週期、關注點分離
 
 ### [routing-and-controllers.md](routing-and-controllers.md)
-Route definitions, BaseController, error handling, examples
+Route 定義、BaseController、錯誤處理、範例
 
 ### [services-and-repositories.md](services-and-repositories.md)
-Service patterns, DI, repository pattern, caching
+Service 模式、DI、repository 模式、快取
 
 ### [validation-patterns.md](validation-patterns.md)
-Zod schemas, validation, DTO pattern
+Zod schemas、驗證、DTO 模式
 
 ### [sentry-and-monitoring.md](sentry-and-monitoring.md)
-Sentry init, error capture, performance monitoring
+Sentry 初始化、錯誤捕捉、效能監控
 
 ### [middleware-guide.md](middleware-guide.md)
-Auth, audit, error boundaries, AsyncLocalStorage
+身份驗證、稽核、錯誤邊界、AsyncLocalStorage
 
 ### [database-patterns.md](database-patterns.md)
-PrismaService, repositories, transactions, optimization
+PrismaService、repositories、交易、最佳化
 
 ### [configuration.md](configuration.md)
-UnifiedConfig, environment configs, secrets
+UnifiedConfig、環境設定、機密資料
 
 ### [async-and-errors.md](async-and-errors.md)
-Async patterns, custom errors, asyncErrorWrapper
+非同步模式、自訂錯誤、asyncErrorWrapper
 
 ### [testing-guide.md](testing-guide.md)
-Unit/integration tests, mocking, coverage
+單元/整合測試、模擬、覆蓋率
 
 ### [complete-examples.md](complete-examples.md)
-Full examples, refactoring guide
+完整範例、重構指南
 
 ---
 
-## Related Skills
+## 相關技能
 
-- **database-verification** - Verify column names and schema consistency
-- **error-tracking** - Sentry integration patterns
-- **skill-developer** - Meta-skill for creating and managing skills
+- **database-verification** - 驗證欄位名稱與 schema 一致性
+- **error-tracking** - Sentry 整合模式
+- **skill-developer** - 建立與管理技能的元技能
 
 ---
 
-**Skill Status**: COMPLETE ✅
-**Line Count**: < 500 ✅
-**Progressive Disclosure**: 11 resource files ✅
+**技能狀態**：完成 ✅
+**行數**：< 500 ✅
+**漸進式揭露**：11 個資源檔案 ✅

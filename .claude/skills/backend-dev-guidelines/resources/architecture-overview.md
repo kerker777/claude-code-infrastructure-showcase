@@ -1,6 +1,6 @@
 # Architecture Overview - Backend Services
 
-Complete guide to the layered architecture pattern used in backend microservices.
+後端微服務分層架構模式完整指南。
 
 ## Table of Contents
 
@@ -62,25 +62,25 @@ Complete guide to the layered architecture pattern used in backend microservices
 
 ### Why This Architecture?
 
-**Testability:**
-- Each layer can be tested independently
-- Easy to mock dependencies
-- Clear test boundaries
+**可測試性 (Testability)：**
+- 每一層都可以獨立測試
+- 容易 mock 依賴項目
+- 測試邊界清楚
 
-**Maintainability:**
-- Changes isolated to specific layers
-- Business logic separate from HTTP concerns
-- Easy to locate bugs
+**可維護性 (Maintainability)：**
+- 變更可以隔離在特定層級
+- 商業邏輯與 HTTP 關注點分離
+- 容易定位 bug
 
-**Reusability:**
-- Services can be used by routes, cron jobs, scripts
-- Repositories hide database implementation
-- Business logic not tied to HTTP
+**可重用性 (Reusability)：**
+- Service 可以被 route、cron job、script 使用
+- Repository 隱藏資料庫實作細節
+- 商業邏輯不與 HTTP 綁定
 
-**Scalability:**
-- Easy to add new endpoints
-- Clear patterns to follow
-- Consistent structure
+**可擴展性 (Scalability)：**
+- 容易新增 endpoint
+- 有清楚的模式可以遵循
+- 結構一致
 
 ---
 
@@ -121,7 +121,7 @@ Complete guide to the layered architecture pattern used in backend microservices
 
 ### Middleware Execution Order
 
-**Critical:** Middleware executes in registration order
+**重要：** Middleware 依照註冊順序執行
 
 ```typescript
 app.use(Sentry.Handlers.requestHandler());  // 1. Sentry tracing (FIRST)
@@ -135,7 +135,7 @@ app.use(errorBoundary);                      // 7. Error handler (LAST)
 app.use(Sentry.Handlers.errorHandler());     // 8. Sentry errors (LAST)
 ```
 
-**Rule:** Error handlers must be registered AFTER routes!
+**規則：** Error handler 必須在 route 之後註冊！
 
 ---
 
@@ -143,15 +143,15 @@ app.use(Sentry.Handlers.errorHandler());     // 8. Sentry errors (LAST)
 
 ### Email Service (Mature Pattern ✅)
 
-**Strengths:**
-- Comprehensive BaseController with Sentry integration
-- Clean route delegation (no business logic in routes)
-- Consistent dependency injection pattern
-- Good middleware organization
-- Type-safe throughout
-- Excellent error handling
+**優點：**
+- 完整的 BaseController，整合 Sentry
+- 乾淨的 route 委派（route 中沒有商業邏輯）
+- 一致的依賴注入模式
+- 良好的 middleware 組織
+- 完整的型別安全
+- 優秀的錯誤處理
 
-**Example Structure:**
+**範例結構：**
 ```
 email/src/
 ├── controllers/
@@ -169,23 +169,23 @@ email/src/
     └── DevImpersonationSSOMiddleware.ts
 ```
 
-**Use as template** for new services!
+**新服務請參考這個架構！**
 
 ### Form Service (Transitioning ⚠️)
 
-**Strengths:**
-- Excellent workflow architecture (event sourcing)
-- Good Sentry integration
-- Innovative audit middleware (AsyncLocalStorage)
-- Comprehensive permission system
+**優點：**
+- 優秀的 workflow 架構（event sourcing）
+- 良好的 Sentry 整合
+- 創新的 audit middleware（AsyncLocalStorage）
+- 完整的權限系統
 
-**Weaknesses:**
-- Some routes have 200+ lines of business logic
-- Inconsistent controller naming
-- Direct process.env usage (60+ occurrences)
-- Minimal repository pattern usage
+**缺點：**
+- 某些 route 有 200 多行商業邏輯
+- Controller 命名不一致
+- 直接使用 process.env（60 多處）
+- Repository pattern 使用不足
 
-**Example:**
+**範例：**
 ```
 form/src/
 ├── routes/
@@ -203,8 +203,8 @@ form/src/
     └── auditMiddleware.ts         ✅ AsyncLocalStorage pattern
 ```
 
-**Learn from:** workflow/, middleware/auditMiddleware.ts
-**Avoid:** responseRoutes.ts, direct process.env
+**可學習：** workflow/、middleware/auditMiddleware.ts
+**應避免：** responseRoutes.ts、直接使用 process.env
 
 ---
 
@@ -212,108 +212,108 @@ form/src/
 
 ### Controllers Directory
 
-**Purpose:** Handle HTTP request/response concerns
+**用途：** 處理 HTTP request/response 相關事務
 
-**Contents:**
-- `BaseController.ts` - Base class with common methods
-- `{Feature}Controller.ts` - Feature-specific controllers
+**內容：**
+- `BaseController.ts` - 包含共用方法的基礎類別
+- `{Feature}Controller.ts` - 功能專屬 controller
 
-**Naming:** PascalCase + Controller
+**命名：** PascalCase + Controller
 
-**Responsibilities:**
-- Parse request parameters
-- Validate input (Zod)
-- Call appropriate service methods
-- Format responses
-- Handle errors (via BaseController)
-- Set HTTP status codes
+**職責：**
+- 解析 request 參數
+- 驗證輸入（Zod）
+- 呼叫對應的 service method
+- 格式化 response
+- 處理錯誤（透過 BaseController）
+- 設定 HTTP status code
 
 ### Services Directory
 
-**Purpose:** Business logic and orchestration
+**用途：** 商業邏輯和協調（orchestration）
 
-**Contents:**
-- `{feature}Service.ts` - Feature business logic
+**內容：**
+- `{feature}Service.ts` - 功能的商業邏輯
 
-**Naming:** camelCase + Service (or PascalCase + Service)
+**命名：** camelCase + Service（或 PascalCase + Service）
 
-**Responsibilities:**
-- Implement business rules
-- Orchestrate multiple repositories
-- Transaction management
-- Business validations
-- No HTTP knowledge (Request/Response types)
+**職責：**
+- 實作商業規則
+- 協調多個 repository
+- 交易管理
+- 商業驗證
+- 不包含 HTTP 知識（Request/Response 型別）
 
 ### Repositories Directory
 
-**Purpose:** Data access abstraction
+**用途：** 資料存取抽象層
 
-**Contents:**
-- `{Entity}Repository.ts` - Database operations for entity
+**內容：**
+- `{Entity}Repository.ts` - Entity 的資料庫操作
 
-**Naming:** PascalCase + Repository
+**命名：** PascalCase + Repository
 
-**Responsibilities:**
-- Prisma query operations
-- Query optimization
-- Database error handling
-- Caching layer
-- Hide Prisma implementation details
+**職責：**
+- Prisma query 操作
+- Query 優化
+- 資料庫錯誤處理
+- Caching 層
+- 隱藏 Prisma 實作細節
 
-**Current Gap:** Only 1 repository exists (WorkflowRepository)
+**目前狀況：** 只有 1 個 repository 存在（WorkflowRepository）
 
 ### Routes Directory
 
-**Purpose:** Route registration ONLY
+**用途：** 僅用於註冊 route
 
-**Contents:**
-- `{feature}Routes.ts` - Express router for feature
+**內容：**
+- `{feature}Routes.ts` - 功能的 Express router
 
-**Naming:** camelCase + Routes
+**命名：** camelCase + Routes
 
-**Responsibilities:**
-- Register routes with Express
-- Apply middleware
-- Delegate to controllers
-- **NO business logic!**
+**職責：**
+- 在 Express 註冊 route
+- 套用 middleware
+- 委派給 controller
+- **不可有商業邏輯！**
 
 ### Middleware Directory
 
-**Purpose:** Cross-cutting concerns
+**用途：** 橫切關注點（cross-cutting concerns）
 
-**Contents:**
+**內容：**
 - Authentication middleware
 - Audit middleware
-- Error boundaries
+- Error boundary
 - Validation middleware
-- Custom middleware
+- 自訂 middleware
 
-**Naming:** camelCase
+**命名：** camelCase
 
-**Types:**
-- Request processing (before handler)
-- Response processing (after handler)
-- Error handling (error boundary)
+**類型：**
+- Request 處理（handler 之前）
+- Response 處理（handler 之後）
+- 錯誤處理（error boundary）
 
 ### Config Directory
 
-**Purpose:** Configuration management
+**用途：** 設定管理
 
-**Contents:**
-- `unifiedConfig.ts` - Type-safe configuration
-- Environment-specific configs
+**內容：**
+- `unifiedConfig.ts` - 型別安全的設定
+- 環境專屬設定
 
-**Pattern:** Single source of truth
+**模式：** 單一事實來源（single source of truth）
 
 ### Types Directory
 
-**Purpose:** TypeScript type definitions
+**用途：** TypeScript 型別定義
 
-**Contents:**
-- `{feature}.types.ts` - Feature-specific types
-- DTOs (Data Transfer Objects)
-- Request/Response types
-- Domain models
+**內容：**
+- `{feature}.types.ts` - 功能專屬型別
+- DTO（Data Transfer Object）
+- Request/Response 型別
+- Domain model
 
 ---
 
@@ -321,7 +321,7 @@ form/src/
 
 ### Feature-Based Organization
 
-For large features, use subdirectories:
+大型功能使用子目錄：
 
 ```
 src/workflow/
@@ -333,14 +333,14 @@ src/workflow/
 └── utils/             # Workflow utilities
 ```
 
-**When to use:**
-- Feature has 5+ files
-- Clear sub-domains exist
-- Logical grouping improves clarity
+**何時使用：**
+- 功能有 5 個以上檔案
+- 有明確的子領域
+- 邏輯分組能提升清晰度
 
 ### Flat Organization
 
-For simple features:
+簡單功能使用扁平結構：
 
 ```
 src/
@@ -350,10 +350,10 @@ src/
 └── repositories/UserRepository.ts
 ```
 
-**When to use:**
-- Simple features (< 5 files)
-- No clear sub-domains
-- Flat structure is clearer
+**何時使用：**
+- 簡單功能（少於 5 個檔案）
+- 沒有明確的子領域
+- 扁平結構更清楚
 
 ---
 
@@ -361,42 +361,42 @@ src/
 
 ### What Goes Where
 
-**Routes Layer:**
-- ✅ Route definitions
-- ✅ Middleware registration
-- ✅ Controller delegation
-- ❌ Business logic
-- ❌ Database operations
-- ❌ Validation logic (should be in validator or controller)
+**Routes Layer：**
+- ✅ Route 定義
+- ✅ Middleware 註冊
+- ✅ Controller 委派
+- ❌ 商業邏輯
+- ❌ 資料庫操作
+- ❌ 驗證邏輯（應在 validator 或 controller）
 
-**Controllers Layer:**
-- ✅ Request parsing (params, body, query)
-- ✅ Input validation (Zod)
-- ✅ Service calls
-- ✅ Response formatting
-- ✅ Error handling
-- ❌ Business logic
-- ❌ Database operations
+**Controllers Layer：**
+- ✅ Request 解析（params、body、query）
+- ✅ 輸入驗證（Zod）
+- ✅ Service 呼叫
+- ✅ Response 格式化
+- ✅ 錯誤處理
+- ❌ 商業邏輯
+- ❌ 資料庫操作
 
-**Services Layer:**
-- ✅ Business logic
-- ✅ Business rules enforcement
-- ✅ Orchestration (multiple repos)
-- ✅ Transaction management
-- ❌ HTTP concerns (Request/Response)
-- ❌ Direct Prisma calls (use repositories)
+**Services Layer：**
+- ✅ 商業邏輯
+- ✅ 商業規則執行
+- ✅ 協調（多個 repository）
+- ✅ 交易管理
+- ❌ HTTP 關注點（Request/Response）
+- ❌ 直接呼叫 Prisma（使用 repository）
 
-**Repositories Layer:**
-- ✅ Prisma operations
-- ✅ Query construction
-- ✅ Database error handling
+**Repositories Layer：**
+- ✅ Prisma 操作
+- ✅ Query 建構
+- ✅ 資料庫錯誤處理
 - ✅ Caching
-- ❌ Business logic
-- ❌ HTTP concerns
+- ❌ 商業邏輯
+- ❌ HTTP 關注點
 
 ### Example: User Creation
 
-**Route:**
+**Route：**
 ```typescript
 router.post('/users',
     SSOMiddleware.verifyLoginStatus,
@@ -405,7 +405,7 @@ router.post('/users',
 );
 ```
 
-**Controller:**
+**Controller：**
 ```typescript
 async create(req: Request, res: Response): Promise<void> {
     try {
@@ -418,7 +418,7 @@ async create(req: Request, res: Response): Promise<void> {
 }
 ```
 
-**Service:**
+**Service：**
 ```typescript
 async create(data: CreateUserDTO): Promise<User> {
     // Business rule: check if email already exists
@@ -430,7 +430,7 @@ async create(data: CreateUserDTO): Promise<User> {
 }
 ```
 
-**Repository:**
+**Repository：**
 ```typescript
 async create(data: CreateUserDTO): Promise<User> {
     return PrismaService.main.user.create({ data });
@@ -441,7 +441,7 @@ async findByEmail(email: string): Promise<User | null> {
 }
 ```
 
-**Notice:** Each layer has clear, distinct responsibilities!
+**注意：** 每一層都有清楚且獨特的職責！
 
 ---
 

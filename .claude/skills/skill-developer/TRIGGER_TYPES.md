@@ -1,28 +1,28 @@
-# Trigger Types - Complete Guide
+# Trigger Types - 完整指南
 
-Complete reference for configuring skill triggers in Claude Code's skill auto-activation system.
+Claude Code 技能自動啟用系統中觸發器設定的完整參考文件。
 
-## Table of Contents
+## 目錄
 
-- [Keyword Triggers (Explicit)](#keyword-triggers-explicit)
-- [Intent Pattern Triggers (Implicit)](#intent-pattern-triggers-implicit)
-- [File Path Triggers](#file-path-triggers)
-- [Content Pattern Triggers](#content-pattern-triggers)
-- [Best Practices Summary](#best-practices-summary)
+- [關鍵字觸發器 (明確式)](#關鍵字觸發器-明確式)
+- [意圖模式觸發器 (隱含式)](#意圖模式觸發器-隱含式)
+- [檔案路徑觸發器](#檔案路徑觸發器)
+- [內容模式觸發器](#內容模式觸發器)
+- [最佳實踐摘要](#最佳實踐摘要)
 
 ---
 
-## Keyword Triggers (Explicit)
+## 關鍵字觸發器 (明確式)
 
-### How It Works
+### 運作方式
 
-Case-insensitive substring matching in user's prompt.
+對使用者提示進行不區分大小寫的子字串比對。
 
-### Use For
+### 適用情境
 
-Topic-based activation where user explicitly mentions the subject.
+當使用者明確提及主題時，基於主題的啟用機制。
 
-### Configuration
+### 設定方式
 
 ```json
 "promptTriggers": {
@@ -30,32 +30,32 @@ Topic-based activation where user explicitly mentions the subject.
 }
 ```
 
-### Example
+### 範例
 
-- User prompt: "how does the **layout** system work?"
-- Matches: "layout" keyword
-- Activates: `project-catalog-developer`
+- 使用者提示：「how does the **layout** system work?」
+- 比對到：「layout」關鍵字
+- 啟用技能：`project-catalog-developer`
 
-### Best Practices
+### 最佳實踐
 
-- Use specific, unambiguous terms
-- Include common variations ("layout", "layout system", "grid layout")
-- Avoid overly generic words ("system", "work", "create")
-- Test with real prompts
+- 使用具體、明確的詞彙
+- 包含常見變體（「layout」、「layout system」、「grid layout」）
+- 避免過於籠統的字詞（「system」、「work」、「create」）
+- 以實際提示進行測試
 
 ---
 
-## Intent Pattern Triggers (Implicit)
+## 意圖模式觸發器 (隱含式)
 
-### How It Works
+### 運作方式
 
-Regex pattern matching to detect user's intent even when they don't mention the topic explicitly.
+使用正規表達式模式比對來偵測使用者意圖，即使他們沒有明確提及特定主題。
 
-### Use For
+### 適用情境
 
-Action-based activation where user describes what they want to do rather than the specific topic.
+當使用者描述他們想做什麼，而非特定主題時，基於行為的啟用機制。
 
-### Configuration
+### 設定方式
 
 ```json
 "promptTriggers": {
@@ -66,59 +66,59 @@ Action-based activation where user describes what they want to do rather than th
 }
 ```
 
-### Examples
+### 範例
 
-**Database Work:**
-- User prompt: "add user tracking feature"
-- Matches: `(add).*?(feature)`
-- Activates: `database-verification`, `error-tracking`
+**資料庫相關工作：**
+- 使用者提示：「add user tracking feature」
+- 比對到：`(add).*?(feature)`
+- 啟用技能：`database-verification`、`error-tracking`
 
-**Component Creation:**
-- User prompt: "create a dashboard widget"
-- Matches: `(create).*?(component)` (if component in pattern)
-- Activates: `frontend-dev-guidelines`
+**元件建立：**
+- 使用者提示：「create a dashboard widget」
+- 比對到：`(create).*?(component)`（若模式中包含 component）
+- 啟用技能：`frontend-dev-guidelines`
 
-### Best Practices
+### 最佳實踐
 
-- Capture common action verbs: `(create|add|modify|build|implement)`
-- Include domain-specific nouns: `(feature|endpoint|component|workflow)`
-- Use non-greedy matching: `.*?` instead of `.*`
-- Test patterns thoroughly with regex tester (https://regex101.com/)
-- Don't make patterns too broad (causes false positives)
-- Don't make patterns too specific (causes false negatives)
+- 捕捉常見動作動詞：`(create|add|modify|build|implement)`
+- 包含領域特定名詞：`(feature|endpoint|component|workflow)`
+- 使用非貪婪比對：`.*?` 而非 `.*`
+- 使用正規表達式測試工具徹底測試模式 (https://regex101.com/)
+- 不要讓模式過於廣泛（會造成誤判）
+- 不要讓模式過於具體（會造成漏判）
 
-### Common Pattern Examples
+### 常見模式範例
 
 ```regex
-# Database Work
+# 資料庫工作
 (add|create|implement).*?(user|login|auth|feature)
 
-# Explanations
+# 解釋說明
 (how does|explain|what is|describe).*?
 
-# Frontend Work
+# 前端工作
 (create|add|make|build).*?(component|UI|page|modal|dialog)
 
-# Error Handling
+# 錯誤處理
 (fix|handle|catch|debug).*?(error|exception|bug)
 
-# Workflow Operations
+# 工作流程操作
 (create|add|modify).*?(workflow|step|branch|condition)
 ```
 
 ---
 
-## File Path Triggers
+## 檔案路徑觸發器
 
-### How It Works
+### 運作方式
 
-Glob pattern matching against the file path being edited.
+使用 Glob 模式比對正在編輯的檔案路徑。
 
-### Use For
+### 適用情境
 
-Domain/area-specific activation based on file location in the project.
+根據專案中檔案的位置進行特定領域或區域的啟用。
 
-### Configuration
+### 設定方式
 
 ```json
 "fileTriggers": {
@@ -133,70 +133,70 @@ Domain/area-specific activation based on file location in the project.
 }
 ```
 
-### Glob Pattern Syntax
+### Glob 模式語法
 
-- `**` = Any number of directories (including zero)
-- `*` = Any characters within a directory name
-- Examples:
-  - `frontend/src/**/*.tsx` = All .tsx files in frontend/src and subdirs
-  - `**/schema.prisma` = schema.prisma anywhere in project
-  - `form/src/**/*.ts` = All .ts files in form/src subdirs
+- `**` = 任意數量的目錄（包含零個）
+- `*` = 目錄名稱中的任意字元
+- 範例：
+  - `frontend/src/**/*.tsx` = frontend/src 及其子目錄中所有 .tsx 檔案
+  - `**/schema.prisma` = 專案中任何位置的 schema.prisma
+  - `form/src/**/*.ts` = form/src 子目錄中所有 .ts 檔案
 
-### Example
+### 範例
 
-- File being edited: `frontend/src/components/Dashboard.tsx`
-- Matches: `frontend/src/**/*.tsx`
-- Activates: `frontend-dev-guidelines`
+- 正在編輯的檔案：`frontend/src/components/Dashboard.tsx`
+- 比對到：`frontend/src/**/*.tsx`
+- 啟用技能：`frontend-dev-guidelines`
 
-### Best Practices
+### 最佳實踐
 
-- Be specific to avoid false positives
-- Use exclusions for test files: `**/*.test.ts`
-- Consider subdirectory structure
-- Test patterns with actual file paths
-- Use narrower patterns when possible: `form/src/services/**` not `form/**`
+- 使用具體條件以避免誤判
+- 使用排除規則排除測試檔案：`**/*.test.ts`
+- 考慮子目錄結構
+- 使用實際檔案路徑測試模式
+- 盡可能使用更窄的模式：`form/src/services/**` 而非 `form/**`
 
-### Common Path Patterns
+### 常見路徑模式
 
 ```glob
-# Frontend
-frontend/src/**/*.tsx        # All React components
-frontend/src/**/*.ts         # All TypeScript files
-frontend/src/components/**   # Only components directory
+# 前端
+frontend/src/**/*.tsx        # 所有 React 元件
+frontend/src/**/*.ts         # 所有 TypeScript 檔案
+frontend/src/components/**   # 僅 components 目錄
 
-# Backend Services
-form/src/**/*.ts            # Form service
-email/src/**/*.ts           # Email service
-users/src/**/*.ts           # Users service
+# 後端服務
+form/src/**/*.ts            # Form 服務
+email/src/**/*.ts           # Email 服務
+users/src/**/*.ts           # Users 服務
 
-# Database
-**/schema.prisma            # Prisma schema (anywhere)
-**/migrations/**/*.sql      # Migration files
-database/src/**/*.ts        # Database scripts
+# 資料庫
+**/schema.prisma            # Prisma schema（任何位置）
+**/migrations/**/*.sql      # Migration 檔案
+database/src/**/*.ts        # 資料庫腳本
 
-# Workflows
-form/src/workflow/**/*.ts              # Workflow engine
-form/src/workflow-definitions/**/*.json # Workflow definitions
+# 工作流程
+form/src/workflow/**/*.ts              # 工作流程引擎
+form/src/workflow-definitions/**/*.json # 工作流程定義
 
-# Test Exclusions
-**/*.test.ts                # TypeScript tests
-**/*.test.tsx               # React component tests
-**/*.spec.ts                # Spec files
+# 測試檔案排除
+**/*.test.ts                # TypeScript 測試
+**/*.test.tsx               # React 元件測試
+**/*.spec.ts                # Spec 檔案
 ```
 
 ---
 
-## Content Pattern Triggers
+## 內容模式觸發器
 
-### How It Works
+### 運作方式
 
-Regex pattern matching against the file's actual content (what's inside the file).
+使用正規表達式模式比對檔案的實際內容（檔案裡面的內容）。
 
-### Use For
+### 適用情境
 
-Technology-specific activation based on what the code imports or uses (Prisma, controllers, specific libraries).
+根據程式碼引入或使用的技術（Prisma、controllers、特定函式庫等）進行技術特定的啟用。
 
-### Configuration
+### 設定方式
 
 ```json
 "fileTriggers": {
@@ -209,49 +209,49 @@ Technology-specific activation based on what the code imports or uses (Prisma, c
 }
 ```
 
-### Examples
+### 範例
 
-**Prisma Detection:**
-- File contains: `import { PrismaService } from '@project/database'`
-- Matches: `import.*[Pp]risma`
-- Activates: `database-verification`
+**Prisma 偵測：**
+- 檔案內容包含：`import { PrismaService } from '@project/database'`
+- 比對到：`import.*[Pp]risma`
+- 啟用技能：`database-verification`
 
-**Controller Detection:**
-- File contains: `export class UserController {`
-- Matches: `export class.*Controller`
-- Activates: `error-tracking`
+**Controller 偵測：**
+- 檔案內容包含：`export class UserController {`
+- 比對到：`export class.*Controller`
+- 啟用技能：`error-tracking`
 
-### Best Practices
+### 最佳實踐
 
-- Match imports: `import.*[Pp]risma` (case-insensitive with [Pp])
-- Escape special regex chars: `\\.findMany\\(` not `.findMany(`
-- Patterns use case-insensitive flag
-- Test against real file content
-- Make patterns specific enough to avoid false matches
+- 比對 imports：`import.*[Pp]risma`（使用 [Pp] 進行大小寫不敏感比對）
+- 跳脫特殊正規表達式字元：`\\.findMany\\(` 而非 `.findMany(`
+- 模式使用不區分大小寫的旗標
+- 針對實際檔案內容進行測試
+- 讓模式足夠具體以避免誤判
 
-### Common Content Patterns
+### 常見內容模式
 
 ```regex
-# Prisma/Database
+# Prisma/資料庫
 import.*[Pp]risma                # Prisma imports
-PrismaService                    # PrismaService usage
+PrismaService                    # PrismaService 使用
 prisma\.                         # prisma.something
-\.findMany\(                     # Prisma query methods
+\.findMany\(                     # Prisma 查詢方法
 \.create\(
 \.update\(
 \.delete\(
 
 # Controllers/Routes
-export class.*Controller         # Controller classes
+export class.*Controller         # Controller 類別
 router\.                         # Express router
 app\.(get|post|put|delete|patch) # Express app routes
 
-# Error Handling
-try\s*\{                        # Try blocks
-catch\s*\(                      # Catch blocks
-throw new                        # Throw statements
+# 錯誤處理
+try\s*\{                        # Try 區塊
+catch\s*\(                      # Catch 區塊
+throw new                        # Throw 陳述式
 
-# React/Components
+# React/元件
 export.*React\.FC               # React functional components
 export default function.*       # Default function exports
 useState|useEffect              # React hooks
@@ -259,34 +259,34 @@ useState|useEffect              # React hooks
 
 ---
 
-## Best Practices Summary
+## 最佳實踐摘要
 
-### DO:
-✅ Use specific, unambiguous keywords
-✅ Test all patterns with real examples
-✅ Include common variations
-✅ Use non-greedy regex: `.*?`
-✅ Escape special characters in content patterns
-✅ Add exclusions for test files
-✅ Make file path patterns narrow and specific
+### 應該做的事：
+✅ 使用具體、明確的關鍵字
+✅ 使用實際範例測試所有模式
+✅ 包含常見變體
+✅ 使用非貪婪正規表達式：`.*?`
+✅ 在內容模式中跳脫特殊字元
+✅ 加入測試檔案的排除規則
+✅ 讓檔案路徑模式窄且具體
 
-### DON'T:
-❌ Use overly generic keywords ("system", "work")
-❌ Make intent patterns too broad (false positives)
-❌ Make patterns too specific (false negatives)
-❌ Forget to test with regex tester (https://regex101.com/)
-❌ Use greedy regex: `.*` instead of `.*?`
-❌ Match too broadly in file paths
+### 不應該做的事：
+❌ 使用過於籠統的關鍵字（「system」、「work」）
+❌ 讓意圖模式過於廣泛（造成誤判）
+❌ 讓模式過於具體（造成漏判）
+❌ 忘記使用正規表達式測試工具進行測試 (https://regex101.com/)
+❌ 使用貪婪正規表達式：`.*` 而非 `.*?`
+❌ 在檔案路徑中比對過於廣泛
 
-### Testing Your Triggers
+### 測試你的觸發器
 
-**Test keyword/intent triggers:**
+**測試關鍵字/意圖觸發器：**
 ```bash
 echo '{"session_id":"test","prompt":"your test prompt"}' | \
   npx tsx .claude/hooks/skill-activation-prompt.ts
 ```
 
-**Test file path/content triggers:**
+**測試檔案路徑/內容觸發器：**
 ```bash
 cat <<'EOF' | npx tsx .claude/hooks/skill-verification-guard.ts
 {
@@ -299,7 +299,7 @@ EOF
 
 ---
 
-**Related Files:**
-- [SKILL.md](SKILL.md) - Main skill guide
-- [SKILL_RULES_REFERENCE.md](SKILL_RULES_REFERENCE.md) - Complete skill-rules.json schema
-- [PATTERNS_LIBRARY.md](PATTERNS_LIBRARY.md) - Ready-to-use pattern library
+**相關檔案：**
+- [SKILL.md](SKILL.md) - 主要技能指南
+- [SKILL_RULES_REFERENCE.md](SKILL_RULES_REFERENCE.md) - 完整 skill-rules.json schema
+- [PATTERNS_LIBRARY.md](PATTERNS_LIBRARY.md) - 即用模式庫

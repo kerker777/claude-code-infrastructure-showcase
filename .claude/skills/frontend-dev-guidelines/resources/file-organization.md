@@ -1,27 +1,27 @@
-# File Organization
+# 檔案組織
 
-Proper file and directory structure for maintainable, scalable frontend code in the the application.
+在應用程式中維護可維護性和可擴展性的前端程式碼，需要適當的檔案和目錄結構。
 
 ---
 
-## features/ vs components/ Distinction
+## features/ 與 components/ 的區別
 
-### features/ Directory
+### features/ 目錄
 
-**Purpose**: Domain-specific features with their own logic, API, and components
+**用途**：具有自己的邏輯、API 和元件的領域特定功能
 
-**When to use:**
-- Feature has multiple related components
-- Feature has its own API endpoints
-- Feature has domain-specific logic
-- Feature has custom hooks/utilities
+**何時使用：**
+- 功能有多個相關元件
+- 功能有自己的 API endpoints
+- 功能有領域特定的邏輯
+- 功能有自定義的 hooks/工具函式
 
-**Examples:**
-- `features/posts/` - Project catalog/post management
-- `features/blogs/` - Blog builder and rendering
-- `features/auth/` - Authentication flows
+**範例：**
+- `features/posts/` - 專案目錄/文章管理
+- `features/blogs/` - 部落格建構和渲染
+- `features/auth/` - 驗證流程
 
-**Structure:**
+**結構：**
 ```
 features/
   my-feature/
@@ -40,22 +40,22 @@ features/
     index.ts                  # Public exports
 ```
 
-### components/ Directory
+### components/ 目錄
 
-**Purpose**: Truly reusable components used across multiple features
+**用途**：可跨多個功能真正重複使用的元件
 
-**When to use:**
-- Component is used in 3+ places
-- Component is generic (no feature-specific logic)
-- Component is a UI primitive or pattern
+**何時使用：**
+- 元件在 3 個以上的地方使用
+- 元件是通用的（沒有功能特定的邏輯）
+- 元件是 UI 原件或模式
 
-**Examples:**
+**範例：**
 - `components/SuspenseLoader/` - Loading wrapper
 - `components/CustomAppBar/` - Application header
 - `components/ErrorBoundary/` - Error handling
 - `components/LoadingOverlay/` - Loading overlay
 
-**Structure:**
+**結構：**
 ```
 components/
   SuspenseLoader/
@@ -68,11 +68,11 @@ components/
 
 ---
 
-## Feature Directory Structure (Detailed)
+## 功能目錄結構（詳細）
 
-### Complete Feature Example
+### 完整功能範例
 
-Based on `features/posts/` structure:
+基於 `features/posts/` 結構：
 
 ```
 features/
@@ -118,16 +118,16 @@ features/
     index.ts                        # Public API exports
 ```
 
-### Subdirectory Guidelines
+### 子目錄指南
 
-#### api/ Directory
+#### api/ 目錄
 
-**Purpose**: Centralized API calls for the feature
+**用途**：功能的集中式 API 呼叫
 
-**Files:**
-- `{feature}Api.ts` - Main API service
+**檔案：**
+- `{feature}Api.ts` - 主要 API service
 
-**Pattern:**
+**模式：**
 ```typescript
 // features/my-feature/api/myFeatureApi.ts
 import apiClient from '@/lib/apiClient';
@@ -144,15 +144,15 @@ export const myFeatureApi = {
 };
 ```
 
-#### components/ Directory
+#### components/ 目錄
 
-**Purpose**: Feature-specific components
+**用途**：功能特定的元件
 
-**Organization:**
-- Flat structure if <5 components
-- Subdirectories by responsibility if >5 components
+**組織方式：**
+- 如果少於 5 個元件使用扁平結構
+- 如果多於 5 個元件依職責分類使用子目錄
 
-**Examples:**
+**範例：**
 ```
 components/
   MyFeatureMain.tsx           # Main component
@@ -168,15 +168,15 @@ components/
     MyFeatureBlog.tsx
 ```
 
-#### hooks/ Directory
+#### hooks/ 目錄
 
-**Purpose**: Custom hooks for the feature
+**用途**：功能的自定義 hooks
 
-**Naming:**
-- `use` prefix (camelCase)
-- Descriptive of what they do
+**命名：**
+- `use` 前綴（camelCase）
+- 描述性地說明它們的作用
 
-**Examples:**
+**範例：**
 ```
 hooks/
   useMyFeature.ts               # Main hook
@@ -185,11 +185,11 @@ hooks/
   useMyFeatureFilters.ts        # Filters/search
 ```
 
-#### helpers/ Directory
+#### helpers/ 目錄
 
-**Purpose**: Utility functions specific to the feature
+**用途**：功能特定的工具函式
 
-**Examples:**
+**範例：**
 ```
 helpers/
   myFeatureHelpers.ts           # General utilities
@@ -198,11 +198,11 @@ helpers/
   constants.ts                  # Constants
 ```
 
-#### types/ Directory
+#### types/ 目錄
 
-**Purpose**: TypeScript types and interfaces
+**用途**：TypeScript 型別和介面
 
-**Files:**
+**檔案：**
 ```
 types/
   index.ts                      # Main types, exported
@@ -211,55 +211,55 @@ types/
 
 ---
 
-## Import Aliases (Vite Configuration)
+## Import 別名（Vite 設定）
 
-### Available Aliases
+### 可用的別名
 
-From `vite.config.ts` lines 180-185:
+來自 `vite.config.ts` 第 180-185 行：
 
-| Alias | Resolves To | Use For |
+| 別名 | 解析至 | 用途 |
 |-------|-------------|---------|
-| `@/` | `src/` | Absolute imports from src root |
-| `~types` | `src/types` | Shared TypeScript types |
-| `~components` | `src/components` | Reusable components |
-| `~features` | `src/features` | Feature imports |
+| `@/` | `src/` | 從 src 根目錄的絕對 imports |
+| `~types` | `src/types` | 共用的 TypeScript 型別 |
+| `~components` | `src/components` | 可重複使用的元件 |
+| `~features` | `src/features` | 功能 imports |
 
-### Usage Examples
+### 使用範例
 
 ```typescript
-// ✅ PREFERRED - Use aliases for absolute imports
+// ✅ 推薦 - 使用別名進行絕對 imports
 import { apiClient } from '@/lib/apiClient';
 import { SuspenseLoader } from '~components/SuspenseLoader';
 import { postApi } from '~features/posts/api/postApi';
 import type { User } from '~types/user';
 
-// ❌ AVOID - Relative paths from deep nesting
+// ❌ 避免 - 從深層巢狀使用相對路徑
 import { apiClient } from '../../../lib/apiClient';
 import { SuspenseLoader } from '../../../components/SuspenseLoader';
 ```
 
-### When to Use Which Alias
+### 何時使用哪個別名
 
-**@/ (General)**:
-- Lib utilities: `@/lib/apiClient`
-- Hooks: `@/hooks/useAuth`
-- Config: `@/config/theme`
-- Shared services: `@/services/authService`
+**@/ (一般用途)**:
+- Lib 工具函式：`@/lib/apiClient`
+- Hooks：`@/hooks/useAuth`
+- 設定檔：`@/config/theme`
+- 共用服務：`@/services/authService`
 
-**~types (Type Imports)**:
+**~types (型別 Imports)**:
 ```typescript
 import type { Post } from '~types/post';
 import type { User, UserRole } from '~types/user';
 ```
 
-**~components (Reusable Components)**:
+**~components (可重複使用的元件)**:
 ```typescript
 import { SuspenseLoader } from '~components/SuspenseLoader';
 import { CustomAppBar } from '~components/CustomAppBar';
 import { ErrorBoundary } from '~components/ErrorBoundary';
 ```
 
-**~features (Feature Imports)**:
+**~features (功能 Imports)**:
 ```typescript
 import { postApi } from '~features/posts/api/postApi';
 import { useAuth } from '~features/auth/hooks/useAuth';
@@ -267,11 +267,11 @@ import { useAuth } from '~features/auth/hooks/useAuth';
 
 ---
 
-## File Naming Conventions
+## 檔案命名慣例
 
-### Components
+### 元件
 
-**Pattern**: PascalCase with `.tsx` extension
+**模式**：PascalCase 搭配 `.tsx` 副檔名
 
 ```
 MyComponent.tsx
@@ -279,14 +279,14 @@ PostDataGrid.tsx
 CustomAppBar.tsx
 ```
 
-**Avoid:**
-- camelCase: `myComponent.tsx` ❌
-- kebab-case: `my-component.tsx` ❌
-- All caps: `MYCOMPONENT.tsx` ❌
+**避免：**
+- camelCase：`myComponent.tsx` ❌
+- kebab-case：`my-component.tsx` ❌
+- 全大寫：`MYCOMPONENT.tsx` ❌
 
 ### Hooks
 
-**Pattern**: camelCase with `use` prefix, `.ts` extension
+**模式**：camelCase 搭配 `use` 前綴，`.ts` 副檔名
 
 ```
 useMyFeature.ts
@@ -297,7 +297,7 @@ useGridLayout.ts
 
 ### API Services
 
-**Pattern**: camelCase with `Api` suffix, `.ts` extension
+**模式**：camelCase 搭配 `Api` 後綴，`.ts` 副檔名
 
 ```
 myFeatureApi.ts
@@ -305,9 +305,9 @@ postApi.ts
 userApi.ts
 ```
 
-### Helpers/Utilities
+### Helpers/工具函式
 
-**Pattern**: camelCase with descriptive name, `.ts` extension
+**模式**：camelCase 搭配描述性名稱，`.ts` 副檔名
 
 ```
 myFeatureHelpers.ts
@@ -316,9 +316,9 @@ transblogers.ts
 constants.ts
 ```
 
-### Types
+### 型別
 
-**Pattern**: camelCase, `index.ts` or descriptive name
+**模式**：camelCase，`index.ts` 或描述性名稱
 
 ```
 types/index.ts
@@ -328,83 +328,83 @@ types/user.ts
 
 ---
 
-## When to Create a New Feature
+## 何時建立新功能
 
-### Create New Feature When:
+### 建立新功能的時機：
 
-- Multiple related components (>3)
-- Has own API endpoints
-- Domain-specific logic
-- Will grow over time
-- Reused across multiple routes
+- 多個相關元件（>3 個）
+- 有自己的 API endpoints
+- 領域特定的邏輯
+- 隨時間會成長
+- 跨多個路由重複使用
 
-**Example:** `features/posts/`
-- 20+ components
-- Own API service
-- Complex state management
-- Used in multiple routes
+**範例：** `features/posts/`
+- 20 個以上元件
+- 自己的 API service
+- 複雜的狀態管理
+- 在多個路由中使用
 
-### Add to Existing Feature When:
+### 加入現有功能的時機：
 
-- Related to existing feature
-- Shares same API
-- Logically grouped
-- Extends existing functionality
+- 與現有功能相關
+- 共用相同的 API
+- 邏輯上分組
+- 擴展現有功能
 
-**Example:** Adding export dialog to posts feature
+**範例：**在 posts 功能中新增匯出對話框
 
-### Create Reusable Component When:
+### 建立可重複使用元件的時機：
 
-- Used across 3+ features
-- Generic, no domain logic
-- Pure presentation
-- Shared pattern
+- 跨 3 個以上功能使用
+- 通用的，沒有領域邏輯
+- 純展示
+- 共用模式
 
-**Example:** `components/SuspenseLoader/`
+**範例：** `components/SuspenseLoader/`
 
 ---
 
-## Import Organization
+## Import 組織
 
-### Import Order (Recommended)
+### Import 順序（建議）
 
 ```typescript
-// 1. React and React-related
+// 1. React 和 React 相關
 import React, { useState, useCallback, useMemo } from 'react';
 import { lazy } from 'react';
 
-// 2. Third-party libraries (alphabetical)
+// 2. 第三方套件（依字母排序）
 import { Box, Paper, Button, Grid } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import { useSuspenseQuery, useQueryClient } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 
-// 3. Alias imports (@ first, then ~)
+// 3. 別名 imports (@ 先，然後 ~)
 import { apiClient } from '@/lib/apiClient';
 import { useAuth } from '@/hooks/useAuth';
 import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
 import { SuspenseLoader } from '~components/SuspenseLoader';
 import { postApi } from '~features/posts/api/postApi';
 
-// 4. Type imports (grouped)
+// 4. 型別 imports（分組）
 import type { Post } from '~types/post';
 import type { User } from '~types/user';
 
-// 5. Relative imports (same feature)
+// 5. 相對 imports（同一功能）
 import { MySubComponent } from './MySubComponent';
 import { useMyFeature } from '../hooks/useMyFeature';
 import { myFeatureHelpers } from '../helpers/myFeatureHelpers';
 ```
 
-**Use single quotes** for all imports (project standard)
+**所有 imports 使用單引號**（專案標準）
 
 ---
 
-## Public API Pattern
+## Public API 模式
 
 ### feature/index.ts
 
-Export public API from feature for clean imports:
+從功能匯出 public API 以實現簡潔的 imports：
 
 ```typescript
 // features/my-feature/index.ts
@@ -424,22 +424,22 @@ export { myFeatureApi } from './api/myFeatureApi';
 export type { MyFeatureData, MyFeatureConfig } from './types';
 ```
 
-**Usage:**
+**使用方式：**
 ```typescript
-// ✅ Clean import from feature index
+// ✅ 從功能 index 簡潔的 import
 import { MyFeatureMain, useMyFeature } from '~features/my-feature';
 
-// ❌ Avoid deep imports (but OK if needed)
+// ❌ 避免深層 imports（但如有需要也可以）
 import { MyFeatureMain } from '~features/my-feature/components/MyFeatureMain';
 ```
 
 ---
 
-## Directory Structure Visualization
+## 目錄結構視覺化
 
 ```
 src/
-├── features/                    # Domain-specific features
+├── features/                    # 領域特定功能
 │   ├── posts/
 │   │   ├── api/
 │   │   ├── components/
@@ -450,7 +450,7 @@ src/
 │   ├── blogs/
 │   └── auth/
 │
-├── components/                  # Reusable components
+├── components/                  # 可重複使用的元件
 │   ├── SuspenseLoader/
 │   ├── CustomAppBar/
 │   ├── ErrorBoundary/
@@ -464,21 +464,21 @@ src/
 │   │   └── create/
 │   └── blogs/
 │
-├── hooks/                       # Shared hooks
+├── hooks/                       # 共用 hooks
 │   ├── useAuth.ts
 │   ├── useMuiSnackbar.ts
 │   └── useDebounce.ts
 │
-├── lib/                         # Shared utilities
+├── lib/                         # 共用工具
 │   ├── apiClient.ts
 │   └── utils.ts
 │
-├── types/                       # Shared TypeScript types
+├── types/                       # 共用 TypeScript 型別
 │   ├── user.ts
 │   ├── post.ts
 │   └── common.ts
 │
-├── config/                      # Configuration
+├── config/                      # 設定檔
 │   └── theme.ts
 │
 └── App.tsx                      # Root component
@@ -486,17 +486,17 @@ src/
 
 ---
 
-## Summary
+## 摘要
 
-**Key Principles:**
-1. **features/** for domain-specific code
-2. **components/** for truly reusable UI
-3. Use subdirectories: api/, components/, hooks/, helpers/, types/
-4. Import aliases for clean imports (@/, ~types, ~components, ~features)
-5. Consistent naming: PascalCase components, camelCase utilities
-6. Export public API from feature index.ts
+**關鍵原則：**
+1. **features/** 用於領域特定程式碼
+2. **components/** 用於真正可重複使用的 UI
+3. 使用子目錄：api/、components/、hooks/、helpers/、types/
+4. Import 別名用於簡潔的 imports（@/、~types、~components、~features）
+5. 一致的命名：PascalCase 元件、camelCase 工具函式
+6. 從功能 index.ts 匯出 public API
 
-**See Also:**
-- [component-patterns.md](component-patterns.md) - Component structure
-- [data-fetching.md](data-fetching.md) - API service patterns
-- [complete-examples.md](complete-examples.md) - Full feature example
+**另請參閱：**
+- [component-patterns.md](component-patterns.md) - 元件結構
+- [data-fetching.md](data-fetching.md) - API service 模式
+- [complete-examples.md](complete-examples.md) - 完整功能範例

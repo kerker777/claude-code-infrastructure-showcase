@@ -1,27 +1,27 @@
-# skill-rules.json - Complete Reference
+# skill-rules.json - 完整參考文件
 
-Complete schema and configuration reference for `.claude/skills/skill-rules.json`.
+`.claude/skills/skill-rules.json` 的完整 schema 與設定參考文件。
 
-## Table of Contents
+## 目錄
 
-- [File Location](#file-location)
-- [Complete TypeScript Schema](#complete-typescript-schema)
-- [Field Guide](#field-guide)
-- [Example: Guardrail Skill](#example-guardrail-skill)
-- [Example: Domain Skill](#example-domain-skill)
-- [Validation](#validation)
-
----
-
-## File Location
-
-**Path:** `.claude/skills/skill-rules.json`
-
-This JSON file defines all skills and their trigger conditions for the auto-activation system.
+- [檔案位置](#檔案位置)
+- [完整 TypeScript Schema](#完整-typescript-schema)
+- [欄位指南](#欄位指南)
+- [範例：Guardrail Skill](#範例guardrail-skill)
+- [範例：Domain Skill](#範例domain-skill)
+- [驗證](#驗證)
 
 ---
 
-## Complete TypeScript Schema
+## 檔案位置
+
+**路徑：** `.claude/skills/skill-rules.json`
+
+這個 JSON 檔案定義了所有 skill 及其在自動啟動系統中的觸發條件。
+
+---
+
+## 完整 TypeScript Schema
 
 ```typescript
 interface SkillRules {
@@ -58,60 +58,60 @@ interface SkillRule {
 
 ---
 
-## Field Guide
+## 欄位指南
 
-### Top Level
+### 最上層
 
-| Field | Type | Required | Description |
+| 欄位 | 類型 | 必填 | 說明 |
 |-------|------|----------|-------------|
-| `version` | string | Yes | Schema version (currently "1.0") |
-| `skills` | object | Yes | Map of skill name → SkillRule |
+| `version` | string | 是 | Schema 版本（目前為 "1.0"） |
+| `skills` | object | 是 | Skill 名稱對應到 SkillRule 的 map |
 
-### SkillRule Fields
+### SkillRule 欄位
 
-| Field | Type | Required | Description |
+| 欄位 | 類型 | 必填 | 說明 |
 |-------|------|----------|-------------|
-| `type` | string | Yes | "guardrail" (enforced) or "domain" (advisory) |
-| `enforcement` | string | Yes | "block" (PreToolUse), "suggest" (UserPromptSubmit), or "warn" |
-| `priority` | string | Yes | "critical", "high", "medium", or "low" |
-| `promptTriggers` | object | Optional | Triggers for UserPromptSubmit hook |
-| `fileTriggers` | object | Optional | Triggers for PreToolUse hook |
-| `blockMessage` | string | Optional* | Required if enforcement="block". Use `{file_path}` placeholder |
-| `skipConditions` | object | Optional | Escape hatches and session tracking |
+| `type` | string | 是 | "guardrail"（強制執行）或 "domain"（建議性質） |
+| `enforcement` | string | 是 | "block"（PreToolUse）、"suggest"（UserPromptSubmit）或 "warn" |
+| `priority` | string | 是 | "critical"、"high"、"medium" 或 "low" |
+| `promptTriggers` | object | 選填 | UserPromptSubmit hook 的觸發條件 |
+| `fileTriggers` | object | 選填 | PreToolUse hook 的觸發條件 |
+| `blockMessage` | string | 選填* | 當 enforcement="block" 時為必填。使用 `{file_path}` 佔位符 |
+| `skipConditions` | object | 選填 | 例外機制與 session 追蹤 |
 
-*Required for guardrails
+*Guardrail 必填
 
-### promptTriggers Fields
+### promptTriggers 欄位
 
-| Field | Type | Required | Description |
+| 欄位 | 類型 | 必填 | 說明 |
 |-------|------|----------|-------------|
-| `keywords` | string[] | Optional | Exact substring matches (case-insensitive) |
-| `intentPatterns` | string[] | Optional | Regex patterns for intent detection |
+| `keywords` | string[] | 選填 | 精確子字串比對（不區分大小寫） |
+| `intentPatterns` | string[] | 選填 | 用於意圖偵測的 regex 模式 |
 
-### fileTriggers Fields
+### fileTriggers 欄位
 
-| Field | Type | Required | Description |
+| 欄位 | 類型 | 必填 | 說明 |
 |-------|------|----------|-------------|
-| `pathPatterns` | string[] | Yes* | Glob patterns for file paths |
-| `pathExclusions` | string[] | Optional | Glob patterns to exclude (e.g., test files) |
-| `contentPatterns` | string[] | Optional | Regex patterns to match file content |
-| `createOnly` | boolean | Optional | Only trigger when creating new files |
+| `pathPatterns` | string[] | 是* | 檔案路徑的 glob 模式 |
+| `pathExclusions` | string[] | 選填 | 要排除的 glob 模式（例如測試檔案） |
+| `contentPatterns` | string[] | 選填 | 用於比對檔案內容的 regex 模式 |
+| `createOnly` | boolean | 選填 | 僅在建立新檔案時觸發 |
 
-*Required if fileTriggers is present
+*當有 fileTriggers 時為必填
 
-### skipConditions Fields
+### skipConditions 欄位
 
-| Field | Type | Required | Description |
+| 欄位 | 類型 | 必填 | 說明 |
 |-------|------|----------|-------------|
-| `sessionSkillUsed` | boolean | Optional | Skip if skill already used this session |
-| `fileMarkers` | string[] | Optional | Skip if file contains comment marker |
-| `envOverride` | string | Optional | Environment variable name to disable skill |
+| `sessionSkillUsed` | boolean | 選填 | 如果 skill 已在本次 session 中使用過則跳過 |
+| `fileMarkers` | string[] | 選填 | 如果檔案包含註解標記則跳過 |
+| `envOverride` | string | 選填 | 用於停用 skill 的環境變數名稱 |
 
 ---
 
-## Example: Guardrail Skill
+## 範例：Guardrail Skill
 
-Complete example of a blocking guardrail skill with all features:
+包含所有功能的完整 blocking guardrail skill 範例：
 
 ```json
 {
@@ -182,21 +182,21 @@ Complete example of a blocking guardrail skill with all features:
 }
 ```
 
-### Key Points for Guardrails
+### Guardrail 重點
 
-1. **type**: Must be "guardrail"
-2. **enforcement**: Must be "block"
-3. **priority**: Usually "critical" or "high"
-4. **blockMessage**: Required, clear actionable steps
-5. **skipConditions**: Session tracking prevents repeated nagging
-6. **fileTriggers**: Usually has both path and content patterns
-7. **contentPatterns**: Catch actual usage of technology
+1. **type**：必須為 "guardrail"
+2. **enforcement**：必須為 "block"
+3. **priority**：通常為 "critical" 或 "high"
+4. **blockMessage**：必填，需提供清楚的執行步驟
+5. **skipConditions**：Session 追蹤可避免重複提醒
+6. **fileTriggers**：通常包含路徑與內容模式
+7. **contentPatterns**：捕捉技術的實際使用情況
 
 ---
 
-## Example: Domain Skill
+## 範例：Domain Skill
 
-Complete example of a suggestion-based domain skill:
+完整的建議型 domain skill 範例：
 
 ```json
 {
@@ -250,66 +250,66 @@ Complete example of a suggestion-based domain skill:
 }
 ```
 
-### Key Points for Domain Skills
+### Domain Skill 重點
 
-1. **type**: Must be "domain"
-2. **enforcement**: Usually "suggest"
-3. **priority**: "high" or "medium"
-4. **blockMessage**: Not needed (doesn't block)
-5. **skipConditions**: Optional (less critical)
-6. **promptTriggers**: Usually has extensive keywords
-7. **fileTriggers**: May have only path patterns (content less important)
+1. **type**：必須為 "domain"
+2. **enforcement**：通常為 "suggest"
+3. **priority**："high" 或 "medium"
+4. **blockMessage**：不需要（不會阻擋）
+5. **skipConditions**：選填（較不重要）
+6. **promptTriggers**：通常有大量關鍵字
+7. **fileTriggers**：可能只有路徑模式（內容較不重要）
 
 ---
 
-## Validation
+## 驗證
 
-### Check JSON Syntax
+### 檢查 JSON 語法
 
 ```bash
 cat .claude/skills/skill-rules.json | jq .
 ```
 
-If valid, jq will pretty-print the JSON. If invalid, it will show the error.
+如果有效，jq 會美化輸出 JSON。如果無效，會顯示錯誤。
 
-### Common JSON Errors
+### 常見 JSON 錯誤
 
-**Trailing comma:**
+**結尾逗號：**
 ```json
 {
   "keywords": ["one", "two",]  // ❌ Trailing comma
 }
 ```
 
-**Missing quotes:**
+**缺少引號：**
 ```json
 {
   type: "guardrail"  // ❌ Missing quotes on key
 }
 ```
 
-**Single quotes (invalid JSON):**
+**單引號（無效的 JSON）：**
 ```json
 {
   'type': 'guardrail'  // ❌ Must use double quotes
 }
 ```
 
-### Validation Checklist
+### 驗證清單
 
-- [ ] JSON syntax valid (use `jq`)
-- [ ] All skill names match SKILL.md filenames
-- [ ] Guardrails have `blockMessage`
-- [ ] Block messages use `{file_path}` placeholder
-- [ ] Intent patterns are valid regex (test on regex101.com)
-- [ ] File path patterns use correct glob syntax
-- [ ] Content patterns escape special characters
-- [ ] Priority matches enforcement level
-- [ ] No duplicate skill names
+- [ ] JSON 語法有效（使用 `jq`）
+- [ ] 所有 skill 名稱與 SKILL.md 檔名一致
+- [ ] Guardrail 有 `blockMessage`
+- [ ] Block 訊息使用 `{file_path}` 佔位符
+- [ ] Intent 模式為有效的 regex（可在 regex101.com 測試）
+- [ ] 檔案路徑模式使用正確的 glob 語法
+- [ ] 內容模式有跳脫特殊字元
+- [ ] Priority 與 enforcement 等級相符
+- [ ] 沒有重複的 skill 名稱
 
 ---
 
-**Related Files:**
-- [SKILL.md](SKILL.md) - Main skill guide
-- [TRIGGER_TYPES.md](TRIGGER_TYPES.md) - Complete trigger documentation
-- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - Debugging configuration issues
+**相關檔案：**
+- [SKILL.md](SKILL.md) - 主要 skill 指南
+- [TRIGGER_TYPES.md](TRIGGER_TYPES.md) - 完整 trigger 文件
+- [TROUBLESHOOTING.md](TROUBLESHOOTING.md) - 除錯設定問題

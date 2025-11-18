@@ -1,22 +1,22 @@
-# Routing Guide
+# 路由指南
 
-TanStack Router implementation with folder-based routing and lazy loading patterns.
-
----
-
-## TanStack Router Overview
-
-**TanStack Router** with file-based routing:
-- Folder structure defines routes
-- Lazy loading for code splitting
-- Type-safe routing
-- Breadcrumb loaders
+基於資料夾結構的 TanStack Router 實作，包含延遲載入模式。
 
 ---
 
-## Folder-Based Routing
+## TanStack Router 概觀
 
-### Directory Structure
+**TanStack Router** 採用檔案式路由：
+- 資料夾結構定義路由
+- 延遲載入以進行程式碼分割
+- 型別安全的路由
+- 麵包屑載入器
+
+---
+
+## 資料夾式路由
+
+### 目錄結構
 
 ```
 routes/
@@ -31,16 +31,16 @@ routes/
     index.tsx                   # /comments
 ```
 
-**Pattern**:
-- `index.tsx` = Route at that path
-- `$param.tsx` = Dynamic parameter
-- Nested folders = Nested routes
+**模式**：
+- `index.tsx` = 該路徑的路由
+- `$param.tsx` = 動態參數
+- 巢狀資料夾 = 巢狀路由
 
 ---
 
-## Basic Route Pattern
+## 基本路由模式
 
-### Example from posts/index.tsx
+### posts/index.tsx 範例
 
 ```typescript
 /**
@@ -78,18 +78,18 @@ function PostsPage() {
 export default PostsPage;
 ```
 
-**Key Points:**
-- Lazy load heavy components
-- `createFileRoute` with route path
-- `loader` for breadcrumb data
-- Page component renders content
-- Export both Route and component
+**重點：**
+- 延遲載入大型元件
+- 使用 `createFileRoute` 搭配路由路徑
+- 使用 `loader` 載入麵包屑資料
+- 頁面元件渲染內容
+- 匯出 Route 和元件
 
 ---
 
-## Lazy Loading Routes
+## 延遲載入路由
 
-### Named Export Pattern
+### 具名匯出模式
 
 ```typescript
 import { lazy } from 'react';
@@ -102,7 +102,7 @@ const MyPage = lazy(() =>
 );
 ```
 
-### Default Export Pattern
+### 預設匯出模式
 
 ```typescript
 import { lazy } from 'react';
@@ -111,18 +111,18 @@ import { lazy } from 'react';
 const MyPage = lazy(() => import('@/features/my-feature/components/MyPage'));
 ```
 
-### Why Lazy Load Routes?
+### 為什麼要延遲載入路由？
 
-- Code splitting - smaller initial bundle
-- Faster initial page load
-- Load route code only when navigated to
-- Better performance
+- 程式碼分割 - 減少初始載入檔案大小
+- 加快初始頁面載入速度
+- 僅在導航至該路由時才載入程式碼
+- 提升效能
 
 ---
 
 ## createFileRoute
 
-### Basic Configuration
+### 基本設定
 
 ```typescript
 export const Route = createFileRoute('/my-route/')({
@@ -134,7 +134,7 @@ function MyRoutePage() {
 }
 ```
 
-### With Breadcrumb Loader
+### 使用麵包屑載入器
 
 ```typescript
 export const Route = createFileRoute('/my-route/')({
@@ -145,9 +145,9 @@ export const Route = createFileRoute('/my-route/')({
 });
 ```
 
-Breadcrumb appears in navigation/app bar automatically.
+麵包屑會自動顯示在導覽列/應用程式列中。
 
-### With Data Loader
+### 使用資料載入器
 
 ```typescript
 export const Route = createFileRoute('/my-route/')({
@@ -160,7 +160,7 @@ export const Route = createFileRoute('/my-route/')({
 });
 ```
 
-### With Search Params
+### 使用搜尋參數
 
 ```typescript
 export const Route = createFileRoute('/search/')({
@@ -181,9 +181,9 @@ function SearchPage() {
 
 ---
 
-## Dynamic Routes
+## 動態路由
 
-### Parameter Routes
+### 參數路由
 
 ```typescript
 // routes/users/$userId.tsx
@@ -199,7 +199,7 @@ function UserPage() {
 }
 ```
 
-### Multiple Parameters
+### 多個參數
 
 ```typescript
 // routes/posts/$postId/comments/$commentId.tsx
@@ -217,9 +217,9 @@ function CommentPage() {
 
 ---
 
-## Navigation
+## 導航
 
-### Programmatic Navigation
+### 程式化導航
 
 ```typescript
 import { useNavigate } from '@tanstack/react-router';
@@ -235,7 +235,7 @@ export const MyComponent: React.FC = () => {
 };
 ```
 
-### With Parameters
+### 帶參數
 
 ```typescript
 const handleNavigate = () => {
@@ -246,7 +246,7 @@ const handleNavigate = () => {
 };
 ```
 
-### With Search Params
+### 帶搜尋參數
 
 ```typescript
 const handleSearch = () => {
@@ -259,9 +259,9 @@ const handleSearch = () => {
 
 ---
 
-## Route Layout Pattern
+## 路由版面配置模式
 
-### Root Layout (__root.tsx)
+### 根版面配置 (__root.tsx)
 
 ```typescript
 import { createRootRoute, Outlet } from '@tanstack/react-router';
@@ -284,7 +284,7 @@ function RootLayout() {
 }
 ```
 
-### Nested Layouts
+### 巢狀版面配置
 
 ```typescript
 // routes/dashboard/index.tsx
@@ -306,7 +306,7 @@ function DashboardLayout() {
 
 ---
 
-## Complete Route Example
+## 完整路由範例
 
 ```typescript
 /**
@@ -347,18 +347,18 @@ export default UserPage;
 
 ---
 
-## Summary
+## 總結
 
-**Routing Checklist:**
-- ✅ Folder-based: `routes/my-route/index.tsx`
-- ✅ Lazy load components: `React.lazy(() => import())`
-- ✅ Use `createFileRoute` with route path
-- ✅ Add breadcrumb in `loader` function
-- ✅ Wrap in `SuspenseLoader` for loading states
-- ✅ Use `Route.useParams()` for dynamic params
-- ✅ Use `useNavigate()` for programmatic navigation
+**路由檢查清單：**
+- ✅ 資料夾式：`routes/my-route/index.tsx`
+- ✅ 延遲載入元件：`React.lazy(() => import())`
+- ✅ 使用 `createFileRoute` 搭配路由路徑
+- ✅ 在 `loader` 函式中加入麵包屑
+- ✅ 使用 `SuspenseLoader` 包裝以處理載入狀態
+- ✅ 使用 `Route.useParams()` 取得動態參數
+- ✅ 使用 `useNavigate()` 進行程式化導航
 
-**See Also:**
-- [component-patterns.md](component-patterns.md) - Lazy loading patterns
-- [loading-and-error-states.md](loading-and-error-states.md) - SuspenseLoader usage
-- [complete-examples.md](complete-examples.md) - Full route examples
+**另見：**
+- [component-patterns.md](component-patterns.md) - 延遲載入模式
+- [loading-and-error-states.md](loading-and-error-states.md) - SuspenseLoader 用法
+- [complete-examples.md](complete-examples.md) - 完整路由範例

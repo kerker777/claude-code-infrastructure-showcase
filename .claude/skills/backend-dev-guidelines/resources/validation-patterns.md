@@ -1,51 +1,51 @@
-# Validation Patterns - Input Validation with Zod
+# 驗證模式 - 使用 Zod 進行輸入驗證
 
-Complete guide to input validation using Zod schemas for type-safe validation.
+使用 Zod schemas 進行型別安全驗證的完整指南。
 
-## Table of Contents
+## 目錄
 
-- [Why Zod?](#why-zod)
-- [Basic Zod Patterns](#basic-zod-patterns)
-- [Schema Examples from Codebase](#schema-examples-from-codebase)
-- [Route-Level Validation](#route-level-validation)
-- [Controller Validation](#controller-validation)
-- [DTO Pattern](#dto-pattern)
-- [Error Handling](#error-handling)
-- [Advanced Patterns](#advanced-patterns)
+- [為什麼選擇 Zod？](#為什麼選擇-zod)
+- [基本 Zod 模式](#基本-zod-模式)
+- [程式碼庫中的 Schema 範例](#程式碼庫中的-schema-範例)
+- [路由層級驗證](#路由層級驗證)
+- [Controller 驗證](#controller-驗證)
+- [DTO 模式](#dto-模式)
+- [錯誤處理](#錯誤處理)
+- [進階模式](#進階模式)
 
 ---
 
-## Why Zod?
+## 為什麼選擇 Zod？
 
-### Benefits Over Joi/Other Libraries
+### 相較於 Joi 及其他函式庫的優勢
 
-**Type Safety:**
-- ✅ Full TypeScript inference
-- ✅ Runtime + compile-time validation
-- ✅ Automatic type generation
+**型別安全：**
+- ✅ 完整的 TypeScript 型別推論
+- ✅ 執行時期與編譯時期雙重驗證
+- ✅ 自動產生型別定義
 
-**Developer Experience:**
-- ✅ Intuitive API
-- ✅ Composable schemas
-- ✅ Excellent error messages
+**開發體驗：**
+- ✅ 直覺的 API 設計
+- ✅ 可組合的 schemas
+- ✅ 優秀的錯誤訊息
 
-**Performance:**
-- ✅ Fast validation
-- ✅ Small bundle size
-- ✅ Tree-shakeable
+**效能：**
+- ✅ 快速的驗證速度
+- ✅ 小巧的打包體積
+- ✅ 支援 Tree-shaking
 
-### Migration from Joi
+### 從 Joi 遷移
 
-Modern validation uses Zod instead of Joi:
+現代驗證使用 Zod 取代 Joi：
 
 ```typescript
-// ❌ OLD - Joi (being phased out)
+// ❌ 舊寫法 - Joi（正在淘汰中）
 const schema = Joi.object({
     email: Joi.string().email().required(),
     name: Joi.string().min(3).required(),
 });
 
-// ✅ NEW - Zod (preferred)
+// ✅ 新寫法 - Zod（推薦使用）
 const schema = z.object({
     email: z.string().email(),
     name: z.string().min(3),
@@ -54,14 +54,14 @@ const schema = z.object({
 
 ---
 
-## Basic Zod Patterns
+## 基本 Zod 模式
 
-### Primitive Types
+### 基本型別
 
 ```typescript
 import { z } from 'zod';
 
-// Strings
+// 字串
 const nameSchema = z.string();
 const emailSchema = z.string().email();
 const urlSchema = z.string().url();
@@ -69,34 +69,34 @@ const uuidSchema = z.string().uuid();
 const minLengthSchema = z.string().min(3);
 const maxLengthSchema = z.string().max(100);
 
-// Numbers
+// 數字
 const ageSchema = z.number().int().positive();
 const priceSchema = z.number().positive();
 const rangeSchema = z.number().min(0).max(100);
 
-// Booleans
+// 布林值
 const activeSchema = z.boolean();
 
-// Dates
-const dateSchema = z.string().datetime(); // ISO 8601 string
-const nativeDateSchema = z.date(); // Native Date object
+// 日期
+const dateSchema = z.string().datetime(); // ISO 8601 字串
+const nativeDateSchema = z.date(); // 原生 Date 物件
 
-// Enums
+// 列舉
 const roleSchema = z.enum(['admin', 'operations', 'user']);
 const statusSchema = z.enum(['PENDING', 'APPROVED', 'REJECTED']);
 ```
 
-### Objects
+### 物件
 
 ```typescript
-// Simple object
+// 簡單物件
 const userSchema = z.object({
     email: z.string().email(),
     name: z.string(),
     age: z.number().int().positive(),
 });
 
-// Nested objects
+// 巢狀物件
 const addressSchema = z.object({
     street: z.string(),
     city: z.string(),
@@ -108,28 +108,28 @@ const userWithAddressSchema = z.object({
     address: addressSchema,
 });
 
-// Optional fields
+// 選填欄位
 const userSchema = z.object({
     name: z.string(),
     email: z.string().email().optional(),
     phone: z.string().optional(),
 });
 
-// Nullable fields
+// 可為 null 的欄位
 const userSchema = z.object({
     name: z.string(),
     middleName: z.string().nullable(),
 });
 ```
 
-### Arrays
+### 陣列
 
 ```typescript
-// Array of primitives
+// 基本型別陣列
 const rolesSchema = z.array(z.string());
 const numbersSchema = z.array(z.number());
 
-// Array of objects
+// 物件陣列
 const usersSchema = z.array(
     z.object({
         id: z.string(),
@@ -137,23 +137,23 @@ const usersSchema = z.array(
     })
 );
 
-// Array with constraints
+// 帶有限制條件的陣列
 const tagsSchema = z.array(z.string()).min(1).max(10);
 const nonEmptyArray = z.array(z.string()).nonempty();
 ```
 
 ---
 
-## Schema Examples from Codebase
+## 程式碼庫中的 Schema 範例
 
-### Form Validation Schemas
+### 表單驗證 Schemas
 
-**File:** `/form/src/helpers/zodSchemas.ts`
+**檔案：** `/form/src/helpers/zodSchemas.ts`
 
 ```typescript
 import { z } from 'zod';
 
-// Question types enum
+// 問題類型列舉
 export const questionTypeSchema = z.enum([
     'input',
     'textbox',
@@ -165,17 +165,17 @@ export const questionTypeSchema = z.enum([
     'upload',
 ]);
 
-// Upload types
+// 上傳類型
 export const uploadTypeSchema = z.array(
     z.enum(['pdf', 'image', 'excel', 'video', 'powerpoint', 'word']).nullable()
 );
 
-// Input types
+// 輸入類型
 export const inputTypeSchema = z
     .enum(['date', 'number', 'input', 'currency'])
     .nullable();
 
-// Question option
+// 問題選項
 export const questionOptionSchema = z.object({
     id: z.number().int().positive().optional(),
     controlTag: z.string().max(150).nullable().optional(),
@@ -183,7 +183,7 @@ export const questionOptionSchema = z.object({
     order: z.number().int().min(0).default(0),
 });
 
-// Question schema
+// 問題 schema
 export const questionSchema = z.object({
     id: z.number().int().positive().optional(),
     formID: z.number().int().positive(),
@@ -202,7 +202,7 @@ export const questionSchema = z.object({
     isOptionsSorted: z.boolean().optional(),
 });
 
-// Form section schema
+// 表單區段 schema
 export const formSectionSchema = z.object({
     id: z.number().int().positive(),
     formID: z.number().int().positive(),
@@ -212,7 +212,7 @@ export const formSectionSchema = z.object({
     isStandard: z.boolean(),
 });
 
-// Create form schema
+// 建立表單 schema
 export const createFormSchema = z.object({
     id: z.number().int().positive(),
     label: z.string().max(150),
@@ -221,7 +221,7 @@ export const createFormSchema = z.object({
     username: z.string(),
 });
 
-// Update order schema
+// 更新順序 schema
 export const updateOrderSchema = z.object({
     source: z.object({
         index: z.number().int().min(0),
@@ -233,7 +233,7 @@ export const updateOrderSchema = z.object({
     }),
 });
 
-// Controller-specific validation schemas
+// Controller 專用的驗證 schemas
 export const createQuestionValidationSchema = z.object({
     formID: z.number().int().positive(),
     sectionID: z.number().int().positive(),
@@ -249,10 +249,10 @@ export const updateQuestionValidationSchema = z.object({
 });
 ```
 
-### Proxy Relationship Schema
+### 代理關係 Schema
 
 ```typescript
-// Proxy relationship validation
+// 代理關係驗證
 const createProxySchema = z.object({
     originalUserID: z.string().min(1),
     proxyUserID: z.string().min(1),
@@ -260,7 +260,7 @@ const createProxySchema = z.object({
     expiresAt: z.string().datetime(),
 });
 
-// With custom validation
+// 帶有自訂驗證
 const createProxySchemaWithValidation = createProxySchema.refine(
     (data) => new Date(data.expiresAt) > new Date(data.startsAt),
     {
@@ -270,10 +270,10 @@ const createProxySchemaWithValidation = createProxySchema.refine(
 );
 ```
 
-### Workflow Validation
+### 工作流程驗證
 
 ```typescript
-// Workflow start schema
+// 工作流程啟動 schema
 const startWorkflowSchema = z.object({
     workflowCode: z.string().min(1),
     entityType: z.enum(['Post', 'User', 'Comment']),
@@ -281,7 +281,7 @@ const startWorkflowSchema = z.object({
     dryRun: z.boolean().optional().default(false),
 });
 
-// Workflow step completion schema
+// 工作流程步驟完成 schema
 const completeStepSchema = z.object({
     stepInstanceID: z.number().int().positive(),
     answers: z.record(z.string(), z.any()),
@@ -291,9 +291,9 @@ const completeStepSchema = z.object({
 
 ---
 
-## Route-Level Validation
+## 路由層級驗證
 
-### Pattern 1: Inline Validation
+### 模式 1：內嵌驗證
 
 ```typescript
 // routes/proxyRoutes.ts
@@ -311,10 +311,10 @@ router.post(
     SSOMiddlewareClient.verifyLoginStatus,
     async (req, res) => {
         try {
-            // Validate at route level
+            // 在路由層級進行驗證
             const validated = createProxySchema.parse(req.body);
 
-            // Delegate to service
+            // 委派給 service
             const proxy = await proxyService.createProxyRelationship(validated);
 
             res.status(201).json({ success: true, data: proxy });
@@ -334,20 +334,20 @@ router.post(
 );
 ```
 
-**Pros:**
-- Quick and simple
-- Good for simple routes
+**優點：**
+- 快速且簡單
+- 適合簡單的路由
 
-**Cons:**
-- Validation logic in routes
-- Harder to test
-- Not reusable
+**缺點：**
+- 驗證邏輯寫在路由中
+- 較難進行測試
+- 無法重複使用
 
 ---
 
-## Controller Validation
+## Controller 驗證
 
-### Pattern 2: Controller Validation (Recommended)
+### 模式 2：Controller 驗證（推薦）
 
 ```typescript
 // validators/userSchemas.ts
@@ -389,16 +389,16 @@ export class UserController extends BaseController {
 
     async createUser(req: Request, res: Response): Promise<void> {
         try {
-            // Validate input
+            // 驗證輸入
             const validated = createUserSchema.parse(req.body);
 
-            // Call service
+            // 呼叫 service
             const user = await this.userService.createUser(validated);
 
             this.handleSuccess(res, user, 'User created successfully', 201);
         } catch (error) {
             if (error instanceof z.ZodError) {
-                // Handle validation errors with 400 status
+                // 以 400 狀態碼處理驗證錯誤
                 return this.handleError(error, res, 'createUser', 400);
             }
             this.handleError(error, res, 'createUser');
@@ -407,7 +407,7 @@ export class UserController extends BaseController {
 
     async updateUser(req: Request, res: Response): Promise<void> {
         try {
-            // Validate params and body
+            // 驗證參數和 body
             const userId = req.params.id;
             const validated = updateUserSchema.parse(req.body);
 
@@ -424,68 +424,68 @@ export class UserController extends BaseController {
 }
 ```
 
-**Pros:**
-- Clean separation
-- Reusable schemas
-- Easy to test
-- Type-safe DTOs
+**優點：**
+- 清楚的職責分離
+- 可重複使用的 schemas
+- 容易測試
+- 型別安全的 DTOs
 
-**Cons:**
-- More files to manage
+**缺點：**
+- 需要管理更多檔案
 
 ---
 
-## DTO Pattern
+## DTO 模式
 
-### Type Inference from Schemas
+### 從 Schemas 推論型別
 
 ```typescript
 import { z } from 'zod';
 
-// Define schema
+// 定義 schema
 const createUserSchema = z.object({
     email: z.string().email(),
     name: z.string(),
     age: z.number().int().positive(),
 });
 
-// Infer TypeScript type from schema
+// 從 schema 推論 TypeScript 型別
 type CreateUserDTO = z.infer<typeof createUserSchema>;
 
-// Equivalent to:
+// 等同於：
 // type CreateUserDTO = {
 //     email: string;
 //     name: string;
 //     age: number;
 // }
 
-// Use in service
+// 在 service 中使用
 class UserService {
     async createUser(data: CreateUserDTO): Promise<User> {
-        // data is fully typed!
-        console.log(data.email); // ✅ TypeScript knows this exists
-        console.log(data.invalid); // ❌ TypeScript error!
+        // data 是完全型別化的！
+        console.log(data.email); // ✅ TypeScript 知道這個屬性存在
+        console.log(data.invalid); // ❌ TypeScript 錯誤！
     }
 }
 ```
 
-### Input vs Output Types
+### 輸入與輸出型別
 
 ```typescript
-// Input schema (what API receives)
+// 輸入 schema（API 接收的資料）
 const createUserInputSchema = z.object({
     email: z.string().email(),
     name: z.string(),
     password: z.string().min(8),
 });
 
-// Output schema (what API returns)
+// 輸出 schema（API 回傳的資料）
 const userOutputSchema = z.object({
     id: z.string().uuid(),
     email: z.string().email(),
     name: z.string(),
     createdAt: z.string().datetime(),
-    // password excluded!
+    // password 不包含在內！
 });
 
 type CreateUserInput = z.infer<typeof createUserInputSchema>;
@@ -494,9 +494,9 @@ type UserOutput = z.infer<typeof userOutputSchema>;
 
 ---
 
-## Error Handling
+## 錯誤處理
 
-### Zod Error Format
+### Zod 錯誤格式
 
 ```typescript
 try {
@@ -517,7 +517,7 @@ try {
 }
 ```
 
-### Custom Error Messages
+### 自訂錯誤訊息
 
 ```typescript
 const userSchema = z.object({
@@ -527,10 +527,10 @@ const userSchema = z.object({
 });
 ```
 
-### Formatted Error Response
+### 格式化錯誤回應
 
 ```typescript
-// Helper function to format Zod errors
+// 格式化 Zod 錯誤的輔助函式
 function formatZodError(error: z.ZodError) {
     return {
         message: 'Validation failed',
@@ -542,7 +542,7 @@ function formatZodError(error: z.ZodError) {
     };
 }
 
-// In controller
+// 在 controller 中
 catch (error) {
     if (error instanceof z.ZodError) {
         return res.status(400).json({
@@ -552,7 +552,7 @@ catch (error) {
     }
 }
 
-// Response example:
+// 回應範例：
 // {
 //   "success": false,
 //   "error": {
@@ -570,18 +570,18 @@ catch (error) {
 
 ---
 
-## Advanced Patterns
+## 進階模式
 
-### Conditional Validation
+### 條件式驗證
 
 ```typescript
-// Validate based on other field values
+// 根據其他欄位的值進行驗證
 const submissionSchema = z.object({
     type: z.enum(['NEW', 'UPDATE']),
     postId: z.number().optional(),
 }).refine(
     (data) => {
-        // If type is UPDATE, postId is required
+        // 如果 type 是 UPDATE，則 postId 為必填
         if (data.type === 'UPDATE') {
             return data.postId !== undefined;
         }
@@ -594,26 +594,26 @@ const submissionSchema = z.object({
 );
 ```
 
-### Transform Data
+### 轉換資料
 
 ```typescript
-// Transform strings to numbers
+// 將字串轉換為數字
 const userSchema = z.object({
     name: z.string(),
     age: z.string().transform((val) => parseInt(val, 10)),
 });
 
-// Transform dates
+// 轉換日期
 const eventSchema = z.object({
     name: z.string(),
     date: z.string().transform((str) => new Date(str)),
 });
 ```
 
-### Preprocess Data
+### 預處理資料
 
 ```typescript
-// Trim strings before validation
+// 驗證前先修剪字串
 const userSchema = z.object({
     email: z.preprocess(
         (val) => typeof val === 'string' ? val.trim().toLowerCase() : val,
@@ -626,13 +626,13 @@ const userSchema = z.object({
 });
 ```
 
-### Union Types
+### Union 型別
 
 ```typescript
-// Multiple possible types
+// 多種可能的型別
 const idSchema = z.union([z.string(), z.number()]);
 
-// Discriminated unions
+// 可辨識的 unions
 const notificationSchema = z.discriminatedUnion('type', [
     z.object({
         type: z.literal('email'),
@@ -647,10 +647,10 @@ const notificationSchema = z.discriminatedUnion('type', [
 ]);
 ```
 
-### Recursive Schemas
+### 遞迴 Schemas
 
 ```typescript
-// For nested structures like trees
+// 用於樹狀結構等巢狀結構
 type Category = {
     id: number;
     name: string;
@@ -666,10 +666,10 @@ const categorySchema: z.ZodType<Category> = z.lazy(() =>
 );
 ```
 
-### Schema Composition
+### Schema 組合
 
 ```typescript
-// Base schemas
+// 基礎 schemas
 const timestampsSchema = z.object({
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
@@ -680,37 +680,37 @@ const auditSchema = z.object({
     updatedBy: z.string(),
 });
 
-// Compose schemas
+// 組合 schemas
 const userSchema = z.object({
     id: z.string(),
     email: z.string().email(),
     name: z.string(),
 }).merge(timestampsSchema).merge(auditSchema);
 
-// Extend schemas
+// 擴充 schemas
 const adminUserSchema = userSchema.extend({
     adminLevel: z.number().int().min(1).max(5),
     permissions: z.array(z.string()),
 });
 
-// Pick specific fields
+// 選取特定欄位
 const publicUserSchema = userSchema.pick({
     id: true,
     name: true,
-    // email excluded
+    // email 被排除
 });
 
-// Omit fields
+// 排除欄位
 const userWithoutTimestamps = userSchema.omit({
     createdAt: true,
     updatedAt: true,
 });
 ```
 
-### Validation Middleware
+### 驗證 Middleware
 
 ```typescript
-// Create reusable validation middleware
+// 建立可重複使用的驗證 middleware
 import { Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
 
@@ -734,11 +734,11 @@ export function validateBody<T extends z.ZodType>(schema: T) {
     };
 }
 
-// Usage
+// 使用方式
 router.post('/users',
     validateBody(createUserSchema),
     async (req, res) => {
-        // req.body is validated and typed!
+        // req.body 已驗證並具有型別！
         const user = await userService.createUser(req.body);
         res.json({ success: true, data: user });
     }
@@ -747,8 +747,8 @@ router.post('/users',
 
 ---
 
-**Related Files:**
-- [SKILL.md](SKILL.md) - Main guide
-- [routing-and-controllers.md](routing-and-controllers.md) - Using validation in controllers
-- [services-and-repositories.md](services-and-repositories.md) - Using DTOs in services
-- [async-and-errors.md](async-and-errors.md) - Error handling patterns
+**相關檔案：**
+- [SKILL.md](SKILL.md) - 主要指南
+- [routing-and-controllers.md](routing-and-controllers.md) - 在 controllers 中使用驗證
+- [services-and-repositories.md](services-and-repositories.md) - 在 services 中使用 DTOs
+- [async-and-errors.md](async-and-errors.md) - 錯誤處理模式
